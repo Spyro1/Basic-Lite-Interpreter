@@ -7,6 +7,8 @@
 #include "Register.h"
 #include "List.h"
 
+#include "../memtrace.h"
+
 class Instruction {
 
 protected:

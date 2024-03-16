@@ -5,7 +5,8 @@
 #ifndef NAGYHAZI_REGISTER_H
 #define NAGYHAZI_REGISTER_H
 
-//#include <locale>
+
+#include "../memtrace.h"
 
 class Register {
     char* name;
@@ -15,10 +16,10 @@ public:
     // -- Constructors --
     Register();
     explicit Register(const char* name, int defValue = 0);
-
+    // -- Getters --
     const char* getName() const;
     int getValue() const;
-
+    // -- Destructor --
     ~Register();
 };
 

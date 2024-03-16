@@ -7,12 +7,14 @@
 
 #include "Instruction.h"
 
+#include "../memtrace.h"
+
 class LetInstruction : public Instruction{
 public:
     // -- Constructors --
     LetInstruction(int lineNumber, const char* expression);
     // -- Virtual function --
-    virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex) override;
+    virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
 };
 
 

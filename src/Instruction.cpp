@@ -2,7 +2,7 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 #include <cstring>
-#include "Instruction.h"
+#include "../include/Instruction.h"
 
 Instruction::Instruction() : lineNumber(0) { }
 

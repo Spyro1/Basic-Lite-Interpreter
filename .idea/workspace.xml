@@ -21,22 +21,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="399e641e-36c0-4a6e-a5de-52597552f239" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/gtest_lite.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/memtrace.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/memtrace.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PrintInstruction.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BASIC.md" beforeDir="false" afterPath="$PROJECT_DIR$/BASIC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Instruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/Instruction.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LetInstruction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LetInstruction.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LetInstruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/LetInstruction.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/List.h" beforeDir="false" afterPath="$PROJECT_DIR$/List.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PrintInstruction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/PrintInstruction.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PrintInstruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/PrintInstruction.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cache-v2-5daf663367315f492b21.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2024-03-16T00-35-46-0497.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Computer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Computer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Computer.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Computer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GotoInstruction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/GotoInstruction.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GotoInstruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/GotoInstruction.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IfInstruction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/IfInstruction.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IfInstruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/IfInstruction.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Instruction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Instruction.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Instruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Instruction.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LetInstruction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/LetInstruction.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LetInstruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/LetInstruction.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/List.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/List.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PrintInstruction.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PrintInstruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/PrintInstruction.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReadInstruction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadInstruction.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReadInstruction.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ReadInstruction.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Register.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Register.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Register.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Register.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-cbdc94a3ab19806ea7ba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-Nagyhazi-Debug-9ec1eb2583fc940a1fe0.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/build.ninja" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/program1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/program1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +68,20 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Spyro1"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="a59e86b7-0758-4ed4-b404-1c2f47669d18" />
+        <option name="url" value="https://github.com/Spyro1/BasicInterpeter.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -91,6 +124,13 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="S:\Programozas\BasicInterpeter" />
+      <recent name="S:\Programozas\BasicInterpeter\src" />
+      <recent name="S:\Programozas\BasicInterpeter\include" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Nagyhazi" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Nagyhazi" TARGET_NAME="Nagyhazi" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Nagyhazi" RUN_TARGET_NAME="Nagyhazi">
       <method v="2">
@@ -114,7 +154,7 @@
       <workItem from="1710543539592" duration="24000" />
       <workItem from="1710543573648" duration="5689000" />
       <workItem from="1710579028358" duration="58000" />
-      <workItem from="1710579096519" duration="5050000" />
+      <workItem from="1710579096519" duration="25656000" />
     </task>
     <servers />
   </component>
@@ -126,16 +166,5 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticFoundErrors value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/main.cpp</url>
-          <line>7</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

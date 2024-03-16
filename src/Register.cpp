@@ -2,7 +2,7 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 #include <cstring>
-#include "Register.h"
+#include "../include/Register.h"
 
 Register::Register() = default; //: value(0) { }
 

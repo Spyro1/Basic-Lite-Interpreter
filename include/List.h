@@ -6,7 +6,9 @@
 #define NAGYHAZI_LIST_H
 
 #include <cstdlib>
+#include <iostream>
 
+#include "../memtrace.h"
 
 template <class C>
 struct Node { C* data; Node<C>* next; };
@@ -50,17 +52,8 @@ public:
 //    void InsertAt(size_t index);
 //    bool RemoveAt(size_t index);
 //    bool RemoveLast();
-    C* operator[](size_t index){
-        if (index > Count)
-            throw "Error: Index out of range";
-        Node<C>* iter = first;
-        for (size_t i = 0; i < index; ++i) {
-            iter = iter->next;
-        }
-        return (iter->data); // TODO: Make it reference typecast
-    }
 
-    ~List(){
+    void Clear(){
         Node<C>* iter = first;
         while(iter != nullptr){
             Node<C>* nextNode = iter->next;
@@ -68,6 +61,19 @@ public:
             delete iter;
             iter = nextNode;
         }
+    }
+    C* operator[](int index){
+        if ((size_t)index > Count || index < 0)
+            throw std::range_error("Index out of range");
+        Node<C>* iter = first;
+        for (int i = 0; i < index; ++i) {
+            iter = iter->next;
+        }
+        return (iter->data); // TODO: Make it reference typecast
+    }
+
+    ~List(){
+        Clear();
     }
 };
 

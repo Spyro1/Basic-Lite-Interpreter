@@ -55,53 +55,53 @@ build CMakeFiles/Nagyhazi.dir/main.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Deb
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
   OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
 
-build CMakeFiles/Nagyhazi.dir/Computer.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/Computer.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\Computer.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/Computer.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/Computer.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\Computer.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
-build CMakeFiles/Nagyhazi.dir/Register.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/Register.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\Register.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/Register.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/Register.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\Register.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
-build CMakeFiles/Nagyhazi.dir/Instruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/Instruction.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\Instruction.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/Instruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/Instruction.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\Instruction.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
-build CMakeFiles/Nagyhazi.dir/PrintInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/PrintInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\PrintInstruction.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/PrintInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/PrintInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\PrintInstruction.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
-build CMakeFiles/Nagyhazi.dir/LetInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/LetInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\LetInstruction.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/LetInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/LetInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\LetInstruction.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
-build CMakeFiles/Nagyhazi.dir/IfInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/IfInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\IfInstruction.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/IfInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/IfInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\IfInstruction.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
-build CMakeFiles/Nagyhazi.dir/GotoInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/GotoInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\GotoInstruction.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/GotoInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/GotoInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\GotoInstruction.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
-build CMakeFiles/Nagyhazi.dir/ReadInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/ReadInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
-  DEP_FILE = CMakeFiles\Nagyhazi.dir\ReadInstruction.cpp.obj.d
+build CMakeFiles/Nagyhazi.dir/src/ReadInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_unscanned_Debug S$:/Programozas/BasicInterpeter/src/ReadInstruction.cpp || cmake_object_order_depends_target_Nagyhazi
+  DEP_FILE = CMakeFiles\Nagyhazi.dir\src\ReadInstruction.cpp.obj.d
   FLAGS = -g -std=gnu++11 -fdiagnostics-color=always -Wall -Werror
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir
+  OBJECT_FILE_DIR = CMakeFiles\Nagyhazi.dir\src
 
 
 # =============================================================================
@@ -111,7 +111,7 @@ build CMakeFiles/Nagyhazi.dir/ReadInstruction.cpp.obj: CXX_COMPILER__Nagyhazi_un
 #############################################
 # Link the executable Nagyhazi.exe
 
-build Nagyhazi.exe: CXX_EXECUTABLE_LINKER__Nagyhazi_Debug CMakeFiles/Nagyhazi.dir/main.cpp.obj CMakeFiles/Nagyhazi.dir/Computer.cpp.obj CMakeFiles/Nagyhazi.dir/Register.cpp.obj CMakeFiles/Nagyhazi.dir/Instruction.cpp.obj CMakeFiles/Nagyhazi.dir/PrintInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/LetInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/IfInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/GotoInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/ReadInstruction.cpp.obj
+build Nagyhazi.exe: CXX_EXECUTABLE_LINKER__Nagyhazi_Debug CMakeFiles/Nagyhazi.dir/main.cpp.obj CMakeFiles/Nagyhazi.dir/src/Computer.cpp.obj CMakeFiles/Nagyhazi.dir/src/Register.cpp.obj CMakeFiles/Nagyhazi.dir/src/Instruction.cpp.obj CMakeFiles/Nagyhazi.dir/src/PrintInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/src/LetInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/src/IfInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/src/GotoInstruction.cpp.obj CMakeFiles/Nagyhazi.dir/src/ReadInstruction.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Nagyhazi.dir
