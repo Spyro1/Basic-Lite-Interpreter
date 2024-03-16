@@ -2,7 +2,11 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 #include <fstream>
+#include <iostream>
+#include <cstring>
 #include "Computer.h"
+#include "LetInstruction.h"
+#include "PrintInstruction.h"
 
 
 Computer::Computer(size_t registerCount) {
@@ -26,13 +30,31 @@ void Computer::ReadProgramFromFile(const char *filename) {
         throw "Error: File not found!";
     }
     // File was opened
-    std::string line;
-    char command[10];
     int i = 0;
-    while (std::getline(filereader, line)){
-//        filereader >> command;
+    int lineNumber;
+    string line, command;
+    char *expression = nullptr;
+    do {
+        filereader >> lineNumber >> command >> expression;
+        std::cout << lineNumber << "| " << command << ": " << expression << std::endl; // Debug
+        //
+        if (command == LET) {
+            instructions.Add(new LetInstruction(lineNumber, expression));
+        }
+        else if(command == PRINT){
+            instructions.Add(new PrintInstruction(lineNumber, expression));
+        }
+        else if (command == IF){
+            filereader >> command >> expression;
+            std::cout << "\t> " << command << ": " << expression << std::endl; // Debug
+
+        }
+        else if(command == GOTO){
+
+        }
+//        instructions.Add(new Instruction())
         i++;
-    }
+    } while (std::getline(filereader, line, '\n'));
 
     // TODO: Make file reading line by line
 

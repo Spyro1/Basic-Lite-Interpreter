@@ -5,12 +5,15 @@
 #ifndef NAGYHAZI_LETINSTRUCTION_H
 #define NAGYHAZI_LETINSTRUCTION_H
 
-//#include "Instruction.h"
-//
-//class LetInstruction : public Instruction{
-//public:
-//    LetInstruction(int lineNumber, const char* expression);
-//};
+#include "Instruction.h"
+
+class LetInstruction : public Instruction{
+public:
+    // -- Constructors --
+    LetInstruction(int lineNumber, const char* expression);
+    // -- Virtual function --
+    virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
+};
 
 
 #endif //NAGYHAZI_LETINSTRUCTION_H

@@ -1,4 +1,4 @@
-# Install script for directory: D:/BME/PROG_2/Nagyhazi
+# Install script for directory: S:/Programozas/BasicInterpeter
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/BME/PROG_2/Nagyhazi/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "S:/Programozas/BasicInterpeter/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

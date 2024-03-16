@@ -9,6 +9,12 @@
 #include "Register.h"
 #include "List.h"
 
+#define LET "let"
+#define PRINT "print"
+#define IF "if"
+#define GOTO "goto"
+
+
 class Computer {
     List<Register> registers;
     List<Instruction> instructions;

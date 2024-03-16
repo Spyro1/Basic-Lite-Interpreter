@@ -5,6 +5,7 @@
 #ifndef NAGYHAZI_INSTRUCTION_H
 #define NAGYHAZI_INSTRUCTION_H
 #include "Register.h"
+#include "List.h"
 
 class Instruction {
 
@@ -16,9 +17,10 @@ public:
     // -- Constructors --
     Instruction();
     Instruction(int lineNumber, const char* expression);
-
+    // -- Getters --
     int getLineNumber() const;
-    virtual void Execute(Register registers[], size_t registerCount, Instruction instructions[], int& instructionIndex) { }
+    // -- Virtual function --
+    virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex) { }
 
     virtual ~Instruction();
 };

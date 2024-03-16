@@ -54,10 +54,10 @@ public:
         if (index > Count)
             throw "Error: Index out of range";
         Node<C>* iter = first;
-        for (int i = 0; i < index; ++i) {
+        for (size_t i = 0; i < index; ++i) {
             iter = iter->next;
         }
-        return iter->data;
+        return(iter->data); // TODO: Make it reference typecast
     }
 
     ~List(){
