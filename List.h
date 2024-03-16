@@ -50,14 +50,14 @@ public:
 //    void InsertAt(size_t index);
 //    bool RemoveAt(size_t index);
 //    bool RemoveLast();
-    C& operator[](size_t index){
+    C* operator[](size_t index){
         if (index > Count)
             throw "Error: Index out of range";
         Node<C>* iter = first;
         for (size_t i = 0; i < index; ++i) {
             iter = iter->next;
         }
-        return(iter->data); // TODO: Make it reference typecast
+        return (iter->data); // TODO: Make it reference typecast
     }
 
     ~List(){

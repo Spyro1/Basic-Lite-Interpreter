@@ -9,6 +9,11 @@
 #### Tervben:
 - `read <regiszter>`: Beolvassa a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
 
+### Hátralévő feladatok
+- [ ] If Instrucion kidolgozása
+- [ ] Goto Instruction kidolgozása
+- [ ] ExecuteNextInstruction megírása
+
 ```mermaid
 classDiagram
     direction TB

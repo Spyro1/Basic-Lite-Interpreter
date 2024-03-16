@@ -5,7 +5,7 @@
 #ifndef NAGYHAZI_PRINTINSTRUCTION_H
 #define NAGYHAZI_PRINTINSTRUCTION_H
 
-#include "Instruction.h"
+ #include "Instruction.h"
 
 class PrintInstruction : public Instruction {
 public:
