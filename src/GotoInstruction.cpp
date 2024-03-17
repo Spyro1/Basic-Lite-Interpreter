@@ -5,7 +5,7 @@
 #include "../include/GotoInstruction.h"
 
 GotoInstruction::GotoInstruction(int lineNumber, const char *expression) : Instruction(lineNumber, expression) {
-
+    instrTy = InstructionType::Goto;
 }
 
 void GotoInstruction::Execute(List<Register> &registers, List<Instruction> &instructions, int &instructionIndex) {
@@ -22,4 +22,7 @@ void GotoInstruction::Execute(List<Register> &registers, List<Instruction> &inst
     }
     else
         throw std::runtime_error("Can not recognize goto argument");
+}
+GotoInstruction::~GotoInstruction() {
+    delete[] expression;
 }

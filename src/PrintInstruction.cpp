@@ -6,7 +6,7 @@
 #include "../include/PrintInstruction.h"
 
 PrintInstruction::PrintInstruction(int lineNumber, const char *expression) : Instruction(lineNumber, expression) {
-
+    instrTy = InstructionType::Print;
 }
 // -- Virtual function --
 void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& instructions, int& instructionIndex) {
@@ -38,4 +38,7 @@ void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& ins
         }
     }
     instructionIndex++;
+}
+PrintInstruction::~PrintInstruction() {
+    delete[] expression;
 }

@@ -9,12 +9,14 @@
 
 #include "../memtrace.h"
 
+enum InstructionType { NoType, Print, Let, If, Goto, Read };
+
 class Instruction {
 
 protected:
     int lineNumber;
     char* expression;
-
+    InstructionType instrTy;
 public:
     // -- Constructors --
     Instruction();
@@ -23,7 +25,7 @@ public:
     int getLineNumber() const;
     // -- Virtual function --
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex) = 0;
-
+    // -- Destructor --
     virtual ~Instruction();
 };
 

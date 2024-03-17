@@ -15,6 +15,8 @@ public:
     PrintInstruction(int lineNumber, const char* expression);
     // -- Virtual function --
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
+    // -- Destructor --
+    virtual ~PrintInstruction();
 };
 
 
