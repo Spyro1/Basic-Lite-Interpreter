@@ -11,7 +11,7 @@
 
 #include "../memtrace.h"
 
-#define DEBUG
+#define DEBUG_
 
 // BASIC command keywords
 #define LET "let"
@@ -40,14 +40,18 @@ public:
      */
     void ReadProgramFromFile(const char* filename);
 //    void ReadProgramFromString(char* program);
+    /**
+     *
+     */
     void RunProgram();
-    void ExecuteNextInstruction();
     // -- Destructor --
     ~Computer();
 
 private:
     // -- Private functions--
+    void ExecuteNextInstruction();
     void DeleteProgramArrays();
+    void ProcessProgramLine(const std::string& line);
     void SplitLineToTokens(const std::string& line, int& lineNumber, std::string& command, char** expression);
 };
 

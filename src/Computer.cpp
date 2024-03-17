@@ -32,54 +32,61 @@ void Computer::ReadProgramFromFile(const char *filename) {
         throw runtime_error("File not found!");
     }
     // File opened, read in file:
-    int lineNumber = 0;
-    char *expression = nullptr;
-    string line, command;
+    string line;
     while (std::getline(filereader, line, '\n')) {
-
-        SplitLineToTokens(line, lineNumber, command, &expression);
-
-        if (command == LET) {
-            instructions.Add(new LetInstruction(lineNumber, expression));
-        }
-        else if (command == PRINT) {
-            instructions.Add(new PrintInstruction(lineNumber, expression));
-        }
-        else if (command == IF) {
-            instructions.Add(new IfInstruction(lineNumber, expression));
-//            filereader >> command >> expression;
-//            #ifdef DEBUG
-//                std::cout << "\t> " << command << ": " << expression << std::endl; // Debug
-//            #endif
-        }
-        else if(command == GOTO) {
-            instructions.Add(new GotoInstruction(lineNumber, expression));
-        }
-        else if (command == READ) {
-            instructions.Add(new ReadInstruction(lineNumber, expression));
-        }
-//        else if (command == RUN)
-//        instructions.Add(new Instruction())
-        delete[] expression;
+        ProcessProgramLine(line);
     }
 
-    filereader.close();
+    filereader.close(); // Close File
+    instructionIndex = 0;
 }
 void Computer::RunProgram() {
-
+    while ((size_t)instructionIndex < instructions.Count){
+        ExecuteNextInstruction();
+    }
 }
 
 void Computer::ExecuteNextInstruction() {
-
+    instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
 }
 
 void Computer::DeleteProgramArrays() {
     instructions.Clear();
+    instructionIndex = -1;
 }
 Computer::~Computer() {
     //DeleteProgramArrays();
 }
+void Computer::ProcessProgramLine(const std::string& line) {
+    int lineNumber = 0;
+    char *expression = nullptr;
+    std::string command;
 
+    SplitLineToTokens(line, lineNumber, command, &expression);
+
+    if (command == LET) {
+        instructions.Add(new LetInstruction(lineNumber, expression));
+    }
+    else if (command == PRINT) {
+        instructions.Add(new PrintInstruction(lineNumber, expression));
+    }
+    else if (command == IF) {
+        instructions.Add(new IfInstruction(lineNumber, expression));
+//            filereader >> command >> expression;
+//            #ifdef DEBUG
+//                std::cout << "\t> " << command << ": " << expression << std::endl; // Debug
+//            #endif
+    }
+    else if(command == GOTO) {
+        instructions.Add(new GotoInstruction(lineNumber, expression));
+    }
+    else if (command == READ) {
+        instructions.Add(new ReadInstruction(lineNumber, expression));
+    }
+//        else if (command == RUN)
+//        instructions.Add(new Instruction())
+    delete[] expression;
+}
 void Computer::SplitLineToTokens(const std::string& line, int &lineNumber, std::string &command, char** expression) {
     // Convert string line to char*
     char* cline = new char[line.length()+1];
@@ -105,6 +112,8 @@ void Computer::SplitLineToTokens(const std::string& line, int &lineNumber, std::
     #endif
     delete[] cline;
 }
+
+
 
 
 

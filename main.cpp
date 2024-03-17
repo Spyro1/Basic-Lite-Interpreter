@@ -7,7 +7,9 @@ int main() {
     try {
         Computer pc;
 //        pc.ReadProgramFromFile("program.txt"); // Error
-        pc.ReadProgramFromFile("program1.txt"); // Found
+//        pc.ReadProgramFromFile("program1.dat"); // Found
+        pc.ReadProgramFromFile("test.dat"); // Found
+        pc.RunProgram();
     }
     catch (std::exception& e){
         cout << "Error: " << e.what() << endl;

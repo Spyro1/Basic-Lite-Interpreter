@@ -17,6 +17,7 @@ void GotoInstruction::Execute(List<Register> &registers, List<Instruction> &inst
                 instructionIndex = i;
                 break;
             }
+            i++;
         }
     }
     else
