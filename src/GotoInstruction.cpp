@@ -9,5 +9,16 @@ GotoInstruction::GotoInstruction(int lineNumber, const char *expression) : Instr
 }
 
 void GotoInstruction::Execute(List<Register> &registers, List<Instruction> &instructions, int &instructionIndex) {
-
+    int jumpNumber;
+    if ((jumpNumber = std::stoi(expression))){
+        int i = 0;
+        while ((size_t)i < instructions.Count){
+            if (instructions[i]->getLineNumber() == jumpNumber){
+                instructionIndex = i;
+                break;
+            }
+        }
+    }
+    else
+        throw std::runtime_error("Can not recognize goto argument");
 }

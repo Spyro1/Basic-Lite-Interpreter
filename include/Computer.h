@@ -36,7 +36,7 @@ public:
     // -- Functions --
     /**
      * Reads the program from the given file into the 'instructions' list.
-     * @param filename
+     * @param filename The name of the file that contains the program.
      */
     void ReadProgramFromFile(const char* filename);
 //    void ReadProgramFromString(char* program);

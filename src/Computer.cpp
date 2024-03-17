@@ -32,7 +32,6 @@ void Computer::ReadProgramFromFile(const char *filename) {
         throw runtime_error("File not found!");
     }
     // File opened, read in file:
-//    int N = 0;
     int lineNumber = 0;
     char *expression = nullptr;
     string line, command;
@@ -61,7 +60,6 @@ void Computer::ReadProgramFromFile(const char *filename) {
         }
 //        else if (command == RUN)
 //        instructions.Add(new Instruction())
-//        N++;
         delete[] expression;
     }
 
@@ -79,7 +77,7 @@ void Computer::DeleteProgramArrays() {
     instructions.Clear();
 }
 Computer::~Computer() {
-    DeleteProgramArrays();
+    //DeleteProgramArrays();
 }
 
 void Computer::SplitLineToTokens(const std::string& line, int &lineNumber, std::string &command, char** expression) {
@@ -87,14 +85,14 @@ void Computer::SplitLineToTokens(const std::string& line, int &lineNumber, std::
     char* cline = new char[line.length()+1];
     std::strcpy(cline, line.c_str());
     int k = 0;
-    // This code snippet is from https://cplusplus.com/reference/string/string/c_str/
+    // This code snippet is based on this example: https://cplusplus.com/reference/string/string/c_str/
     char* p = std::strtok (cline," ");
     std::string argument;
     while (p != nullptr) {
-        if (k == 0) lineNumber = std::stoi(p);
-        else if (k == 1) command = std::string(p);
-        else if (k > 1) argument += std::string(p);
-//            std::cout << p << endl;
+        if (k == 0) lineNumber = std::stoi(p); // Extract line number
+        else if (k == 1) command = std::string(p); // Extract command
+        else if (k > 1) argument += std::string(p); // Extract argument
+        // std::cout << p << endl;
         p = std::strtok(nullptr," ");
         k++;
     }

@@ -17,6 +17,9 @@ template <class C>
 class List {
     Node<C>* first;
 public:
+    /**
+     * Number of items in the list
+     */
     size_t Count;
 
     List() { first = nullptr; Count = 0; }

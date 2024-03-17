@@ -9,8 +9,8 @@ int main() {
 //        pc.ReadProgramFromFile("program.txt"); // Error
         pc.ReadProgramFromFile("program1.txt"); // Found
     }
-    catch (const char* e){
-        cout << e << endl;
+    catch (std::exception& e){
+        cout << "Error: " << e.what() << endl;
     }
 
     return 0;
