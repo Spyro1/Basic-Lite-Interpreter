@@ -2,8 +2,8 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 
-#ifndef NAGYHAZI_LIST_H
-#define NAGYHAZI_LIST_H
+#ifndef NAGYHAZI_LIST_HPP
+#define NAGYHAZI_LIST_HPP
 
 #include <cstdlib>
 #include <iostream>
@@ -82,4 +82,4 @@ public:
 
 
 
-#endif //NAGYHAZI_LIST_H
+#endif //NAGYHAZI_LIST_HPP

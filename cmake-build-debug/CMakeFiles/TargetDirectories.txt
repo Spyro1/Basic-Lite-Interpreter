@@ -1,3 +1,0 @@
-S:/Programozas/BasicInterpeter/cmake-build-debug/CMakeFiles/Nagyhazi.dir
-S:/Programozas/BasicInterpeter/cmake-build-debug/CMakeFiles/edit_cache.dir
-S:/Programozas/BasicInterpeter/cmake-build-debug/CMakeFiles/rebuild_cache.dir
