@@ -40,14 +40,16 @@ classDiagram
     direction TB
     class List~C~{
         <<generic>>
-        - first*: Node~C~
-        + Count: int
+        - headPtr*: Node~C~
+        - Count: int
         + List()
-        + Add(newItem: C)
-        + operator[](idx: int)
+        + getCount() int
+        + Add(newItem: C) void
+        + Sort() void
+        + operator[](idx: int) C
     }
     class Node { 
-        + data: C
+        + dataPtr*: C
         + next*: Node~C~ 
     }
     
@@ -67,7 +69,7 @@ classDiagram
         - expression: string
         + Instruction(lineNumber: int, expression: string)
         + getLineNumber() int
-        + Execute(registers: Register[], regCount: int, instructionIndex: int) void
+        + Execute(registers: Register[], regCount: int, instructionIndex: int) void*
     }
     class LetInstruction
     class PrintInstruction
@@ -89,8 +91,8 @@ classDiagram
     Computer "1" *-- "1..*" Instruction : contains
     Computer "1" *-- "1..*" Register : contains
     
-    Computer o-- List : uses    
-    Register --o Instruction : uses
+    Computer --> List : uses    
+    Register --> Instruction : uses
     List --o Instruction : uses
     
     Instruction <|-- LetInstruction

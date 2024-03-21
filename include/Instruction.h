@@ -5,7 +5,7 @@
 #ifndef NAGYHAZI_INSTRUCTION_H
 #define NAGYHAZI_INSTRUCTION_H
 #include "Register.h"
-#include "List.h"
+#include "List.hpp"
 
 #include "../memtrace.h"
 
@@ -14,7 +14,7 @@ enum InstructionType { NoType, Print, Let, If, Goto, Read };
 class Instruction {
 
 protected:
-    int lineNumber;
+    int lineNumber = -1;
     char* expression;
     InstructionType instrTy;
 public:
@@ -25,8 +25,15 @@ public:
     int getLineNumber() const;
     // -- Virtual function --
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex) = 0;
+    // -- Operators --
+    bool operator>(const Instruction& rhs) const { return this->lineNumber > rhs.lineNumber; }
+    bool operator<(const Instruction& rhs) const { return  this->lineNumber < rhs.lineNumber; }
+    bool operator>=(const Instruction& rhs) const { return this->lineNumber >= rhs.lineNumber; }
+    bool operator<=(const Instruction& rhs) const { return this->lineNumber <= rhs.lineNumber; }
+    bool operator==(const Instruction& rhs) const { return this->lineNumber == rhs.lineNumber; }
+    bool operator!=(const Instruction& rhs) const { return this->lineNumber != rhs.lineNumber; }
     // -- Destructor --
-    virtual ~Instruction();
+    virtual ~Instruction() = 0;
 };
 
 

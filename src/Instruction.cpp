@@ -17,7 +17,8 @@ int Instruction::getLineNumber() const {
 }
 
 Instruction::~Instruction() {
-    delete[] expression;
+    if (lineNumber != -1)
+        delete[] expression;
 }
 
 

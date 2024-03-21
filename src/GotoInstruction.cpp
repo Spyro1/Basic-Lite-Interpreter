@@ -12,7 +12,7 @@ void GotoInstruction::Execute(List<Register> &registers, List<Instruction> &inst
     int jumpNumber;
     if ((jumpNumber = std::stoi(expression))){
         int i = 0;
-        while ((size_t)i < instructions.Count){
+        while (i < instructions.getCount()){
             if (instructions[i]->getLineNumber() == jumpNumber){
                 instructionIndex = i;
                 break;

@@ -30,7 +30,7 @@ void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& ins
         int regindex = 0;
         while (strcmp(registers[regindex]->getName(), expression) == 0) { regindex++; }
         // Error handling if unrecognized variable was in expression
-        if ((size_t)regindex >= registers.Count){
+        if (regindex >= registers.getCount()){
             throw runtime_error(string("Unrecognized variable in line: ") + to_string(lineNumber));
         }
         else{

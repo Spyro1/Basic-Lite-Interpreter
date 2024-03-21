@@ -15,8 +15,10 @@
 Computer::Computer(size_t registerCount) {
     if (registerCount <  2) throw "Error: There are not enough registers for the computer to work."; // Computer can not work with less than 2 registers. (PLAN)
     // Adding default registers
+    registers.Clear();
     registers.Add(new Register("a")); // Base register
     registers.Add(new Register("i")); // Counter
+    instructions.Clear();
 }
 
 void Computer::ReadProgramFromFile(const char *filename) {
@@ -39,9 +41,14 @@ void Computer::ReadProgramFromFile(const char *filename) {
 
     filereader.close(); // Close File
     instructionIndex = 0;
+    // Make instruction in order based on the line number
+    instructions.Sort();
+}
+void Computer::NewInstruction(const char *instructionLine) {
+
 }
 void Computer::RunProgram() {
-    while ((size_t)instructionIndex < instructions.Count){
+    while (instructionIndex < instructions.getCount()){
         ExecuteNextInstruction();
     }
 }
@@ -112,6 +119,8 @@ void Computer::SplitLineToTokens(const std::string& line, int &lineNumber, std::
     #endif
     delete[] cline;
 }
+
+
 
 
 

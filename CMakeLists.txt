@@ -4,7 +4,7 @@ project(Nagyhazi)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(Nagyhazi main.cpp
-        include/List.h
+        include/List.hpp
         include/Computer.h src/Computer.cpp
         include/Register.h src/Register.cpp
         include/Instruction.h src/Instruction.cpp
