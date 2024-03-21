@@ -54,6 +54,26 @@ public:
             Count++;
         }
     }
+    bool Remove(C* toRemove) {
+        Node<C>* iter = headPtr;
+        Node<C>* prev = iter;
+        while (iter != nullptr && *(iter->dataPtr) != *toRemove) { // Iterating through the linked list
+            prev = iter; // Save previous node in prev pointer
+            iter = iter->next;
+        }
+        if (iter != nullptr && *(iter->dataPtr) == *toRemove){
+            prev->next = iter->next; // Set previous's node next pointer to the next node
+            delete iter->dataPtr; // Delete object
+            delete iter; // Delete Node
+            delete toRemove;
+            Count--;
+            return true;
+        }
+        else {// Object not found
+            delete toRemove;
+            return false;
+        }
+    }
 //    void InsertAt(size_t index);
 //    bool RemoveAt(size_t index);
 //    bool RemoveLast();
@@ -66,6 +86,7 @@ public:
             delete iter;
             iter = nextNode;
         }
+        Count = 0;
     }
     C* operator[](int index){
         if ((size_t)index > Count || index < 0)

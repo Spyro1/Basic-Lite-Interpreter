@@ -45,7 +45,7 @@ void Computer::ReadProgramFromFile(const char *filename) {
     instructions.Sort();
 }
 void Computer::NewInstruction(const char *instructionLine) {
-
+    ProcessProgramLine(std::string(instructionLine));
 }
 void Computer::RunProgram() {
     while (instructionIndex < instructions.getCount()){
@@ -72,23 +72,24 @@ void Computer::ProcessProgramLine(const std::string& line) {
     SplitLineToTokens(line, lineNumber, command, &expression);
 
     if (command == LET) {
-        instructions.Add(new LetInstruction(lineNumber, expression));
+        if (lineNumber < 0) instructions.Remove(new LetInstruction(-lineNumber, expression));
+        else instructions.Add(new LetInstruction(lineNumber, expression));
     }
     else if (command == PRINT) {
-        instructions.Add(new PrintInstruction(lineNumber, expression));
+        if (lineNumber < 0) instructions.Remove(new PrintInstruction(-lineNumber, expression));
+        else instructions.Add(new PrintInstruction(lineNumber, expression));
     }
     else if (command == IF) {
-        instructions.Add(new IfInstruction(lineNumber, expression));
-//            filereader >> command >> expression;
-//            #ifdef DEBUG
-//                std::cout << "\t> " << command << ": " << expression << std::endl; // Debug
-//            #endif
+        if (lineNumber < 0) instructions.Remove(new IfInstruction(-lineNumber, expression));
+        else instructions.Add(new IfInstruction(lineNumber, expression));
     }
     else if(command == GOTO) {
-        instructions.Add(new GotoInstruction(lineNumber, expression));
+        if (lineNumber < 0) instructions.Remove(new GotoInstruction(-lineNumber, expression));
+        else instructions.Add(new GotoInstruction(lineNumber, expression));
     }
     else if (command == READ) {
-        instructions.Add(new ReadInstruction(lineNumber, expression));
+        if (lineNumber < 0) instructions.Remove(new ReadInstruction(-lineNumber, expression));
+        else instructions.Add(new ReadInstruction(lineNumber, expression));
     }
 //        else if (command == RUN)
 //        instructions.Add(new Instruction())

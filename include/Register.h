@@ -5,6 +5,7 @@
 #ifndef NAGYHAZI_REGISTER_H
 #define NAGYHAZI_REGISTER_H
 
+#include <cstring>
 
 #include "../memtrace.h"
 
@@ -19,6 +20,13 @@ public:
     // -- Getters --
     const char* getName() const;
     int getValue() const;
+    // -- Operators --
+    bool operator>(const Register& rhs) const { return value > rhs.getValue(); }
+    bool operator<(const Register& rhs) const { return value < rhs.getValue(); }
+    bool operator>=(const Register& rhs) const { return value >= rhs.getValue(); }
+    bool operator<=(const Register& rhs) const { return value <= rhs.getValue(); }
+    bool operator==(const Register& rhs) const { return strcmp(name, rhs.getName()) == 0; }
+    bool operator!=(const Register& rhs) const { return strcmp(name, rhs.getName()) != 0; }
     // -- Destructor --
     ~Register();
 };

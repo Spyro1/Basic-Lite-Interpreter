@@ -21,9 +21,15 @@ void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& ins
     if (doubleComma == 1 || doubleComma > 2)
         throw runtime_error(string("Wrong string literal in line: ") + to_string(lineNumber));
     if (doubleComma == 2) {
-        expression[strlen(expression)-1] = 0; // Cut " from the end
-        expression++;                           // Cut " from the beginning of the string
-        cout << expression << endl;             // Print string
+//        string f = expression;
+
+        char* defExpression = new char[strlen(expression)+1];
+        strcpy(defExpression, expression);
+        defExpression[strlen(defExpression)-1] = 0; // Cut " from the end
+        defExpression++;                           // Cut " from the beginning of the string
+        cout << defExpression << endl;             // Print string
+        defExpression--;
+        delete[] defExpression;
     }
     // Else the expression is a variable
     else {

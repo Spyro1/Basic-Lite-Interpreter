@@ -1,3 +1,2 @@
-30 print "harminc"
-10 print "tiz"
-20 print "husz"
+10 print "Marci"
+20 goto 10
