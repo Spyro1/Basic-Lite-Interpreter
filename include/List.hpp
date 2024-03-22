@@ -19,15 +19,15 @@ class List {
     /**
      * Number of items in the list
      */
-    size_t Count;
+    size_t count;
 public:
-    List() { headPtr = nullptr; Count = 0; }
+    List() { headPtr = nullptr; count = 0; }
     List(const List& rhs){
-        Count = rhs.Count;
-        // TODO: Copy constructor of List}
+        count = rhs.count;
+        // TODO: Copy constructor of List
     }
     // -- Getter -- Setter --
-    int getCount() { return (int)Count; }
+    int getCount() { return (int)count; }
 
 //    List& operator=(const List& rhs){
 //
@@ -40,7 +40,7 @@ public:
             headPtr = new Node<C>();
             headPtr->dataPtr = newItem;
             headPtr->next = nullptr;
-            Count++;
+            count++;
         }
         // Not empty list
         else{
@@ -51,7 +51,7 @@ public:
             newNode->dataPtr = newItem; // Pass dataPtr class
             newNode->next = nullptr; // Set empty null pointer
             iter->next = newNode; // Pointeg at new node
-            Count++;
+            count++;
         }
     }
     bool Remove(C* toRemove) {
@@ -66,7 +66,7 @@ public:
             delete iter->dataPtr; // Delete object
             delete iter; // Delete Node
             delete toRemove;
-            Count--;
+            count--;
             return true;
         }
         else {// Object not found
@@ -86,10 +86,10 @@ public:
             delete iter;
             iter = nextNode;
         }
-        Count = 0;
+        count = 0;
     }
     C* operator[](int index){
-        if ((size_t)index > Count || index < 0)
+        if ((size_t)index > count || index < 0)
             throw std::range_error("Index out of range");
         Node<C>* iter = headPtr;
         for (int i = 0; i < index; ++i) {
@@ -98,7 +98,7 @@ public:
         return (iter->dataPtr);
     }
     void Sort() {
-        if (headPtr == nullptr || Count <= 1){
+        if (headPtr == nullptr || count <= 1){
             return;
         }
         else {

@@ -44,8 +44,8 @@ void Computer::ReadProgramFromFile(const char *filename) {
     // Make instruction in order based on the line number
     instructions.Sort();
 }
-void Computer::NewInstruction(const char *instructionLine) {
-    ProcessProgramLine(std::string(instructionLine));
+void Computer::NewInstruction(const char *programLine) {
+    ProcessProgramLine(std::string(programLine));
 }
 void Computer::RunProgram() {
     while (instructionIndex < instructions.getCount()){

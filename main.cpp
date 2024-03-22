@@ -9,7 +9,8 @@
 int main() {
     using namespace std;
 
-#ifdef CPORTA // TEST
+#ifdef CPORTA
+    // === RUN TESTS ===
     // List test
     TEST (List, FunctionTesting){
         List<Register> testRegisters;
@@ -39,7 +40,10 @@ int main() {
         pc.RunProgram();
     } END
 
+#endif
 
+#ifndef CPORTA
+// === RUN PROGRAM INTERFACE ===
 
 #endif
     // Alapfeladat

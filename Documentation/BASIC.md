@@ -1,7 +1,7 @@
 # Prog 2 Nagyházi - BASIC interpeter
 ## Feladatleírás
 Egy egyszerű BASIC-szerű nyelven programozható kalkulátornak egyetlen regisztere (a) és egy ciklusszámlálója (i) van. A számítási eredmények mindig az a regiszterben keletkeznek. A ciklusszámláló értékétől függően pedig feltételes ugrást lehet megvalósítani. Így igen egyszerű számítások programozhatók be. Az alábbi program például kiírja az első 5 páratlan számot.
-```javascript
+```
 10 let a=1
 20 let i=5
 30 print a
@@ -15,7 +15,7 @@ Bővítse a modellt újabb utasításokkal (pl. input) és újabb regiszterekkel
 Demonstrálja a működést egy olyan programmal ami n!-t számol! n értékét olvasa be! A megoldáshoz ne használjon STL tárolót!  
 Megj: nem BASIC interpretert kell írni!
 
-## Parancsok
+## Program parancsok
 
 - `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket. (+,-,*,/)
 - `print <regiszter>`: Kiírja a regiszter értékét a szabványos kimenetre.
@@ -24,27 +24,20 @@ Megj: nem BASIC interpretert kell írni!
 #### Tervben:
 - `read <regiszter>`: Beolvassa a szabványos bemenetről egy számot és eltáro~~lja az éréket a regiszterben.
 
-### Hátralévő feladatok
-- [ ] Let Instruction kidolgozása
-- [ ] Print Instruction kidolgozása
-  - [x] Regsizter kiiratás
-  - [x] Szöveg kiiratás
-- [ ] If Instrucion kidolgozása
-- [x] Goto Instruction kidolgozása
-- [ ] Read Instrucition kidolgozása
-- [ ] Begin...End block
-- [ ] ExecuteNextInstruction megírása
-
+## BASIC interpreter - Osztálydiagram
 ```mermaid
 classDiagram
     direction TB
+namespace BasicInterpreter {
     class List~C~{
         <<generic>>
         - headPtr*: Node~C~
-        - Count: int
+        - count: int
         + List()
         + getCount() int
         + Add(newItem: C) void
+        + Remove(toRemove: C*) bool
+        + Clear() void
         + Sort() void
         + operator[](idx: int) C
     }
@@ -59,25 +52,10 @@ classDiagram
         - instructionIndex: int
         + Computer(registerCount: int)
         + ReadProgramFromFile(filename: string) void
+        + NewInstruction(programLine: string) void
         + RunProgram() void
-        + ExecuteNextInstruction() void
-        
+        + ExecuteNextInstruction() void        
     }    
-    class Instruction {
-        <<abstract>>
-        - lineNumber: int
-        - expression: string
-        + Instruction(lineNumber: int, expression: string)
-        + getLineNumber() int
-        + Execute(registers: Register[], regCount: int, instructionIndex: int) void*
-    }
-    class LetInstruction
-    class PrintInstruction
-    class GotoInstruction
-%%    class AddInstruction
-%%    class SubtractInstruction 
-    class IfInstruction
-    
     class Register{
         - name: string
         - value: int
@@ -85,19 +63,92 @@ classDiagram
         + getName() string
         + getValue() int
     }
+    class InstructionType { 
+        <<enumeration>>
+        NoType, Print, Let, If, Goto, Read 
+    }
+    class Instruction {
+        <<abstract>>
+        - lineNumber: int
+        - expression: string
+        - instrTy: InstructionType
+        + Instruction(lineNumber: int, expression: string)
+        + getLineNumber() int
+        + Execute(registers: List~Register~, instructions: List~Instruction~, instructionIndex: int) void*
+    }
+    class LetInstruction
+    class PrintInstruction
+    class GotoInstruction
+    class IfInstruction
+    class ReadInstruction
     
-    List *-- Node
+%%    direction TB
+}
+    Computer --> List : uses   
+    List "1" *-- "0..*" Node : contains
+    Computer "1" *-- "0..*" Instruction : contains
+    Computer "1" *-- "2..*" Register : contains
     
-    Computer "1" *-- "1..*" Instruction : contains
-    Computer "1" *-- "1..*" Register : contains
-    
-    Computer --> List : uses    
-    Register --> Instruction : uses
-    List --o Instruction : uses
+    List <-- Instruction : uses
+    Register <-- Instruction : uses
+    InstructionType <-- Instruction : uses
     
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
     Instruction <|-- IfInstruction
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
+    
+namespace Interface {
+    
+    class IDE{
+      - run: bool
+      + IDE()
+      + Run() void
+      - ProcessLine() void
+    }
+    class commandType { RUN, END, LIST, NEW, LOAD, SAVE }
+    class Command{
+      <<abstract>>
+      - cmdTy: CommandType
+      + Command()
+      + Execute(argument: string) void*
+    }
+    class RunCommand
+    class EndCommand
+    class ListCommand
+    class NewCommand
+    class LoadCommand
+    class SaveCommand
+}
+    IDE --> Command : uses
+    
+    Command <|-- RunCommand
+    Command <|-- EndCommand
+    Command <|-- ListCommand
+    Command <|-- NewCommand
+    Command <|-- LoadCommand
+    Command <|-- SaveCommand
+      
 ```
+
+
+### Hátralévő feladatok
+- [ ] Let Instruction kidolgozása
+- [x] Print Instruction kidolgozása
+  - [x] Regsizter kiiratás
+  - [x] Szöveg kiiratás
+- [ ] If Instrucion kidolgozása
+- [x] Goto Instruction kidolgozása
+- [ ] Read Instrucition kidolgozása
+- [ ] Begin...End block
+- [x] ExecuteNextInstruction megírása
+- [ ] Interfész kidolgozása
+
+## Interfész parancsok
+- `RUN`: Futtatja a betöltött programot.
+- `END`: Lezárja az aktuális interfészt (kód szerkesztő/alkalmazás).
+- `LIST`: Kiírja a betöltött programot sorszám szerint növekvő sorban.
+- `NEW`: Új programot hoz létre.
+- `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
+- `SAVE <fájlbnév>`: Elmenti a megírt programot a megadott fájlnévvel.

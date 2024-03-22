@@ -45,9 +45,9 @@ public:
      * If the line number is positive, then the computer adds it to the instruction list,
      * if the number is negative, then the computer removes the corresponding instrcution
      * wtih the absolute value of the given line number.
-     * @param instructionLine Inputed line containing the instruction: <lineNumber> <command> <argument>
+     * @param programLine Inputed line containing the instruction: <lineNumber> <command> <argument>
      */
-    void NewInstruction(const char* instructionLine);
+    void NewInstruction(const char* programLine);
     /**
      *
      */
