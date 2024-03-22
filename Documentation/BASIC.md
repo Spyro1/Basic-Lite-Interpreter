@@ -146,9 +146,10 @@ namespace Interface {
 - [ ] Interfész kidolgozása
 
 ## Interfész parancsok
+- `HELP`: Kiírja az interfész parancsait, és működésüket
 - `RUN`: Futtatja a betöltött programot.
 - `END`: Lezárja az aktuális interfészt (kód szerkesztő/alkalmazás).
 - `LIST`: Kiírja a betöltött programot sorszám szerint növekvő sorban.
 - `NEW`: Új programot hoz létre.
 - `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
-- `SAVE <fájlbnév>`: Elmenti a megírt programot a megadott fájlnévvel.
+- `SAVE <fájlbnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
