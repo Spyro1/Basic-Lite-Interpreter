@@ -17,6 +17,9 @@ public:
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
     // -- Destructor --
     virtual ~PrintInstruction();
+private:
+    void PrintToConsole(const string& expression);
+    void ReplaceCharacters(string& inputStr, const string& searched, const string& replace);
 };
 
 
