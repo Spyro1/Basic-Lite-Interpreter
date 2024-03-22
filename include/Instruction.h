@@ -16,6 +16,7 @@ class Instruction {
 protected:
     int lineNumber = -1;
     char* expression;
+    std::string argument;
     InstructionType instrTy;
 public:
     // -- Constructors --

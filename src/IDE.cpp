@@ -6,7 +6,7 @@
 
 void IDE::Run() {
 
-    while (runInterface){
-
-    }
+//    while (runInterface){
+//
+//    }
 }

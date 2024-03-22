@@ -96,25 +96,27 @@ void Computer::ProcessProgramLine(const std::string& line) {
     delete[] expression;
 }
 void Computer::SplitLineToTokens(const std::string& line, int &lineNumber, std::string &command, char** expression) {
+    using namespace std;
     // Convert string line to char*
     char* cline = new char[line.length()+1];
-    std::strcpy(cline, line.c_str());
+    strcpy(cline, line.c_str());
     int k = 0;
     // This code snippet is based on this example: https://cplusplus.com/reference/string/string/c_str/
     char* p = std::strtok (cline," ");
-    std::string argument;
+    string argument;
     while (p != nullptr) {
-        if (k == 0) lineNumber = std::stoi(p); // Extract line number
-        else if (k == 1) command = std::string(p); // Extract command
-        else if (k > 1) argument += std::string(p); // Extract argument
+        if (k == 0) lineNumber = stoi(p); // Extract line number
+        else if (k == 1) command = string(p); // Extract command
+        else if (k > 1) argument += string(p); // Extract argument
         // std::cout << p << endl;
-        p = std::strtok(nullptr," ");
+        p = strtok(nullptr, " ");
         k++;
     }
     // End of code snippet
+    if (k < 3) throw runtime_error(string("Syntax error: Not enough arguments in line: ") + to_string(lineNumber));
     // Convert argument to char* expression
     *expression = new char[argument.length()+1];
-    std::strcpy(*expression, argument.c_str());
+    strcpy(*expression, argument.c_str());
     #ifdef DEBUG
         std::cout << lineNumber << "| " << command << ": " << *expression << std::endl; // Debug
     #endif
