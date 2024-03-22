@@ -12,7 +12,7 @@
 class IfInstruction : public Instruction{
 public:
     // -- Constructors --
-    IfInstruction(int lineNumber, const char* expression);
+    IfInstruction(int lineNumber, const string& expression);
     // -- Virtual function --
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
     // -- Destructor --

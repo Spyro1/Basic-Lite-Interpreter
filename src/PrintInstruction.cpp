@@ -5,7 +5,7 @@
 #include <cstring>
 #include "../include/PrintInstruction.h"
 
-PrintInstruction::PrintInstruction(int lineNumber, const char *expression) : Instruction(lineNumber, expression) {
+PrintInstruction::PrintInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::Print;
 }
 // -- Virtual function --
@@ -21,10 +21,8 @@ void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& ins
     if (doubleComma == 1 || doubleComma > 2)
         throw runtime_error(string("Wrong string literal in line: ") + to_string(lineNumber));
     if (doubleComma == 2) {
-//        string f = expression;
-
-        char* defExpression = new char[strlen(expression)+1];
-        strcpy(defExpression, expression);
+        char* defExpression = new char[expression.length()+1];
+        strcpy(defExpression, expression.c_str());
         defExpression[strlen(defExpression)-1] = 0; // Cut " from the end
         defExpression++;                           // Cut " from the beginning of the string
         cout << defExpression << endl;             // Print string
@@ -34,10 +32,11 @@ void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& ins
     // Else the expression is a variable
     else {
         int regindex = 0;
-        while (strcmp(registers[regindex]->getName(), expression) == 0) { regindex++; }
+        while (regindex < registers.getCount() && registers[regindex]->getName() != expression)
+        { regindex++; }
         // Error handling if unrecognized variable was in expression
         if (regindex >= registers.getCount()){
-            throw runtime_error(string("Unrecognized variable in line: ") + to_string(lineNumber));
+            throw logic_error(string("Syntax error: Unrecognized variable in line: ") + to_string(lineNumber));
         }
         else{
             cout << registers[regindex]->getValue() << endl;
@@ -46,5 +45,5 @@ void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& ins
     instructionIndex++;
 }
 PrintInstruction::~PrintInstruction() {
-    delete[] expression;
+//    delete[] expression;
 }

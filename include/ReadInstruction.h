@@ -12,7 +12,7 @@
 class ReadInstruction : public Instruction{
 public:
     // -- Constructors --
-    ReadInstruction(int lineNumber, const char* expression);
+    ReadInstruction(int lineNumber, const string& expression);
     // -- Virtual function --
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
     // -- Destructor --

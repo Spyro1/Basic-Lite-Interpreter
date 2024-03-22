@@ -5,28 +5,30 @@
 #ifndef NAGYHAZI_REGISTER_H
 #define NAGYHAZI_REGISTER_H
 
-#include <cstring>
+#include <string>
 
 #include "../memtrace.h"
+using std::string;
 
 class Register {
-    char* name;
+//    char* name;
+    string name;
     int value = -1;
 
 public:
     // -- Constructors --
     Register();
-    explicit Register(const char* name, int defValue = 0);
+    explicit Register(const string& name, int defValue = 0);
     // -- Getters --
-    const char* getName() const;
-    int getValue() const;
+    const string& getName() const { return name; };
+    const int getValue() const {return value; };
     // -- Operators --
     bool operator>(const Register& rhs) const { return value > rhs.getValue(); }
     bool operator<(const Register& rhs) const { return value < rhs.getValue(); }
     bool operator>=(const Register& rhs) const { return value >= rhs.getValue(); }
     bool operator<=(const Register& rhs) const { return value <= rhs.getValue(); }
-    bool operator==(const Register& rhs) const { return strcmp(name, rhs.getName()) == 0; }
-    bool operator!=(const Register& rhs) const { return strcmp(name, rhs.getName()) != 0; }
+    bool operator==(const Register& rhs) const { return name == rhs.getName(); }
+    bool operator!=(const Register& rhs) const { return name != rhs.getName(); }
     // -- Destructor --
     ~Register();
 };

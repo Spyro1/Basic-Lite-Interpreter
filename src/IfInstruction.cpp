@@ -4,7 +4,7 @@
 
 #include "../include/IfInstruction.h"
 
-IfInstruction::IfInstruction(int lineNumber, const char *expression) : Instruction(lineNumber, expression) {
+IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::If;
 }
 
@@ -12,6 +12,6 @@ void IfInstruction::Execute(List<Register> &registers, List<Instruction> &instru
 
 }
 IfInstruction::~IfInstruction() {
-    delete[] expression;
+//    delete[] expression;
 }
 

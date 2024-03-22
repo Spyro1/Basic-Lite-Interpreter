@@ -4,25 +4,28 @@
 
 #include "../include/GotoInstruction.h"
 
-GotoInstruction::GotoInstruction(int lineNumber, const char *expression) : Instruction(lineNumber, expression) {
+GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::Goto;
 }
 
 void GotoInstruction::Execute(List<Register> &registers, List<Instruction> &instructions, int &instructionIndex) {
-    int jumpNumber;
-    if ((jumpNumber = std::stoi(expression))){
+    int jumpNumber = -1;
+    if ((jumpNumber = std::stoi(expression))) {
         int i = 0;
-        while (i < instructions.getCount()){
-            if (instructions[i]->getLineNumber() == jumpNumber){
+        bool found = false;
+        while (i < instructions.getCount() && !found) {
+            if (instructions[i]->getLineNumber() == jumpNumber) {
                 instructionIndex = i;
-                break;
+                found = true;
             }
             i++;
         }
+        if (!found)
+            throw std::logic_error(string("Logic error: No line identifier found to jump to in line: ") + std::to_string(lineNumber));
     }
     else
-        throw std::runtime_error("Can not recognize goto argument");
+        throw std::runtime_error(string("Can not recognize goto argument in line: ") + std::to_string(lineNumber));
 }
 GotoInstruction::~GotoInstruction() {
-    delete[] expression;
+//    delete[] expression;
 }

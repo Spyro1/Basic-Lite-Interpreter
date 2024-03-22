@@ -38,7 +38,7 @@ public:
      * Reads the program from the given file into the 'instructions' list.
      * @param filename The name of the file that contains the program.
      */
-    void ReadProgramFromFile(const char* filename);
+    void ReadProgramFromFile(const string& filename);
 //    void ReadProgramFromString(char* program);
     /**
      * Evaluates the read character string line.
@@ -47,7 +47,7 @@ public:
      * wtih the absolute value of the given line number.
      * @param programLine Inputed line containing the instruction: <lineNumber> <command> <argument>
      */
-    void NewInstruction(const char* programLine);
+    void NewInstruction(const string& programLine);
     /**
      *
      */
@@ -59,8 +59,8 @@ private:
     // -- Private functions--
     void ExecuteNextInstruction();
     void DeleteProgramArrays();
-    void ProcessProgramLine(const std::string& line);
-    void SplitLineToTokens(const std::string& line, int& lineNumber, std::string& command, char** expression);
+    void ProcessProgramLine(const string& inputLine);
+    void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
 };
 
 

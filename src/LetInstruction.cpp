@@ -4,7 +4,7 @@
 
 #include "../include/LetInstruction.h"
 
-LetInstruction::LetInstruction(int lineNumber, const char *expression) : Instruction(lineNumber, expression) {
+LetInstruction::LetInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::Let;
 }
 
@@ -13,5 +13,5 @@ void LetInstruction::Execute(List<Register> &registers, List<Instruction> &instr
 //    string expression
 }
 LetInstruction::~LetInstruction() {
-    delete[] expression;
+//    delete[] expression;
 }

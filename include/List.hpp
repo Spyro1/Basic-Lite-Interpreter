@@ -62,7 +62,8 @@ public:
             iter = iter->next;
         }
         if (iter != nullptr && *(iter->dataPtr) == *toRemove){
-            prev->next = iter->next; // Set previous's node next pointer to the next node
+            if (iter == headPtr) headPtr = iter->next;
+            else prev->next = iter->next; // Set previous's node next pointer to the next node
             delete iter->dataPtr; // Delete object
             delete iter; // Delete Node
             delete toRemove;
@@ -74,6 +75,7 @@ public:
             return false;
         }
     }
+//    int IndexOf()
 //    void InsertAt(size_t index);
 //    bool RemoveAt(size_t index);
 //    bool RemoveLast();
@@ -86,11 +88,14 @@ public:
             delete iter;
             iter = nextNode;
         }
+        headPtr = nullptr;
         count = 0;
     }
     C* operator[](int index){
         if ((size_t)index > count || index < 0)
-            throw std::range_error("Index out of range");
+            throw std::range_error("Range error: Index out of range!");
+        if (count == 0)
+            throw std::range_error("Range error: List is empty!");
         Node<C>* iter = headPtr;
         for (int i = 0; i < index; ++i) {
             iter = iter->next;

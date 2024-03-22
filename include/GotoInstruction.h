@@ -12,7 +12,7 @@
 class GotoInstruction : public Instruction{
 public:
     // -- Constructors --
-    GotoInstruction(int lineNumber, const char* expression);
+    GotoInstruction(int lineNumber, const string& expression);
     // -- Virtual function --
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
     // -- Destructor --

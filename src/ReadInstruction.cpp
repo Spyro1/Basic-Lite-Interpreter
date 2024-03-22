@@ -4,7 +4,7 @@
 
 #include "../include/ReadInstruction.h"
 
-ReadInstruction::ReadInstruction(int lineNumber, const char *expression) : Instruction(lineNumber, expression) {
+ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::Read;
 }
 
@@ -12,5 +12,5 @@ void ReadInstruction::Execute(List<Register> &registers, List<Instruction> &inst
 
 }
 ReadInstruction::~ReadInstruction() {
-    delete[] expression;
+//    delete[] expression;
 }

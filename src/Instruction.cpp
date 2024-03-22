@@ -6,19 +6,24 @@
 
 Instruction::Instruction() : lineNumber(0) { instrTy = InstructionType::NoType; }
 
-Instruction::Instruction(int lineNumber, const char *expression) : lineNumber(lineNumber) {
-    this->expression = new char[strlen(expression) + 1];
-    strcpy(this->expression, expression);
+//Instruction::Instruction(int lineNumber, const char *expression) : lineNumber(lineNumber) {
+//    this->expression = new char[strlen(expression) + 1];
+//    strcpy(this->expression, expression);
+//    instrTy = InstructionType::NoType;
+//}
+
+Instruction::Instruction(int lineNumber_, const string &expression_) {
+    this->expression = expression_;
+    this->lineNumber = lineNumber_;
     instrTy = InstructionType::NoType;
 }
-
 int Instruction::getLineNumber() const {
     return lineNumber;
 }
 
 Instruction::~Instruction() {
-    if (lineNumber != -1)
-        delete[] expression;
+
 }
+
 
 

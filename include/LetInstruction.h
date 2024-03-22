@@ -12,7 +12,7 @@
 class LetInstruction : public Instruction{
 public:
     // -- Constructors --
-    LetInstruction(int lineNumber, const char* expression);
+    LetInstruction(int lineNumber, const string& expression);
     // -- Virtual function --
     virtual void Execute(List<Register>& registers, List<Instruction>& instructions, int& instructionIndex);
     // -- Destructor --

@@ -1,2 +1,4 @@
 10 print "Marci"
-20 goto 10
+0 Comment goto 30
+12 print "Valami nincs rendben"
+30 print "ugrott"

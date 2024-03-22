@@ -4,7 +4,7 @@
 #include "include/Computer.h"
 #include "gtest_lite.h"
 
-#define CPORTA
+//#define CPORTA
 
 int main() {
     using namespace std;
@@ -21,7 +21,7 @@ int main() {
         EXPECT_EQ(3, testRegisters.getCount());                                     // Added 3 items -> count = 3
         EXPECT_EQ(0, testRegisters[0]->getValue());                                 // Test getter and default value
         EXPECT_EQ(10, testRegisters[1]->getValue());                                // Test getter with given value
-        EXPECT_STREQ("reg1", testRegisters[0]->getName());                          // Test name getter
+        EXPECT_STREQ("reg1", testRegisters[0]->getName().c_str());                          // Test name getter
         testRegisters.Sort();                                                       // Sorting list based of < and > operators declared in type class
         EXPECT_EQ(5, testRegisters[1]->getValue());                                 // After sortig the second item should be "reg3" with value 5
         EXPECT_FALSE(testRegisters.Remove(new Register("reg4")));  // No such register named "reg3"
@@ -44,7 +44,14 @@ int main() {
 
 #ifndef CPORTA
 // === RUN PROGRAM INTERFACE ===
-
+    try{
+        Computer pc;
+        pc.ReadProgramFromFile("../programs/test.dat");
+        pc.RunProgram();
+    }
+    catch (std::exception& e){
+        cout << e.what() << endl;
+    }
 #endif
     // Alapfeladat
 //    try {

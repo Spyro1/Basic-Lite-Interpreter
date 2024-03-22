@@ -9,19 +9,22 @@
 
 #include "../memtrace.h"
 
+using std::string;
+
 enum InstructionType { NoType, Print, Let, If, Goto, Read };
 
 class Instruction {
 
 protected:
     int lineNumber = -1;
-    char* expression;
-    std::string argument;
+//    char* expression;
+    string expression;
     InstructionType instrTy;
 public:
     // -- Constructors --
     Instruction();
-    Instruction(int lineNumber, const char* expression);
+    //    Instruction(int lineNumber_, const char* expression_);
+    Instruction(int lineNumber_, const string& expression_);
     // -- Getters --
     int getLineNumber() const;
     // -- Virtual function --
