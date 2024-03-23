@@ -49,7 +49,19 @@ Az interfész utasítás abban különbözik a program kódsortól, hogy a kóds
 
 ## BASIC-lite szintaxis
 
-Egy program kódsornak 3 pramétere van mindig: `sorszám`, `utasítás`, `paraméter`.
+Egy program kódsornak 3 argumentuma van mindig: `sorszám`, `utasítás`, `paraméter`.
+Ezen paraméterek egymástól legalább egy szóközzel kell legyenek elválasztva.
+A paraméteren belül tetszőleges 'whitespace' lehet, mivel az értelmező törli majd ezeket.
+Ezért fontos, hogy ha két karaktersorozatot egymás mellé írunk egy szóközzel elválasztva, úgy azt az értelmező egy szóként fogja kezelni.
+Ezalól kivétel ha sztringet írunk be a `print` utasításhoz, aminél természetesen nem törlődnek a 'whitespace' karakterek.
+
+Így például a `10 let a = 4 * ( b - c )` sort így bontja fel:
+
+| Sorszám | Utasítás | Praméter    |
+| ------- | -------- | ----------- |
+| `10`    | `let`    | `a=4*(b-c)` |
+
+Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, ahol `b` és `c` regiszterneveket jelölnek, és annak értékeire hivatkoznak.
 
 ### Sorszám:
 
@@ -63,8 +75,8 @@ A második paraméter az utasítás kulcsszó. Ezután következik a harmadik pa
 A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színtaktikájuk:
 
 - `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`)
-- `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre.
-- `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&`,`|`,`!`)
+- `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
+- `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
 - `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
 - `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
 
