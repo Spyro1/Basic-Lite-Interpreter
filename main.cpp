@@ -9,8 +9,8 @@
 int main() {
     using namespace std;
 
+// === RUN TESTS ===
 #ifdef CPORTA
-    // === RUN TESTS ===
     // List test
     TEST (List, FunctionTesting){
         List<Register> testRegisters;
@@ -42,8 +42,8 @@ int main() {
 
 #endif
 
-#ifndef CPORTA
 // === RUN PROGRAM INTERFACE ===
+#ifndef CPORTA
     try{
         Computer pc;
         pc.ReadProgramFromFile("../programs/test.dat");

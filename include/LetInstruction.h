@@ -19,8 +19,6 @@ public:
     virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex);
     // -- Destructor --
     virtual ~LetInstruction();
-private:
-    void ProcessExpression(string& expression, vector<Register>& registers);
 };
 
 

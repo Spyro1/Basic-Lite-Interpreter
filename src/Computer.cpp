@@ -47,7 +47,7 @@ void Computer::ReadProgramFromFile(const string& filename) {
 //    instructions.sort();
     SortInstructions();
     #ifdef DEBUG
-//        cout << "First line test cout: " << instructions[0];
+        cout << "First line test cout: " << *instructions[0] << endl;
     #endif
 }
 void Computer::NewInstruction(const string& programLine) {
@@ -101,9 +101,6 @@ void Computer::ProcessProgramLine(const string& line) {
             throw std::logic_error(string("Syntax error: Instruction not recognized in line: ") + std::to_string(lineNumber));
         }
     }
-//        else if (command == RUN)
-//        instructions.Add(new Instruction())
-//    delete[] expression;
 }
 void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, string&command, string& expression) {
     std::istringstream iss(inputLine);
@@ -111,7 +108,7 @@ void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, strin
     std::getline(iss >> std::ws, expression);
 
     #ifdef DEBUG
-        std::cout << lineNumber << "| " << command << ": " << expression << std::endl; // Debug
+//        std::cout << lineNumber << "| " << command << ": " << expression << std::endl; // Debug
     #endif
 //    delete[] cline;
 }
@@ -123,8 +120,10 @@ void Computer::RemoveInstruction(int lineNumber){
     for (auto it = instructions.begin(); it != instructions.end(); ++it) {
         if ((*it)->getLineNumber() == lineNumber) { // Replace getField() with the appropriate field and desiredValue with the value to match
             // Remove the object from the vector
+            delete *it;
             instructions.erase(it);
             break; // If you only want to remove the first matching object
         }
     }
 }
+

@@ -17,12 +17,12 @@ Megj: nem BASIC interpretert kell írni!
 
 ## Program parancsok
 
-- `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket. (+,-,*,/)
-- `print <regiszter>`: Kiírja a regiszter értékét a szabványos kimenetre.
-- `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat logikai operátorokat. (>,>=,<,<=,==,!=,AND,OR,NOT)
-- `goto <sorazonosító>`: Ha megtalálható, akkor a megjlelölt sorazonosítóhoz ugrik a program.
-#### Tervben:
-- `read <regiszter>`: Beolvassa a szabványos bemenetről egy számot és eltáro~~lja az éréket a regiszterben.
+- `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`)
+- `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
+- `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
+- `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
+- `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
+
 
 ## BASIC interpreter - Osztálydiagram
 ```mermaid
@@ -146,10 +146,12 @@ namespace Interface {
 - [ ] Interfész kidolgozása
 
 ## Interfész parancsok
+A program indulásakot egy CLI-s felület fogadja a felhasználót. Itt az alábbi parancsok adhatóak ki:
+
 - `HELP`: Kiírja az interfész parancsait, és működésüket
 - `RUN`: Futtatja a betöltött programot.
 - `END`: Lezárja az aktuális interfészt (kód szerkesztő/alkalmazás).
 - `LIST`: Kiírja a betöltött programot sorszám szerint növekvő sorban.
 - `NEW`: Új programot hoz létre.
 - `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
-- `SAVE <fájlbnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
+- `SAVE <fájlnév>`: Elmenti a betöltött programot a megadott fájlnévvel.

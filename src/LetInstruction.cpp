@@ -20,7 +20,21 @@ void LetInstruction::Execute(vector<Register> &registers, vector<Instruction*> &
     string regName = shortExpression.substr(0, equalSignIndex); // Get register name
     string argument = shortExpression.substr(equalSignIndex + 1); // Separate after the equal sign
 
+    // Test for syntax error
 
+
+
+    // Test if register name exists. if not, then create new register
+    int regIndex = Register::FindRegisterIndex(registers, regName);
+    string evaluatedArgument = ProcessExpression(argument, registers);
+    auto newValue = stoi(evaluatedArgument);
+    if ( regIndex == -1 ) {
+        // Create new register and initialize it
+        registers.emplace_back(regName, newValue);
+    } else {
+        // Assign value to existing register
+        registers[regIndex].SetValue(newValue);
+    }
 //    if ()
 
     // a = 12       // INT literal
@@ -31,12 +45,7 @@ void LetInstruction::Execute(vector<Register> &registers, vector<Instruction*> &
     // a = (3 + a) * a  // BRACKETS
     instructionIndex++;
 }
-LetInstruction::~LetInstruction() {
-
-}
+LetInstruction::~LetInstruction() = default;
 
 
 // -- Private helper functions --
-void LetInstruction::ProcessExpression(string &expression, vector<Register> &registers) {
-
-}
