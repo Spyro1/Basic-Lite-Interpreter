@@ -2,7 +2,7 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 
-#include <algorithm>
+
 #include <vector>
 #include "../include/LetInstruction.h"
 
@@ -12,10 +12,8 @@ LetInstruction::LetInstruction(int lineNumber, const string& expression) : Instr
 }
 
 void LetInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
-    using namespace std;
-    string shortExpression = expression;
-    //  Remove spaces using erase and remove_if
-    shortExpression.erase(std::remove_if(shortExpression.begin(), shortExpression.end(), ::isspace), shortExpression.end());
+    //  Remove whitespace
+    string shortExpression = RemoveWhiteSpace(expression);
     size_t equalSignIndex = shortExpression.find('=');
     string regName = shortExpression.substr(0, equalSignIndex); // Get register name
     string argument = shortExpression.substr(equalSignIndex + 1); // Separate after the equal sign
@@ -25,15 +23,15 @@ void LetInstruction::Execute(vector<Register> &registers, vector<Instruction*> &
 
 
     // Test if register name exists. if not, then create new register
-    int regIndex = Register::FindRegisterIndex(registers, regName);
-    string evaluatedArgument = ProcessExpression(argument, registers);
-    auto newValue = stoi(evaluatedArgument);
-    if ( regIndex == -1 ) {
-        // Create new register and initialize it
-        registers.emplace_back(regName, newValue);
-    } else {
+    size_t regIndex = Register::FindRegisterIndex(registers, regName);
+    string evaluatedArgument = ProcessExpression(argument, registers, Integer);
+    auto newValue = std::stof(evaluatedArgument);
+    if (Exists(regIndex)) {
         // Assign value to existing register
         registers[regIndex].SetValue(newValue);
+    } else {
+        // Create new register and initialize it
+        registers.emplace_back(regName, newValue);
     }
 //    if ()
 
@@ -45,6 +43,7 @@ void LetInstruction::Execute(vector<Register> &registers, vector<Instruction*> &
     // a = (3 + a) * a  // BRACKETS
     instructionIndex++;
 }
+
 LetInstruction::~LetInstruction() = default;
 
 

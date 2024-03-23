@@ -14,7 +14,7 @@ using std::string;
 class Register {
 //    char* name;
     string name;
-    int value = 0;
+    float value = .0;
 
 public:
     // -- Constructors --
@@ -22,20 +22,20 @@ public:
     explicit Register(string name, int defValue = 0);
     // -- Getters --
     const string& getName() const { return name; }
-    int getValue() const { return value; }
+    float getValue() const { return value; }
     // -- Setters --
-    void SetValue(int newValue) {value = newValue;}
+    void SetValue(float newValue) {value = newValue;}
     // -- Operators --
-    bool operator>(const Register& rhs) const { return value > rhs.getValue(); }
-    bool operator<(const Register& rhs) const { return value < rhs.getValue(); }
-    bool operator>=(const Register& rhs) const { return value >= rhs.getValue(); }
-    bool operator<=(const Register& rhs) const { return value <= rhs.getValue(); }
-    bool operator==(const Register& rhs) const { return name == rhs.getName(); }
-    bool operator!=(const Register& rhs) const { return name != rhs.getName(); }
+//    bool operator>(const Register& rhs) const { return value > rhs.getValue(); }
+//    bool operator<(const Register& rhs) const { return value < rhs.getValue(); }
+//    bool operator>=(const Register& rhs) const { return value >= rhs.getValue(); }
+//    bool operator<=(const Register& rhs) const { return value <= rhs.getValue(); }
+//    bool operator==(const Register& rhs) const { return name == rhs.getName(); }
+//    bool operator!=(const Register& rhs) const { return name != rhs.getName(); }
     // -- Destructor --
     ~Register();
     // -- Static functions --
-    static int FindRegisterIndex(const std::vector<Register> &registers, const string &name);
+    static size_t FindRegisterIndex(const std::vector<Register> &registers, const string &name);
 };
 
 

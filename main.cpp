@@ -1,13 +1,19 @@
 #include <iostream>
+//#include <locale>
+//#include <windows.h>
 
-#include "memtrace.h"
 #include "include/Computer.h"
 #include "gtest_lite.h"
 
+#include "memtrace.h"
 //#define CPORTA
+#define UTF8
 
 int main() {
     using namespace std;
+    #ifdef UTF8
+        system("chcp 65001"); // UTF-8 kódolású karakterek használata
+    #endif
 
 // === RUN TESTS ===
 #ifdef CPORTA
@@ -53,24 +59,6 @@ int main() {
         cout << e.what() << endl;
     }
 #endif
-
-
-    // Vektor minta:
-//    std::vector<Register> inst;
-//
-//    // Add new Register to the list
-//    Register reg1( "Register1");
-//    Register reg2( "Register2");
-//    inst.push_back(reg1);
-//    inst.push_back(reg2);
-//    std::string nameToRemove = "Register1";
-//    auto it = std::remove_if(inst.begin(), inst.end(), [nameToRemove](const Register& reg) {
-//        return reg.getName() == nameToRemove;
-//    });
-//    inst.erase(it, inst.end());
-//    for (const auto& reg : inst) {
-//        std::cout << "Name: " << reg.getName() << ", Value: " << reg.getValue() << std::endl;
-//    }
     return 0;
 }
 

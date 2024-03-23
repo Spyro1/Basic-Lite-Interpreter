@@ -14,9 +14,9 @@ public:
     // -- Constructors --
     IfInstruction(int lineNumber, const string& expression);
     // -- Virtual function --
-    virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex);
+    void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) override;
     // -- Destructor --
-    virtual ~IfInstruction();
+    ~IfInstruction() override;
 };
 
 

@@ -28,23 +28,23 @@ Megj: nem BASIC interpretert kell írni!
 ```mermaid
 classDiagram
     direction TB
-namespace BasicInterpreter {
-    class List~C~{
-        <<generic>>
-        - headPtr*: Node~C~
-        - count: int
-        + List()
-        + getCount() int
-        + Add(newItem: C) void
-        + Remove(toRemove: C*) bool
-        + Clear() void
-        + Sort() void
-        + operator[](idx: int) C
-    }
-    class Node { 
-        + dataPtr*: C
-        + next*: Node~C~ 
-    }
+%%namespace BasicInterpreter {
+%%    class List~C~{
+%%        <<generic>>
+%%        - headPtr*: Node~C~
+%%        - count: int
+%%        + List()
+%%        + getCount() int
+%%        + Add(newItem: C) void
+%%        + Remove(toRemove: C*) bool
+%%        + Clear() void
+%%        + Sort() void
+%%        + operator[](idx: int) C
+%%    }
+%%    class Node { 
+%%        + dataPtr*: C
+%%        + next*: Node~C~ 
+%%    }
     
     class Computer {
         - registers: List~Register~
@@ -67,6 +67,10 @@ namespace BasicInterpreter {
         <<enumeration>>
         NoType, Print, Let, If, Goto, Read 
     }
+    class ReturnType{
+        <<enumeration>>
+        Void, Integer, Boolean
+    }
     class Instruction {
         <<abstract>>
         - lineNumber: int
@@ -74,7 +78,9 @@ namespace BasicInterpreter {
         - instrTy: InstructionType
         + Instruction(lineNumber: int, expression: string)
         + getLineNumber() int
-        + Execute(registers: List~Register~, instructions: List~Instruction~, instructionIndex: int) void*
+        + getType() string
+        + getExpression() string
+        + Execute(registers: Vector~Register~, instructions: Vector~Instruction~, instructionIndex: int) void*
     }
     class LetInstruction
     class PrintInstruction
@@ -82,16 +88,46 @@ namespace BasicInterpreter {
     class IfInstruction
     class ReadInstruction
     
+%%namespace Interface {
+    class IDE{
+      - active: bool
+      + IDE()
+      + Run() void
+    }
+    class CommandType { RUN, END, LIST, NEW, LOAD, SAVE }
+    class Command{
+      <<abstract>>
+      - cmdTy: CommandType
+      + Command()
+      + Execute(argument: string) void*
+    }
+    class HELPCommand
+    class RUNCommand
+    class ENDCommand
+    class LISTCommand
+    class NEWCommand
+    class LOADCommand
+    class SAVECommand  
+%%}
 %%    direction TB
-}
-    Computer --> List : uses   
-    List "1" *-- "0..*" Node : contains
+%%}
+%%    Computer --> List : uses   
+%%    List "1" *-- "0..*" Node : contains
+    IDE "1" *-- "1" Computer : contains
+    CommandType <-- Command : uses
+    IDE --> Command : uses
+%%    Computer "1" --* "1" IDE
+    
     Computer "1" *-- "0..*" Instruction : contains
     Computer "1" *-- "2..*" Register : contains
     
-    List <-- Instruction : uses
-    Register <-- Instruction : uses
+    ReturnType <-- Instruction : uses
     InstructionType <-- Instruction : uses
+    Register <-- Instruction : uses
+    
+%%    List <-- Instruction : uses
+%%    Instruction --> InstructionType : uses
+%%    Instruction --> ReturnType : uses
     
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
@@ -99,36 +135,16 @@ namespace BasicInterpreter {
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
     
-namespace Interface {
     
-    class IDE{
-      - run: bool
-      + IDE()
-      + Run() void
-      - ProcessLine() void
-    }
-    class commandType { RUN, END, LIST, NEW, LOAD, SAVE }
-    class Command{
-      <<abstract>>
-      - cmdTy: CommandType
-      + Command()
-      + Execute(argument: string) void*
-    }
-    class RunCommand
-    class EndCommand
-    class ListCommand
-    class NewCommand
-    class LoadCommand
-    class SaveCommand
-}
-    IDE --> Command : uses
+    Command <|-- HELPCommand
+    Command <|-- RUNCommand
+    Command <|-- ENDCommand
+    Command <|-- LISTCommand
+    Command <|-- NEWCommand
+    Command <|-- LOADCommand
+    Command <|-- SAVECommand
     
-    Command <|-- RunCommand
-    Command <|-- EndCommand
-    Command <|-- ListCommand
-    Command <|-- NewCommand
-    Command <|-- LoadCommand
-    Command <|-- SaveCommand
+    %% Notes
       
 ```
 
@@ -138,12 +154,18 @@ namespace Interface {
 - [x] Print Instruction kidolgozása
   - [x] Regsizter kiiratás
   - [x] Szöveg kiiratás
-- [ ] If Instrucion kidolgozása
+- [x] If Instrucion kidolgozása
 - [x] Goto Instruction kidolgozása
 - [ ] Read Instrucition kidolgozása
-- [ ] Begin...End block
 - [x] ExecuteNextInstruction megírása
 - [ ] Interfész kidolgozása
+  - [ ] RUN utasítás
+  - [ ] HELP utasítás
+  - [ ] END utasítás
+  - [ ] LIST utasítás
+  - [ ] NEW utasítás
+  - [ ] SAVE utasítás
+  - [x] LOAD utasítás
 
 ## Interfész parancsok
 A program indulásakot egy CLI-s felület fogadja a felhasználót. Itt az alábbi parancsok adhatóak ki:

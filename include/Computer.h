@@ -12,7 +12,7 @@
 
 #include "../memtrace.h"
 
-#define DEBUG
+//#define DEBUG
 
 // BASIC command keywords
 #define LET "let"
@@ -59,10 +59,10 @@ public:
 private:
     // -- Private functions--
     void ExecuteNextInstruction();
-    void DeleteProgramArrays();
     void ProcessProgramLine(const string& inputLine);
     void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
 
+    void ClearInstructions();
     void SortInstructions();
     void RemoveInstruction(int lineNumber);
 };

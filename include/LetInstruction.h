@@ -9,16 +9,14 @@
 
 #include "../memtrace.h"
 
-using std::string;
-
 class LetInstruction : public Instruction{
 public:
     // -- Constructors --
     LetInstruction(int lineNumber, const string& expression);
     // -- Virtual function --
-    virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex);
+    void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) override;
     // -- Destructor --
-    virtual ~LetInstruction();
+    ~LetInstruction() override;
 };
 
 

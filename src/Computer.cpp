@@ -26,7 +26,7 @@ Computer::Computer(size_t registerCount) {
 void Computer::ReadProgramFromFile(const string& filename) {
     using namespace std;
     // If this computer has read a program before, then free dynamic memory from registers and istructions
-    DeleteProgramArrays();
+    ClearInstructions();
     // Read file
     fstream filereader;
     filereader.open(filename,ios::in); // Open file
@@ -67,7 +67,7 @@ void Computer::ExecuteNextInstruction() {
     instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
 }
 
-void Computer::DeleteProgramArrays() {
+void Computer::ClearInstructions() {
     instructions.clear();
     instructionIndex = -1;
 }
@@ -108,7 +108,7 @@ void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, strin
     std::getline(iss >> std::ws, expression);
 
     #ifdef DEBUG
-//        std::cout << lineNumber << "| " << command << ": " << expression << std::endl; // Debug
+        std::cout << "Tokens: "<< lineNumber << "| " << command << " | " << expression << std::endl; // Debug
     #endif
 //    delete[] cline;
 }

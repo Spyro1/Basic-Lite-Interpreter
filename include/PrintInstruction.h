@@ -14,12 +14,11 @@ public:
     // -- Constructors --
     PrintInstruction(int lineNumber, const string& expression);
     // -- Virtual function --
-    virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex);
+    void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) override;
     // -- Destructor --
-    virtual ~PrintInstruction();
+    ~PrintInstruction() override;
 private:
     void PrintToConsole(const string& expression);
-    void ReplaceCharacters(string& inputStr, const string& searched, const string& replace);
 };
 
 
