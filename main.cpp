@@ -53,16 +53,24 @@ int main() {
         cout << e.what() << endl;
     }
 #endif
-    // Alapfeladat
-//    try {
-////        pc.ReadProgramFromFile("program.txt"); // Error
-////        pc.ReadProgramFromFile("program1.dat"); // Found
-//        pc.RunProgram();
-//    }
-//    catch (std::exception& e){
-//        cout << "Error: " << e.what() << endl;
-//    }
 
+
+    // Vektor minta:
+//    std::vector<Register> inst;
+//
+//    // Add new Register to the list
+//    Register reg1( "Register1");
+//    Register reg2( "Register2");
+//    inst.push_back(reg1);
+//    inst.push_back(reg2);
+//    std::string nameToRemove = "Register1";
+//    auto it = std::remove_if(inst.begin(), inst.end(), [nameToRemove](const Register& reg) {
+//        return reg.getName() == nameToRemove;
+//    });
+//    inst.erase(it, inst.end());
+//    for (const auto& reg : inst) {
+//        std::cout << "Name: " << reg.getName() << ", Value: " << reg.getValue() << std::endl;
+//    }
     return 0;
 }
 

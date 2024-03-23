@@ -8,7 +8,7 @@ IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruc
     instrTy = InstructionType::If;
 }
 
-void IfInstruction::Execute(List<Register> &registers, List<Instruction> &instructions, int &instructionIndex) {
+void IfInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
 
 }
 IfInstruction::~IfInstruction() {

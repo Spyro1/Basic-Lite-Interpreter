@@ -21,9 +21,14 @@ int Instruction::getLineNumber() const {
     return lineNumber;
 }
 
+std::ostream &Instruction::operator<<(std::ostream &os) {
+    os << lineNumber << " " << std::to_string(instrTy) << " " << expression;
+    return os;
+}
 Instruction::~Instruction() {
 
 }
+
 
 
 

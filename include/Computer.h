@@ -5,13 +5,14 @@
 #ifndef NAGYHAZI_COMPUTER_H
 #define NAGYHAZI_COMPUTER_H
 
+#include <vector>
 #include "Instruction.h"
 #include "Register.h"
 #include "List.hpp"
 
 #include "../memtrace.h"
 
-#define DEBUG_
+#define DEBUG
 
 // BASIC command keywords
 #define LET "let"
@@ -23,8 +24,8 @@
 #define RUN "run"
 
 class Computer {
-    List<Register> registers;       // List of registers
-    List<Instruction> instructions; // List of instructions line by line
+    std::vector<Register> registers;       // List of registers
+    std::vector<Instruction*> instructions; // List of instructions line by line
     int instructionIndex = -1;      // Current Instruction index
 public:
     // -- Constructor --
@@ -61,6 +62,9 @@ private:
     void DeleteProgramArrays();
     void ProcessProgramLine(const string& inputLine);
     void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
+
+    void SortInstructions();
+    void RemoveInstruction(int lineNumber);
 };
 
 

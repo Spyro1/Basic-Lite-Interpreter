@@ -8,12 +8,12 @@ GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Ins
     instrTy = InstructionType::Goto;
 }
 
-void GotoInstruction::Execute(List<Register> &registers, List<Instruction> &instructions, int &instructionIndex) {
+void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int &instructionIndex) {
     int jumpNumber = -1;
     if ((jumpNumber = std::stoi(expression))) {
         int i = 0;
         bool found = false;
-        while (i < instructions.getCount() && !found) {
+        while ((size_t)i < instructions.size() && !found) {
             if (instructions[i]->getLineNumber() == jumpNumber) {
                 instructionIndex = i;
                 found = true;

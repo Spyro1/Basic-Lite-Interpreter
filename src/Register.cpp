@@ -6,7 +6,7 @@
 
 Register::Register() = default; //: value(0) { }
 
-Register::Register(const string& name, int defValue) : value(defValue) {
+Register::Register(string name, int defValue) : value(defValue) {
     this->name = name;
 }
 

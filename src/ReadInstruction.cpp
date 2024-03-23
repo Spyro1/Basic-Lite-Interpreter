@@ -8,7 +8,7 @@ ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Ins
     instrTy = InstructionType::Read;
 }
 
-void ReadInstruction::Execute(List<Register> &registers, List<Instruction> &instructions, int &instructionIndex) {
+void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
 
 }
 ReadInstruction::~ReadInstruction() {

@@ -13,12 +13,12 @@ using std::string;
 class Register {
 //    char* name;
     string name;
-    int value = -1;
+    int value = 0;
 
 public:
     // -- Constructors --
     Register();
-    explicit Register(const string& name, int defValue = 0);
+    explicit Register(string name, int defValue = 0);
     // -- Getters --
     const string& getName() const { return name; };
     const int getValue() const {return value; };

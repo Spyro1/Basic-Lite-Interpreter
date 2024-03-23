@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstring>
 #include <sstream>
+#include <algorithm>
 #include "../include/Computer.h"
 #include "../include/LetInstruction.h"
 #include "../include/PrintInstruction.h"
@@ -16,10 +17,10 @@
 Computer::Computer(size_t registerCount) {
     if (registerCount <  2) throw "Error: There are not enough registers for the computer to work."; // Computer can not work with less than 2 registers. (PLAN)
     // Adding default registers
-    registers.Clear();
-    registers.Add(new Register("a")); // Base register
-    registers.Add(new Register("i")); // Counter
-    instructions.Clear();
+    registers.clear();
+    registers.emplace_back("a"); // Base register
+    registers.emplace_back("i"); // Counter
+    instructions.clear();
 }
 
 void Computer::ReadProgramFromFile(const string& filename) {
@@ -43,7 +44,11 @@ void Computer::ReadProgramFromFile(const string& filename) {
     filereader.close(); // Close File
     instructionIndex = 0;
     // Make instruction in order based on the line number
-    instructions.Sort();
+//    instructions.sort();
+    SortInstructions();
+    #ifdef DEBUG
+//        cout << "First line test cout: " << instructions[0];
+    #endif
 }
 void Computer::NewInstruction(const string& programLine) {
     ProcessProgramLine(programLine);
@@ -51,7 +56,7 @@ void Computer::NewInstruction(const string& programLine) {
 void Computer::RunProgram() {
     int counter = 0;
     const int infiniteCycle = 10000;
-    while (instructionIndex < instructions.getCount() && counter <= infiniteCycle){
+    while ((size_t)instructionIndex < instructions.size() && counter <= infiniteCycle){
         ExecuteNextInstruction();
         counter++;
     }
@@ -63,7 +68,7 @@ void Computer::ExecuteNextInstruction() {
 }
 
 void Computer::DeleteProgramArrays() {
-    instructions.Clear();
+    instructions.clear();
     instructionIndex = -1;
 }
 Computer::~Computer() {
@@ -75,26 +80,22 @@ void Computer::ProcessProgramLine(const string& line) {
     string command;
 
     SplitLineToTokens(line, lineNumber, command, expression);
-    if (lineNumber != 0) { // if linenumber is 0, then it is a comment
+    if (lineNumber < 0) RemoveInstruction(-lineNumber);
+    else if (lineNumber != 0) { // if linenumber is 0, then it is a comment
         if (command == LET) {
-            if (lineNumber < 0) instructions.Remove(new LetInstruction(-lineNumber, expression));
-            else instructions.Add(new LetInstruction(lineNumber, expression));
+            instructions.push_back(new LetInstruction(lineNumber, expression));
         }
         else if (command == PRINT) {
-            if (lineNumber < 0) instructions.Remove(new PrintInstruction(-lineNumber, expression));
-            else instructions.Add(new PrintInstruction(lineNumber, expression));
+            instructions.push_back(new PrintInstruction(lineNumber, expression));
         }
         else if (command == IF) {
-            if (lineNumber < 0) instructions.Remove(new IfInstruction(-lineNumber, expression));
-            else instructions.Add(new IfInstruction(lineNumber, expression));
+            instructions.push_back(new IfInstruction(lineNumber, expression));
         }
         else if(command == GOTO) {
-            if (lineNumber < 0) instructions.Remove(new GotoInstruction(-lineNumber, expression));
-            else instructions.Add(new GotoInstruction(lineNumber, expression));
+            instructions.push_back(new GotoInstruction(lineNumber, expression));
         }
         else if (command == READ) {
-            if (lineNumber < 0) instructions.Remove(new ReadInstruction(-lineNumber, expression));
-            else instructions.Add(new ReadInstruction(lineNumber, expression));
+            instructions.push_back(new ReadInstruction(lineNumber, expression));
         }
         else {
             throw std::logic_error(string("Syntax error: Instruction not recognized in line: ") + std::to_string(lineNumber));
@@ -109,29 +110,21 @@ void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, strin
     iss >> lineNumber >> command;
     std::getline(iss >> std::ws, expression);
 
-
-//    using namespace std;
-//    // Convert string inputLine to char*
-//    char* cline = new char[inputLine.length() + 1];
-//    strcpy(cline, inputLine.c_str());
-//    int k = 0;
-//    // This code snippet is based on this example: https://cplusplus.com/reference/string/string/c_str/
-//    char* p = strtok(cline," ");
-//    string argument;
-//    while (p != nullptr) {
-//        if (k == 0) lineNumber = stoi(p); // Extract inputLine number
-//        else if (k == 1) command = string(p); // Extract command
-//        else if (k > 1) argument += string(p); // Extract argument
-//        // std::cout << p << endl;
-//        p = strtok(nullptr, " ");
-//        k++;
-//    }
-//    // End of code snippet
-//    if (k < 3 && lineNumber != 0) throw runtime_error(string("Syntax error: Not enough arguments in inputLine: ") + to_string(lineNumber));
-//    // Convert argument to char* expression
-//    expression = argument;
     #ifdef DEBUG
-        std::cout << lineNumber << "| " << command << ": " << *expression << std::endl; // Debug
+        std::cout << lineNumber << "| " << command << ": " << expression << std::endl; // Debug
     #endif
 //    delete[] cline;
+}
+
+void Computer::SortInstructions() {
+//    std::sort(instructions.begin(), instructions.end(), CompareInstructions);
+}
+void Computer::RemoveInstruction(int lineNumber){
+    for (auto it = instructions.begin(); it != instructions.end(); ++it) {
+        if ((*it)->getLineNumber() == lineNumber) { // Replace getField() with the appropriate field and desiredValue with the value to match
+            // Remove the object from the vector
+            instructions.erase(it);
+            break; // If you only want to remove the first matching object
+        }
+    }
 }

@@ -9,7 +9,7 @@ PrintInstruction::PrintInstruction(int lineNumber, const string& expression) : I
     instrTy = InstructionType::Print;
 }
 // -- Virtual function --
-void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& instructions, int& instructionIndex) {
+void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int& instructionIndex) {
     using namespace std;
     // If expression is a string
     int doubleComma = 0;
@@ -35,14 +35,14 @@ void PrintInstruction::Execute(List<Register> &registers, List<Instruction>& ins
     // Else the expression is a variable
     else {
         int regindex = 0;
-        while (regindex < registers.getCount() && registers[regindex]->getName() != expression)
+        while ((size_t)regindex < registers.size() && registers[regindex].getName() != expression)
         { regindex++; }
         // Error handling if unrecognized variable was in expression
-        if (regindex >= registers.getCount()){
+        if ((size_t)regindex >= registers.size()){
             throw logic_error(string("Syntax error: Unrecognized variable in line: ") + to_string(lineNumber));
         }
         else{
-            PrintToConsole(to_string(registers[regindex]->getValue()));
+            PrintToConsole(to_string(registers[regindex].getValue()));
         }
     }
     instructionIndex++;
