@@ -3,7 +3,6 @@
 //
 #include <fstream>
 #include <iostream>
-#include <cstring>
 #include <sstream>
 #include <algorithm>
 #include "../include/Computer.h"
@@ -68,6 +67,9 @@ void Computer::ExecuteNextInstruction() {
 }
 
 void Computer::ClearInstructions() {
+    for (size_t i = 0; i < instructions.size(); ++i) {
+        delete instructions[i];
+    }
     instructions.clear();
     instructionIndex = -1;
 }
@@ -122,7 +124,7 @@ void Computer::RemoveInstruction(int lineNumber){
             // Remove the object from the vector
             delete *it;
             instructions.erase(it);
-            break; // If you only want to remove the first matching object
+            break;
         }
     }
 }

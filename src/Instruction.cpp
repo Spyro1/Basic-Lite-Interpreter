@@ -3,6 +3,7 @@
 //
 #include <string>
 #include <algorithm>
+#include <stdexcept>
 #include "../include/Instruction.h"
 
 Instruction::Instruction() : lineNumber(0) { instrTy = InstructionType::NoType; }
@@ -30,28 +31,52 @@ string Instruction::getExpression() const {
 }
 
 std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
-    os << inst.getLineNumber() << " " << inst.getType() << " " << inst.getExpression();
+//    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getType() << " " << inst.getExpression();
     return os;
 }
 Instruction::~Instruction() = default;
 
 string Instruction::ProcessExpression(string &argument, vector<Register> &registers, ReturnType returnType) {
-//    using namespace std;
+    using namespace std;
+    // == Declare testing values ==
     string evaluated; // Result string
-    size_t plusIndex = argument.find_last_of('+'),
+    size_t assignValueSignIndex = argument.find_first_of('='),
+           equalsIndex = argument.find("=="),
+           notEqualsIndex = argument.find("!="),
+           plusIndex = argument.find_last_of('+'),
            minusIndex = argument.find_last_of('-'),
            multiplyIndex = argument.find_last_of('*'),
-           divideIndex = argument.find_last_of('/'); // Index of +, -, *, / characters in argument
-    size_t firstOpeningBracket = argument.find_first_of('('); //FindIndexOf(argument, '(');
-    size_t firstClosingBracket = argument.find_first_of(')');//FindIndexOf(argument, ')');
+           divideIndex = argument.find_last_of('/'), // Index of +, -, *, / characters in argument
+           firstOpeningBracket = argument.find_first_of('('), //FindIndexOf(argument, '(');
+           firstClosingBracket = argument.find_first_of(')');//FindIndexOf(argument, ')');
 
-    #pragma region == 0. level: Simplify + -
-
-    ReplaceCharacters(argument, "==", "+");
+    #pragma region == 0. level: Simplify +-
+    ReplaceCharacters(argument, "--", "+");
     ReplaceCharacters(argument, "+-", "-");
     ReplaceCharacters(argument, "-+", "-");
     #pragma endregion
-    #pragma region == 1. level: Brackets ==
+
+    #pragma region == 1. level: Assignment operator ==
+    if (Exists(assignValueSignIndex) && assignValueSignIndex-1 != equalsIndex && assignValueSignIndex-1 != notEqualsIndex){
+        string regName = argument.substr(0, assignValueSignIndex); // Get register name
+        string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
+
+        size_t regIndex = Register::FindRegisterIndex(registers, regName);
+        string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers, Integer);
+        auto newValue = std::stof(evaluatedValueToAssign);
+        if (Exists(regIndex)) {
+            // Assign value to existing register
+            registers[regIndex].SetValue(newValue);
+        } else {
+            // Create new register and initialize it
+            registers.emplace_back(regName, newValue);
+        }
+        return evaluatedValueToAssign;
+    }
+
+    #pragma endregion
+
+    #pragma region == 2. level: Brackets ==
 
     if (firstOpeningBracket != firstClosingBracket) {
         size_t closeBracketPair = FindBracketPairIndex(argument, firstOpeningBracket);
@@ -72,7 +97,22 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     }
     #pragma endregion
 
-    #pragma region == 2/a. level: Integer ==
+
+    #pragma region == 3/a. level: Boolean ==
+
+        // == 2/1/1 : OR ==
+
+        // == 2/1/2 : AND ==
+
+        // == 2/1/3 : EQALS / NOT-EQUALS ==
+
+        // == 2/1/4 : BIGGER / SMALLER / BIGGER-EQUALS / SMALLER-EQUALS ==
+
+        // == 2/1/5 : NOT
+    #pragma endregion
+
+
+    #pragma region == 3/b. level: Integer ==
 
     // == 2/1/1 : PLUS / MINUS ==
     if (Exists(plusIndex) || Exists(minusIndex)) {
@@ -86,18 +126,21 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
             string rightSide = argument.substr(plusIndex + 1, argument.length() - plusIndex - 1);
             string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
             string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stoi(evaluatedLeftSide);
-            auto rightValue = stoi(evaluatedRightSide);
+            auto leftValue = stof(evaluatedLeftSide);
+            auto rightValue = stof(evaluatedRightSide);
             evaluated = std::to_string(leftValue + rightValue);
             return evaluated;
+
         } else if (Exists(minusIndex) && decider != 1) { // MINUS
             // Evaluate expression as subtracting
             string leftSide = argument.substr(0, minusIndex);
             string rightSide = argument.substr(minusIndex + 1, argument.length() - minusIndex - 1);
+            if (leftSide.empty()) leftSide = "0";
+            if (rightSide.empty()) rightSide = "0";
             string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
             string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stoi(evaluatedLeftSide);
-            auto rightValue = stoi(evaluatedRightSide);
+            auto leftValue = stof(evaluatedLeftSide);
+            auto rightValue = stof(evaluatedRightSide);
             evaluated = std::to_string(leftValue - rightValue);
             return evaluated;
         }
@@ -115,8 +158,8 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
             string rightSide = argument.substr(multiplyIndex + 1, argument.length() - multiplyIndex - 1);
             string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
             string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stoi(evaluatedLeftSide);
-            auto rightValue = stoi(evaluatedRightSide);
+            auto leftValue = stof(evaluatedLeftSide);
+            auto rightValue = stof(evaluatedRightSide);
             evaluated = std::to_string(leftValue*rightValue);
             return evaluated;
         } else if (Exists(divideIndex) && decider != 1) { // DIVIDE
@@ -125,28 +168,15 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
             string rightSide = argument.substr(divideIndex + 1, argument.length() - divideIndex - 1);
             string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
             string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stoi(evaluatedLeftSide);
-            auto rightValue = stoi(evaluatedRightSide);
+            auto leftValue = stof(evaluatedLeftSide);
+            auto rightValue = stof(evaluatedRightSide);
             evaluated = std::to_string((float)leftValue/(float)rightValue);
             return evaluated;
         }
     }
     #pragma endregion
 
-    #pragma region == 2/b. level: Boolean ==
-
-        // == 2/1/1 : OR ==
-
-        // == 2/1/2 : AND ==
-
-        // == 2/1/3 : EQALS / NOT-EQUALS ==
-
-        // == 2/1/4 : BIGGER / SMALLER / BIGGER-EQUALS / SMALLER-EQUALS ==
-
-        // == 2/1/5 : NOT
-    #pragma endregion
-
-    #pragma region == 3. level: Register Value ==
+    #pragma region == 4. level: Register Value ==
     // Test if register name exists. if not, then throw error
     size_t regIndex = Register::FindRegisterIndex(registers, argument);
 //    if ( regIndex == -1 ) {
@@ -160,6 +190,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         return evaluated;
     }
     #pragma endregion
+
     return argument;
 }
 
@@ -199,9 +230,9 @@ size_t Instruction::FindLastIndexOf(const string& str, char searched) {
         return found; // Return index if found
     }
 }
-size_t Instruction::FindBracketPairIndex(string str, size_t openopos, char OpenPair, char ClosePair)
+size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPair, char ClosePair)
 {
-    size_t closePos = openopos;
+    size_t closePos = openPos;
     int matching = 1;
     while (matching > 0 && closePos < str.length())
     {

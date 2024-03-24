@@ -6,18 +6,10 @@
 #define NAGYHAZI_INSTRUCTION_H
 #include <vector>
 #include "Register.h"
-#include "List.hpp"
-
-#include "../memtrace.h"
 
 using std::string;
 using std::vector;
 #define nopos string::npos
-
-//#define NOTEXIST(a) a == std::string::npos
-//#define EXIST(a) a != std::string::npos
-// valamiSzam == std::string::npos
-// NOTEXIST(valamiSzam)
 
 enum InstructionType { NoType, Print, Let, If, Goto, Read };
 
@@ -60,6 +52,7 @@ protected:
     size_t FindLastIndexOf(const string &str, char searched);
     size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')');
     inline bool Exists(size_t value) { return value != nopos; }
+private:
 
 };
 

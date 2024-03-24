@@ -8,9 +8,6 @@
 #include <vector>
 #include "Instruction.h"
 #include "Register.h"
-#include "List.hpp"
-
-#include "../memtrace.h"
 
 //#define DEBUG
 

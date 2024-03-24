@@ -7,8 +7,6 @@
 
 #include "../include/Instruction.h"
 
-#include "../memtrace.h"
-
 class ReadInstruction : public Instruction{
 public:
     // -- Constructors --

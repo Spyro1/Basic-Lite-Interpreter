@@ -8,18 +8,17 @@
 #include <string>
 #include <vector>
 
-#include "../memtrace.h"
 using std::string;
 
 class Register {
 //    char* name;
     string name;
-    float value = .0;
+    float value = 0;
 
 public:
     // -- Constructors --
     Register();
-    explicit Register(string name, int defValue = 0);
+    explicit Register(string name, float defValue = 0);
     // -- Getters --
     const string& getName() const { return name; }
     float getValue() const { return value; }

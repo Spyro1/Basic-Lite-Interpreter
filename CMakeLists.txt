@@ -4,7 +4,9 @@ project(Nagyhazi)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(Nagyhazi main.cpp
-        include/List.hpp
+#        memtrace.cpp
+#        memtrace.h
+#        gtest_lite.h
         include/Computer.h          src/Computer.cpp
         include/Register.h          src/Register.cpp
         include/Instruction.h       src/Instruction.cpp
