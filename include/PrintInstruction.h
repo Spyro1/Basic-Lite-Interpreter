@@ -15,8 +15,6 @@ public:
     void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) override;
     // -- Destructor --
     ~PrintInstruction() override;
-private:
-    void PrintToConsole(const string& expression);
 };
 
 

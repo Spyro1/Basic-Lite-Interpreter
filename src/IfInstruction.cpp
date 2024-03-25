@@ -12,7 +12,7 @@ void IfInstruction::Execute(vector<Register> &registers, vector<Instruction*> &i
     //  Remove whitespace
     string argument = RemoveWhiteSpace(expression);
     // Process expression as a bollean return value
-    string evaluatedArgument = ProcessExpression(argument, registers, Boolean);
+    string evaluatedArgument = ProcessExpression(argument, registers);
     // Convert "0" or "1" to int
     int argumentValue = stoi(evaluatedArgument);
     // If true (1) then jump to the line after "if". If not true, jump to the second line below.
@@ -21,8 +21,9 @@ void IfInstruction::Execute(vector<Register> &registers, vector<Instruction*> &i
     }
     else{
         instructionIndex++;
+        bool isgoto = instructions[instructionIndex]->getInstructionType() == Goto;
         instructions[instructionIndex]->Execute(registers, instructions, instructionIndex);
-        instructionIndex++;
+        if(!isgoto) instructionIndex++;
     }
 }
 IfInstruction::~IfInstruction() {

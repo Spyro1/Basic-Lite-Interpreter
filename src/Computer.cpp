@@ -43,7 +43,6 @@ void Computer::ReadProgramFromFile(const string& filename) {
     filereader.close(); // Close File
     instructionIndex = 0;
     // Make instruction in order based on the line number
-//    instructions.sort();
     SortInstructions();
     #ifdef DEBUG
         cout << "First line test cout: " << *instructions[0] << endl;
@@ -66,15 +65,8 @@ void Computer::ExecuteNextInstruction() {
     instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
 }
 
-void Computer::ClearInstructions() {
-    for (size_t i = 0; i < instructions.size(); ++i) {
-        delete instructions[i];
-    }
-    instructions.clear();
-    instructionIndex = -1;
-}
 Computer::~Computer() {
-
+    ClearInstructions();
 }
 void Computer::ProcessProgramLine(const string& line) {
     int lineNumber = 0;
@@ -82,6 +74,9 @@ void Computer::ProcessProgramLine(const string& line) {
     string command;
 
     SplitLineToTokens(line, lineNumber, command, expression);
+    if (std::any_of(instructions.begin(), instructions.end(),[&lineNumber](Instruction* inst) { return inst->getLineNumber() == lineNumber; })){
+        throw std::logic_error(string("Syntax error: Line indentifier already exists: ") + std::to_string(lineNumber));
+    }
     if (lineNumber < 0) RemoveInstruction(-lineNumber);
     else if (lineNumber != 0) { // if linenumber is 0, then it is a comment
         if (command == LET) {
@@ -108,15 +103,19 @@ void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, strin
     std::istringstream iss(inputLine);
     iss >> lineNumber >> command;
     std::getline(iss >> std::ws, expression);
-
     #ifdef DEBUG
         std::cout << "Tokens: "<< lineNumber << "| " << command << " | " << expression << std::endl; // Debug
     #endif
-//    delete[] cline;
 }
-
+void Computer::ClearInstructions() {
+    for (size_t i = 0; i < instructions.size(); ++i) {
+        delete instructions[i];
+    }
+    instructions.clear();
+    instructionIndex = -1;
+}
 void Computer::SortInstructions() {
-//    std::sort(instructions.begin(), instructions.end(), CompareInstructions);
+    std::sort(instructions.begin(), instructions.end(), CompareInstructions);
 }
 void Computer::RemoveInstruction(int lineNumber){
     for (auto it = instructions.begin(); it != instructions.end(); ++it) {
@@ -127,5 +126,9 @@ void Computer::RemoveInstruction(int lineNumber){
             break;
         }
     }
+}
+
+bool Computer::CompareInstructions(const Instruction* a, const Instruction* b) {
+    return a->getLineNumber() < b->getLineNumber();
 }
 

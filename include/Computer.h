@@ -11,13 +11,7 @@
 
 //#define DEBUG
 
-// BASIC command keywords
-#define LET "let"
-#define PRINT "print"
-#define IF "if"
-#define GOTO "goto"
-#define THEN "then"
-#define READ "read"
+
 #define RUN "run"
 
 class Computer {
@@ -62,6 +56,8 @@ private:
     void ClearInstructions();
     void SortInstructions();
     void RemoveInstruction(int lineNumber);
+    static bool CompareInstructions(const Instruction *a, const Instruction *b);
+
 };
 
 

@@ -78,7 +78,7 @@ classDiagram
         - instrTy: InstructionType
         + Instruction(lineNumber: int, expression: string)
         + getLineNumber() int
-        + getType() string
+        + getInstructionTypeStr() string
         + getExpression() string
         + Execute(registers: Vector~Register~, instructions: Vector~Instruction~, instructionIndex: int) void*
     }

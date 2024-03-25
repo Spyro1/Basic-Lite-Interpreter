@@ -16,37 +16,46 @@ Instruction::Instruction(int lineNumber_, const string &expression_) {
 int Instruction::getLineNumber() const {
     return lineNumber;
 }
-string Instruction::getType() const {
+string Instruction::getInstructionTypeStr() const {
     switch (instrTy) {
-        case Let: return "let";
-        case Print: return "print";
-        case Goto: return "goto";
-        case If: return "if";
-        case Read: return "read";
+        case Let: return LET;
+        case Print: return PRINT;
+        case Goto: return GOTO;
+        case If: return IF;
+        case Read: return READ;
         default: return "unknown";
     }
+}
+InstructionType Instruction::getInstructionType() const{
+    return instrTy;
 }
 string Instruction::getExpression() const {
     return expression;
 }
 
 std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
-//    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getType() << " " << inst.getExpression();
+//    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << " " << inst.getExpression();
     return os;
 }
 Instruction::~Instruction() = default;
 
-string Instruction::ProcessExpression(string &argument, vector<Register> &registers, ReturnType returnType) {
+string Instruction::ProcessExpression(string &argument, vector<Register> &registers) {
     using namespace std;
     // == Declare testing values ==
     string evaluated; // Result string
+    float leftValue, rightValue;
     size_t assignValueSignIndex = argument.find_first_of('='),
+           orIndex = argument.find_last_of("||"),
+           andIndex = argument.find_last_of("&&"),
+           biggerIndex = argument.find_last_of('>' ),
+           smallerIndex = argument.find_last_of('<'),
            equalsIndex = argument.find("=="),
            notEqualsIndex = argument.find("!="),
            plusIndex = argument.find_last_of('+'),
            minusIndex = argument.find_last_of('-'),
            multiplyIndex = argument.find_last_of('*'),
-           divideIndex = argument.find_last_of('/'), // Index of +, -, *, / characters in argument
+           divideIndex = argument.find_last_of('/'),
+           modIndex = argument.find_last_of('%'), // Index of +, -, *, /, % characters in argument
            firstOpeningBracket = argument.find_first_of('('), //FindIndexOf(argument, '(');
            firstClosingBracket = argument.find_first_of(')');//FindIndexOf(argument, ')');
 
@@ -57,12 +66,12 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     #pragma endregion
 
     #pragma region == 1. level: Assignment operator ==
-    if (Exists(assignValueSignIndex) && assignValueSignIndex-1 != equalsIndex && assignValueSignIndex-1 != notEqualsIndex){
+    if (Exists(assignValueSignIndex) && assignValueSignIndex != equalsIndex && assignValueSignIndex != notEqualsIndex){
         string regName = argument.substr(0, assignValueSignIndex); // Get register name
         string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
 
         size_t regIndex = Register::FindRegisterIndex(registers, regName);
-        string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers, Integer);
+        string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers);
         auto newValue = std::stof(evaluatedValueToAssign);
         if (Exists(regIndex)) {
             // Assign value to existing register
@@ -78,16 +87,16 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     #pragma region == 2. level: Brackets ==
 
-    if (firstOpeningBracket != firstClosingBracket) {
+    if (Exists(firstOpeningBracket) && Exists(firstClosingBracket)) {
         size_t closeBracketPair = FindBracketPairIndex(argument, firstOpeningBracket);
         if (closeBracketPair == nopos) // Pair bracket not found
             throw std::logic_error(string("Syntax error: Missing brackets in line: ")+std::to_string(lineNumber));
         else {
             string betweenBrackets = argument.substr(firstOpeningBracket + 1,closeBracketPair-firstOpeningBracket - 1);
-            string evaluatedBetweenBrackets = ProcessExpression(betweenBrackets, registers, returnType);
+            string evaluatedBetweenBrackets = ProcessExpression(betweenBrackets, registers);
             ReplaceCharacters(argument, '(' + betweenBrackets + ')', evaluatedBetweenBrackets);
             // Call new evaluation
-            evaluated = ProcessExpression(argument,registers,returnType);
+            evaluated = ProcessExpression(argument,registers);
             return evaluated; // Exit
         }
     }
@@ -95,20 +104,68 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
               (Exists(firstOpeningBracket) && !Exists(firstClosingBracket))) {
         throw std::logic_error(string("Syntax error: Missing brackets in line: ")+std::to_string(lineNumber));
     }
+    else if (Exists(firstOpeningBracket) || Exists(firstClosingBracket)){
+        throw std::logic_error(string("Syntax error: Missing brackets in line: ")+std::to_string(lineNumber));
+    }
     #pragma endregion
 
 
     #pragma region == 3/a. level: Boolean ==
 
-        // == 2/1/1 : OR ==
+    // == 2/1/1 : OR ==
+    if (Exists(orIndex)){
+        // Evaluate expression as OR logic
+        SplitAndProcessArguemnts(argument,registers, orIndex,leftValue, rightValue);
+        evaluated = (leftValue != 0) || (rightValue != 0) ? '1' : '0';
+        return evaluated;
+    }
+    // == 2/1/2 : AND ==
+    else if (Exists(andIndex)){
+        // Evaluate expression as AND logic
+        SplitAndProcessArguemnts(argument,registers, andIndex,leftValue, rightValue);
+        evaluated = (leftValue != 0) && (rightValue != 0) ? '1' : '0';
+        return evaluated;
+    }
+    // == 2/1/3 : EQALS / NOT-EQUALS ==
+    else if (Exists(equalsIndex) || Exists(notEqualsIndex)){
+        int decider = 0; // 0: only one 1: EQ, 2: NOTEQ
+        if (Exists(equalsIndex) && Exists(notEqualsIndex)) { // Contains both
+            decider = equalsIndex > notEqualsIndex ? 1 : 2;
+        }
+        if (Exists(equalsIndex) && decider != 2) { // PLUS
+            // Evaluate expression as adding
+            SplitAndProcessArguemnts(argument,registers, equalsIndex,leftValue, rightValue);
+            evaluated = leftValue == rightValue ? '1' : '0';
+        }
+        else if (Exists(notEqualsIndex) && decider != 1) { // MINUS
+            // Evaluate expression as subtracting
+            SplitAndProcessArguemnts(argument,registers, notEqualsIndex,leftValue, rightValue);
+            evaluated = leftValue != rightValue ? '1' : '0';
+        }
+        return evaluated;
+    }
+    // == 2/1/4 : BIGGER / SMALLER / BIGGER-EQUALS / SMALLER-EQUALS ==
+    else if (Exists(biggerIndex) || Exists(smallerIndex)){
+        int decider = 0; // 0: only one 1: BIGGER, 2: SMALLER
+        if (Exists(biggerIndex) && Exists(smallerIndex)) { // Contains both
+            decider = biggerIndex > smallerIndex ? 1 : 2;
+        }
+        if (Exists(biggerIndex) && decider != 2) { // PLUS
+            // Evaluate expression as adding
+            SplitAndProcessArguemnts(argument,registers, plusIndex,leftValue, rightValue);
+            if (biggerIndex + 1 == assignValueSignIndex) evaluated = leftValue >= rightValue ? '1' : '0';
+            else evaluated = leftValue > rightValue ? '1' : '0';
+        }
+        else if (Exists(smallerIndex) && decider != 1) { // MINUS
+            // Evaluate expression as subtracting
+            SplitAndProcessArguemnts(argument,registers, minusIndex,leftValue, rightValue);
+            if (smallerIndex + 1 == assignValueSignIndex) evaluated = leftValue <= rightValue ? '1' : '0';
+            else evaluated = leftValue < rightValue ? '1' : '0';
+        }
+        return evaluated;
+    }
 
-        // == 2/1/2 : AND ==
-
-        // == 2/1/3 : EQALS / NOT-EQUALS ==
-
-        // == 2/1/4 : BIGGER / SMALLER / BIGGER-EQUALS / SMALLER-EQUALS ==
-
-        // == 2/1/5 : NOT
+    // == 2/1/5 : NOT
     #pragma endregion
 
 
@@ -122,57 +179,43 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         }
         if (Exists(plusIndex) && decider != 2) { // PLUS
             // Evaluate expression as adding
-            string leftSide = argument.substr(0, plusIndex);
-            string rightSide = argument.substr(plusIndex + 1, argument.length() - plusIndex - 1);
-            string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
-            string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stof(evaluatedLeftSide);
-            auto rightValue = stof(evaluatedRightSide);
+            SplitAndProcessArguemnts(argument,registers, plusIndex,leftValue, rightValue);
             evaluated = std::to_string(leftValue + rightValue);
-            return evaluated;
-
-        } else if (Exists(minusIndex) && decider != 1) { // MINUS
-            // Evaluate expression as subtracting
-            string leftSide = argument.substr(0, minusIndex);
-            string rightSide = argument.substr(minusIndex + 1, argument.length() - minusIndex - 1);
-            if (leftSide.empty()) leftSide = "0";
-            if (rightSide.empty()) rightSide = "0";
-            string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
-            string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stof(evaluatedLeftSide);
-            auto rightValue = stof(evaluatedRightSide);
-            evaluated = std::to_string(leftValue - rightValue);
-            return evaluated;
         }
-
+        else if (Exists(minusIndex) && decider != 1) { // MINUS
+            // Evaluate expression as subtracting
+            SplitAndProcessArguemnts(argument,registers, minusIndex,leftValue, rightValue);
+            evaluated = std::to_string(leftValue - rightValue);
+        }
+        return evaluated;
     }
         // == 2/1/2 : MULTIPLY / DIVIDE
-    else if (Exists(multiplyIndex = argument.find_last_of('*')) || Exists(divideIndex = argument.find_last_of('/'))) {
-        int decider = 0; // 0: only one 1: MULTIPLY, 2: DIVIDE
-        if (Exists(multiplyIndex) && Exists(divideIndex)) { // Contains both
-            decider = plusIndex > divideIndex ? 1 : 2;
+    else if (Exists(multiplyIndex) || Exists(divideIndex) || Exists(modIndex)) {
+        int decider = 0; // 0: only one 1: MULTIPLY, 2: DIVIDE, 3: MOD
+        if (Exists(multiplyIndex) && Exists(divideIndex) && Exists(modIndex)) { // Contains both
+            size_t indexes[] = {multiplyIndex, divideIndex, modIndex};
+            decider = (int)std::distance(indexes, std::max_element(indexes, indexes + 3)) + 1;
         }
-        if (Exists(multiplyIndex) && decider != 2) { // MULTIPLY
+        else if (Exists(multiplyIndex) && Exists(divideIndex)) decider = multiplyIndex > divideIndex ? 1 : 2;
+        else if (Exists(modIndex) && Exists(divideIndex)) decider = modIndex > divideIndex ? 3 : 2;
+        else if (Exists(multiplyIndex) && Exists(modIndex)) decider = multiplyIndex > modIndex ? 1 : 3;
+
+        if (Exists(multiplyIndex) && (decider == 1 || decider == 0)) { // MULTIPLY
             // Evaluate expression as multiplication
-            string leftSide = argument.substr(0, multiplyIndex);
-            string rightSide = argument.substr(multiplyIndex + 1, argument.length() - multiplyIndex - 1);
-            string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
-            string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stof(evaluatedLeftSide);
-            auto rightValue = stof(evaluatedRightSide);
-            evaluated = std::to_string(leftValue*rightValue);
-            return evaluated;
-        } else if (Exists(divideIndex) && decider != 1) { // DIVIDE
-            // Evaluate expression as division
-            string leftSide = argument.substr(0, divideIndex);
-            string rightSide = argument.substr(divideIndex + 1, argument.length() - divideIndex - 1);
-            string evaluatedLeftSide = ProcessExpression(leftSide, registers, returnType);
-            string evaluatedRightSide = ProcessExpression(rightSide, registers, returnType);
-            auto leftValue = stof(evaluatedLeftSide);
-            auto rightValue = stof(evaluatedRightSide);
-            evaluated = std::to_string((float)leftValue/(float)rightValue);
-            return evaluated;
+            SplitAndProcessArguemnts(argument,registers, multiplyIndex,leftValue, rightValue);
+            evaluated = std::to_string(leftValue * rightValue);
         }
+        else if (Exists(divideIndex) && (decider == 2 || decider == 0)) { // DIVIDE
+            // Evaluate expression as division
+            SplitAndProcessArguemnts(argument,registers, divideIndex,leftValue, rightValue);
+            evaluated = std::to_string(leftValue / rightValue);
+        }
+        else if (Exists(modIndex) && (decider == 3 || decider == 0)) { // DIVIDE
+            // Evaluate expression as division
+            SplitAndProcessArguemnts(argument,registers, modIndex,leftValue, rightValue);
+            evaluated = std::to_string((int)leftValue % (int)rightValue);
+        }
+        return evaluated;
     }
     #pragma endregion
 
@@ -246,6 +289,17 @@ size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPa
         return -1; // Couldn't find pair
     else
         return closePos; // Pair found
+}
+
+void Instruction::SplitAndProcessArguemnts(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2) {
+    string leftSide = inputArg.substr(0, operatorIndex);
+    string rightSide = inputArg.substr(operatorIndex + 1, inputArg.length() - operatorIndex - 1);
+    if (leftSide.empty()) leftSide = "0";
+    if (rightSide.empty()) rightSide = "0";
+    string evaluatedLeftSide = ProcessExpression(leftSide, registers);
+    string evaluatedRightSide = ProcessExpression(rightSide, registers);
+    evaluatedArg1 = stof(evaluatedLeftSide);
+    evaluatedArg2 = stof(evaluatedRightSide);
 }
 
 

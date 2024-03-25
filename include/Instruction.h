@@ -11,6 +11,13 @@ using std::string;
 using std::vector;
 #define nopos string::npos
 
+// BASIC command keywords
+#define LET "let"
+#define PRINT "print"
+#define IF "if"
+#define GOTO "goto"
+#define READ "read"
+
 enum InstructionType { NoType, Print, Let, If, Goto, Read };
 
 enum ReturnType { Void, Integer, Boolean};
@@ -29,7 +36,8 @@ public:
     Instruction(int lineNumber_, const string& expression_);
     // -- Getters --
     int getLineNumber() const;
-    string getType() const;
+    string getInstructionTypeStr() const;
+    InstructionType getInstructionType() const;
     string getExpression() const;
     // -- Virtual function --
     virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
@@ -44,18 +52,19 @@ public:
     virtual ~Instruction() = 0;
 protected:
     // -- Protected functions --
-    string ProcessExpression(string &argument, vector<Register> &registers, ReturnType returnType);
+    string ProcessExpression(string &argument, vector<Register> &registers);
     void ReplaceCharacters(string &inputStr, const string &searched, const string &replace);
     int CountCharacter(const string &str, char ch);
     string RemoveWhiteSpace(const string& str);
+    void SplitAndProcessArguemnts(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2) ;
     size_t FindIndexOf(const string &str, char searched);
     size_t FindLastIndexOf(const string &str, char searched);
     size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')');
     inline bool Exists(size_t value) { return value != nopos; }
-private:
 
 };
 
 std::ostream& operator<<(std::ostream& os, const Instruction& inst);
+
 
 #endif //NAGYHAZI_INSTRUCTION_H

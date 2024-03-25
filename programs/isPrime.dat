@@ -1,0 +1,17 @@
+10 print "Írjon be egy számot: "
+15 let szam = 0
+20 read szam
+0 let szam = 11
+30 let p = 2
+40 if szam % p == 0
+50 goto 100
+60 let p = p + 1
+70 if szam - p
+80 goto 106
+90 goto 40
+
+100 print "\nNem prím szám"
+101 goto 110
+
+106 print "\nPrím szám"
+110 print ""

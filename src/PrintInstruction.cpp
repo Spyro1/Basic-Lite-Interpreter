@@ -16,17 +16,21 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
     int doubleComma = CountCharacter(expression, '"');
     // The expression is a register
     if (doubleComma == 0){
-        size_t regindex = 0;
-        while (regindex < registers.size() && registers[regindex].getName() != expression)
-        { regindex++; }
-        // Error handling if unrecognized variable was in expression
-        if (regindex >= registers.size()){
-            throw logic_error(string("Syntax error: Unrecognized variable in line: ") + to_string(lineNumber));
-        }
-        else{
-//            PrintToConsole(to_string(registers[regindex].getValue()));
-            cout << registers[regindex].getValue();
-        }
+        //  Remove whitespace
+        string shortExpression = RemoveWhiteSpace(expression);
+        string evaluated = ProcessExpression(shortExpression, registers);
+        cout << stof(evaluated);
+//        size_t regindex = 0;
+//        while (regindex < registers.size() && registers[regindex].getName() != expression)
+//        { regindex++; }
+//        // Error handling if unrecognized variable was in expression
+//        if (regindex >= registers.size()){
+//            throw logic_error(string("Syntax error: Unrecognized register name in line: ") + to_string(lineNumber));
+//        }
+//        else{
+////            PrintToConsole(to_string(registers[regindex].getValue()));
+//            cout << registers[regindex].getValue();
+//        }
     }
     else if (doubleComma % 2 == 0){
         size_t begining = expression.find_first_of('"');
@@ -35,15 +39,11 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
         ReplaceCharacters(cutted, "\\n", "\n");
         ReplaceCharacters(cutted, "\\t", "\t");
         ReplaceCharacters(cutted, "\\\"", "\"");
-        PrintToConsole(cutted);
+        cout << cutted;
     }
     else
         throw runtime_error(string("Wrong string literal in line: ") + to_string(lineNumber));
     instructionIndex++;
-}
-void PrintInstruction::PrintToConsole(const string& expression){
-    std::cout << expression;// << std::endl;
-
 }
 
 PrintInstruction::~PrintInstruction() = default;

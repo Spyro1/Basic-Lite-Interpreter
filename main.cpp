@@ -3,7 +3,7 @@
 //#define CPORTA
 //#define MEMTRACE
 
-//#include "memtrace.h"
+#include "memtrace.h"
 
 #include "include/Computer.h"
 #include "gtest_lite.h"
@@ -40,7 +40,7 @@ int main() {
         pc.RunProgram();
     }
     catch (std::exception& e){
-        cout << e.what() << endl;
+        cout << "\n\n" << e.what() << endl;
     }
 #endif
     return 0;
