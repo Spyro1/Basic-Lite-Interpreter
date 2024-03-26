@@ -56,7 +56,7 @@ protected:
     void ReplaceCharacters(string &inputStr, const string &searched, const string &replace);
     int CountCharacter(const string &str, char ch);
     string RemoveWhiteSpace(const string& str);
-    void SplitAndProcessArguemnts(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2) ;
+    void SplitAndProcessArguemnts(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1) ;
     size_t FindIndexOf(const string &str, char searched);
     size_t FindLastIndexOf(const string &str, char searched);
     size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')');

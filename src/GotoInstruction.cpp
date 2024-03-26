@@ -3,6 +3,7 @@
 //
 
 #include <stdexcept>
+#include <algorithm>
 #include "../include/GotoInstruction.h"
 
 GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
@@ -10,8 +11,10 @@ GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Ins
 }
 
 void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int &instructionIndex) {
+    using namespace std;
     int jumpNumber = -1;
     if ((jumpNumber = std::stoi(expression))) {
+
         int i = 0;
         bool found = false;
         while ((size_t)i < instructions.size() && !found) {

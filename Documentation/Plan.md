@@ -15,3 +15,4 @@
 | 8         | \|\|         | Logikai VAGY              | 3                        |
 | 9         | =            | Értékadás (jobbról balra) | 1                        |
 
+## Hibakezelés - Lehetséges hibajelzések

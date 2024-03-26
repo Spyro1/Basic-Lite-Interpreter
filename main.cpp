@@ -15,7 +15,7 @@
 int main() {
     using namespace std;
     #ifdef UTF8
-        system("chcp 65001"); // UTF-8 kódolású karakterek használata
+        system("chcp 65001"); // Set character encoding to UTF-8
     #endif
 
 // === RUN TESTS ===
@@ -25,11 +25,12 @@ int main() {
     TEST(Test1, NemLetezoFajlBeolvas) {
         EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), runtime_error&); // File not found
     } END
-    TEST(Test1, LetezoFajlBeolvas){
-        EXPECT_NO_THROW(pc.ReadProgramFromFile("../programs/test.dat")); // Found
+    TEST(Test2, LetezoFajlBeolvas){
+        EXPECT_NO_THROW(pc.ReadProgramFromFile("../programs/parosSzamok.dat")); // Found
+    } END
+    TEST(Test3, ParosSzamokProgramFuttatas){
         pc.RunProgram();
     } END
-
 #endif
 
 // === RUN PROGRAM INTERFACE ===

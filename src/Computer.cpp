@@ -14,12 +14,13 @@
 
 
 Computer::Computer(size_t registerCount) {
-    if (registerCount <  2) throw "Error: There are not enough registers for the computer to work."; // Computer can not work with less than 2 registers. (PLAN)
+    if (registerCount <  2) throw std::underflow_error("Error: There are not enough registers for the computer to work."); // Computer can not work with less than 2 registers. (SPEC)
+    // Clear instructions
+    ClearInstructions();
     // Adding default registers
     registers.clear();
-    registers.emplace_back("a"); // Base register
-    registers.emplace_back("i"); // Counter
-    instructions.clear();
+//    registers.emplace_back("a"); // Base register
+//    registers.emplace_back("i"); // Counter
 }
 
 void Computer::ReadProgramFromFile(const string& filename) {
@@ -62,7 +63,14 @@ void Computer::RunProgram() {
 }
 
 void Computer::ExecuteNextInstruction() {
-    instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
+    try{
+        // Execute the next line's instruction
+        instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
+    } catch (std::exception& e){
+        // Throw error if something passed the error check and it can't compile
+        throw std::runtime_error(string("Error: Unknown error in line: ") + std::to_string(instructions[instructionIndex]->getLineNumber()));
+    }
+
 }
 
 Computer::~Computer() {

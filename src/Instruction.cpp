@@ -44,20 +44,20 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     // == Declare testing values ==
     string evaluated; // Result string
     float leftValue, rightValue;
-    size_t assignValueSignIndex = argument.find_first_of('='),
-           orIndex = argument.find_last_of("||"),
-           andIndex = argument.find_last_of("&&"),
-           biggerIndex = argument.find_last_of('>' ),
-           smallerIndex = argument.find_last_of('<'),
-           equalsIndex = argument.find("=="),
-           notEqualsIndex = argument.find("!="),
-           plusIndex = argument.find_last_of('+'),
-           minusIndex = argument.find_last_of('-'),
-           multiplyIndex = argument.find_last_of('*'),
-           divideIndex = argument.find_last_of('/'),
-           modIndex = argument.find_last_of('%'), // Index of +, -, *, /, % characters in argument
-           firstOpeningBracket = argument.find_first_of('('), //FindIndexOf(argument, '(');
-           firstClosingBracket = argument.find_first_of(')');//FindIndexOf(argument, ')');
+    size_t assignValueSignIndex = argument.find('='),
+           orIndex = argument.rfind("||"),
+           andIndex = argument.rfind("&&"),
+           biggerIndex = argument.rfind('>' ),
+           smallerIndex = argument.rfind('<'),
+           equalsIndex = argument.rfind("=="),
+           notEqualsIndex = argument.rfind("!="),
+           plusIndex = argument.rfind('+'),
+           minusIndex = argument.rfind('-'),
+           multiplyIndex = argument.rfind('*'),
+           divideIndex = argument.rfind('/'),
+           modIndex = argument.rfind('%'), // Index of +, -, *, /, % characters in argument
+           firstOpeningBracket = argument.find('('), //FindIndexOf(argument, '(');
+           firstClosingBracket = argument.rfind(')');//FindIndexOf(argument, ')');
 
     #pragma region == 0. level: Simplify +-
     ReplaceCharacters(argument, "--", "+");
@@ -66,8 +66,8 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     #pragma endregion
 
     #pragma region == 1. level: Assignment operator ==
-    if (Exists(assignValueSignIndex) && assignValueSignIndex != equalsIndex && assignValueSignIndex != notEqualsIndex){
-        string regName = argument.substr(0, assignValueSignIndex); // Get register name
+    if (Exists(assignValueSignIndex) && assignValueSignIndex != equalsIndex && assignValueSignIndex-1 != notEqualsIndex && assignValueSignIndex-1 != biggerIndex && assignValueSignIndex-1 != smallerIndex){
+         string regName = argument.substr(0, assignValueSignIndex); // Get register name
         string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
 
         size_t regIndex = Register::FindRegisterIndex(registers, regName);
@@ -115,14 +115,14 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     // == 2/1/1 : OR ==
     if (Exists(orIndex)){
         // Evaluate expression as OR logic
-        SplitAndProcessArguemnts(argument,registers, orIndex,leftValue, rightValue);
+        SplitAndProcessArguemnts(argument,registers, orIndex,leftValue, rightValue, 2);
         evaluated = (leftValue != 0) || (rightValue != 0) ? '1' : '0';
         return evaluated;
     }
     // == 2/1/2 : AND ==
     else if (Exists(andIndex)){
         // Evaluate expression as AND logic
-        SplitAndProcessArguemnts(argument,registers, andIndex,leftValue, rightValue);
+        SplitAndProcessArguemnts(argument,registers, andIndex,leftValue, rightValue, 2);
         evaluated = (leftValue != 0) && (rightValue != 0) ? '1' : '0';
         return evaluated;
     }
@@ -132,14 +132,14 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         if (Exists(equalsIndex) && Exists(notEqualsIndex)) { // Contains both
             decider = equalsIndex > notEqualsIndex ? 1 : 2;
         }
-        if (Exists(equalsIndex) && decider != 2) { // PLUS
-            // Evaluate expression as adding
-            SplitAndProcessArguemnts(argument,registers, equalsIndex,leftValue, rightValue);
+        if (Exists(equalsIndex) && decider != 2) { // EQ
+            // Evaluate expression as EQ logic
+            SplitAndProcessArguemnts(argument,registers, equalsIndex,leftValue, rightValue, 2);
             evaluated = leftValue == rightValue ? '1' : '0';
         }
-        else if (Exists(notEqualsIndex) && decider != 1) { // MINUS
-            // Evaluate expression as subtracting
-            SplitAndProcessArguemnts(argument,registers, notEqualsIndex,leftValue, rightValue);
+        else if (Exists(notEqualsIndex) && decider != 1) { // NOTEQ
+            // Evaluate expression as NOTEQ logic
+            SplitAndProcessArguemnts(argument,registers, notEqualsIndex,leftValue, rightValue, 2);
             evaluated = leftValue != rightValue ? '1' : '0';
         }
         return evaluated;
@@ -150,17 +150,27 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         if (Exists(biggerIndex) && Exists(smallerIndex)) { // Contains both
             decider = biggerIndex > smallerIndex ? 1 : 2;
         }
-        if (Exists(biggerIndex) && decider != 2) { // PLUS
-            // Evaluate expression as adding
-            SplitAndProcessArguemnts(argument,registers, plusIndex,leftValue, rightValue);
-            if (biggerIndex + 1 == assignValueSignIndex) evaluated = leftValue >= rightValue ? '1' : '0';
-            else evaluated = leftValue > rightValue ? '1' : '0';
+        if (Exists(biggerIndex) && decider != 2) { // BIGGER
+            // Evaluate expression as BIGGER
+            if (biggerIndex + 1 == assignValueSignIndex){
+                SplitAndProcessArguemnts(argument,registers, biggerIndex,leftValue, rightValue, 2);
+                evaluated = leftValue >= rightValue ? '1' : '0';
+            }
+            else {
+                SplitAndProcessArguemnts(argument,registers, biggerIndex,leftValue, rightValue);
+                evaluated = leftValue > rightValue ? '1' : '0';
+            }
         }
-        else if (Exists(smallerIndex) && decider != 1) { // MINUS
-            // Evaluate expression as subtracting
-            SplitAndProcessArguemnts(argument,registers, minusIndex,leftValue, rightValue);
-            if (smallerIndex + 1 == assignValueSignIndex) evaluated = leftValue <= rightValue ? '1' : '0';
-            else evaluated = leftValue < rightValue ? '1' : '0';
+        else if (Exists(smallerIndex) && decider != 1) { // SMALLER
+            // Evaluate expression as SMALLER
+            if (smallerIndex + 1 == assignValueSignIndex){
+                SplitAndProcessArguemnts(argument,registers, smallerIndex,leftValue, rightValue, 2);
+                evaluated = leftValue <= rightValue ? '1' : '0';
+            }
+            else {
+                SplitAndProcessArguemnts(argument,registers, smallerIndex,leftValue, rightValue);
+                evaluated = leftValue < rightValue ? '1' : '0';
+            }
         }
         return evaluated;
     }
@@ -291,9 +301,11 @@ size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPa
         return closePos; // Pair found
 }
 
-void Instruction::SplitAndProcessArguemnts(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2) {
-    string leftSide = inputArg.substr(0, operatorIndex);
-    string rightSide = inputArg.substr(operatorIndex + 1, inputArg.length() - operatorIndex - 1);
+void Instruction::SplitAndProcessArguemnts(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
+//    size_t shifterR = operatorChars == 1 ? 1 : 0;
+//    size_t shifterL = operatorChars == 1 ? 0 : 1;
+    string leftSide = inputArg.substr(0, operatorIndex/* - shifterL*/);
+    string rightSide = inputArg.substr(operatorIndex + operatorChars, inputArg.length() - operatorIndex /*- shifterR*/);
     if (leftSide.empty()) leftSide = "0";
     if (rightSide.empty()) rightSide = "0";
     string evaluatedLeftSide = ProcessExpression(leftSide, registers);
