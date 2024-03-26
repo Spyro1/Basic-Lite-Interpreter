@@ -6,6 +6,7 @@
 #include "memtrace.h"
 
 #include "include/Computer.h"
+#include "include/IDE.h"
 #include "gtest_lite.h"
 
 
@@ -36,9 +37,11 @@ int main() {
 // === RUN PROGRAM INTERFACE ===
 #ifndef CPORTA
     try{
-        Computer pc;
-        pc.ReadProgramFromFile("../programs/test.dat");
-        pc.RunProgram();
+//        Computer pc;
+//        pc.ReadProgramFromFile("../programs/test.dat");
+//        pc.RunProgram();
+        IDE ide;
+        ide.Run();
     }
     catch (std::exception& e){
         cout << "\n\n" << e.what() << endl;

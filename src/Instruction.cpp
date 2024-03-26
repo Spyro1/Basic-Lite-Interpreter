@@ -34,7 +34,7 @@ string Instruction::getExpression() const {
 }
 
 std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
-//    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << " " << inst.getExpression();
+    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") <<  inst.getExpression();
     return os;
 }
 Instruction::~Instruction() = default;

@@ -9,11 +9,6 @@
 #include "Instruction.h"
 #include "Register.h"
 
-//#define DEBUG
-
-
-#define RUN "run"
-
 class Computer {
     std::vector<Register> registers;       // List of registers
     std::vector<Instruction*> instructions; // List of instructions line by line
@@ -22,9 +17,8 @@ public:
     // -- Constructor --
     /**
      * Creates a computer object that can run a BASIC-lite program.
-     * @param registerCount Number of registers to make the computer with. (Default value is 2: a, i)
      */
-    explicit Computer(size_t registerCount = 2);
+    explicit Computer();
     // -- Functions --
     /**
      * Reads the program from the given file into the 'instructions' list.
@@ -41,11 +35,24 @@ public:
      */
     void NewInstruction(const string& programLine);
     /**
-     *
+     *  Runs the program: Executes the instructions based on the instructionIndex value
+     *  which is modified according to the previous instrcution.
      */
     void RunProgram();
+    /**
+     * Lists the instructions strored int he memory of the computer.
+     * @return Returns a string containing all the instructions displayed line by line.
+     */
+    friend std::ostream& operator<<(std::ostream& os, const Computer& pc);
+
     // -- Destructor --
     ~Computer();
+    /**
+     *
+     * @param str
+     * @return
+     */
+    static string ToUpperCaseStr(const string &str);
 
 private:
     // -- Private functions--
@@ -57,7 +64,6 @@ private:
     void SortInstructions();
     void RemoveInstruction(int lineNumber);
     static bool CompareInstructions(const Instruction *a, const Instruction *b);
-
 };
 
 

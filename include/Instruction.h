@@ -12,11 +12,11 @@ using std::vector;
 #define nopos string::npos
 
 // BASIC command keywords
-#define LET "let"
-#define PRINT "print"
-#define IF "if"
-#define GOTO "goto"
-#define READ "read"
+#define LET "LET"
+#define PRINT "PRINT"
+#define IF "IF"
+#define GOTO "GOTO"
+#define READ "READ"
 
 enum InstructionType { NoType, Print, Let, If, Goto, Read };
 
@@ -42,12 +42,7 @@ public:
     // -- Virtual function --
     virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
     // -- Operators --
-//    bool operator>(const Instruction& rhs) const { return this->lineNumber > rhs.lineNumber; }
-//    bool operator<(const Instruction& rhs) const { return  this->lineNumber < rhs.lineNumber; }
-//    bool operator>=(const Instruction& rhs) const { return this->lineNumber >= rhs.lineNumber; }
-//    bool operator<=(const Instruction& rhs) const { return this->lineNumber <= rhs.lineNumber; }
-//    bool operator==(const Instruction& rhs) const { return this->lineNumber == rhs.lineNumber; }
-//    bool operator!=(const Instruction& rhs) const { return this->lineNumber != rhs.lineNumber; }
+    friend std::ostream& operator<<(std::ostream& os, const Instruction& inst);
     // -- Destructor --
     virtual ~Instruction() = 0;
 protected:
@@ -64,7 +59,6 @@ protected:
 
 };
 
-std::ostream& operator<<(std::ostream& os, const Instruction& inst);
 
 
 #endif //NAGYHAZI_INSTRUCTION_H

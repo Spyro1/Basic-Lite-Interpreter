@@ -24,13 +24,6 @@ public:
     float getValue() const { return value; }
     // -- Setters --
     void SetValue(float newValue) {value = newValue;}
-    // -- Operators --
-//    bool operator>(const Register& rhs) const { return value > rhs.getValue(); }
-//    bool operator<(const Register& rhs) const { return value < rhs.getValue(); }
-//    bool operator>=(const Register& rhs) const { return value >= rhs.getValue(); }
-//    bool operator<=(const Register& rhs) const { return value <= rhs.getValue(); }
-//    bool operator==(const Register& rhs) const { return name == rhs.getName(); }
-//    bool operator!=(const Register& rhs) const { return name != rhs.getName(); }
     // -- Destructor --
     ~Register();
     // -- Static functions --

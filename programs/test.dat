@@ -1,2 +1,5 @@
-10 let a = 1
-20 let i = 2
+10 print "egy"
+20 let banan = 2
+30 if banan == 1
+40 print "valoban egy"
+50 print "inkabb ketto"

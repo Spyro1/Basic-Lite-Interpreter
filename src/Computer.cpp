@@ -13,14 +13,11 @@
 #include "../include/ReadInstruction.h"
 
 
-Computer::Computer(size_t registerCount) {
-    if (registerCount <  2) throw std::underflow_error("Error: There are not enough registers for the computer to work."); // Computer can not work with less than 2 registers. (SPEC)
+Computer::Computer() {
     // Clear instructions
     ClearInstructions();
     // Adding default registers
     registers.clear();
-//    registers.emplace_back("a"); // Base register
-//    registers.emplace_back("i"); // Counter
 }
 
 void Computer::ReadProgramFromFile(const string& filename) {
@@ -33,7 +30,7 @@ void Computer::ReadProgramFromFile(const string& filename) {
     // If file doesn't exist, then throw exception
     if (!filereader.is_open()){
         filereader.close();
-        throw runtime_error(string("File reading error: '") + filename + string("' file not found!"));
+        throw runtime_error(string("[Error]: \"") + filename + string("\" file not found!"));
     }
     // File opened, read in file:
     string line;
@@ -50,7 +47,9 @@ void Computer::ReadProgramFromFile(const string& filename) {
     #endif
 }
 void Computer::NewInstruction(const string& programLine) {
+    instructionIndex = 0;
     ProcessProgramLine(programLine);
+    SortInstructions();
 }
 void Computer::RunProgram() {
     int counter = 0;
@@ -59,7 +58,8 @@ void Computer::RunProgram() {
         ExecuteNextInstruction();
         counter++;
     }
-    if (counter >= infiniteCycle) throw std::overflow_error(string("Program shutdown: Infinite cycle detected!"));
+    if (counter >= infiniteCycle) throw std::runtime_error(string("[Runtime error]: Program shutdown due to infinite cycle!"));
+    std::cout << std::endl;
 }
 
 void Computer::ExecuteNextInstruction() {
@@ -68,7 +68,7 @@ void Computer::ExecuteNextInstruction() {
         instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
     } catch (std::exception& e){
         // Throw error if something passed the error check and it can't compile
-        throw std::runtime_error(string("Error: Unknown error in line: ") + std::to_string(instructions[instructionIndex]->getLineNumber()));
+        throw std::runtime_error(string("[Error]: Unknown error (") + e.what() + string(") in line: ") + std::to_string(instructions[instructionIndex]->getLineNumber()));
     }
 
 }
@@ -87,6 +87,7 @@ void Computer::ProcessProgramLine(const string& line) {
     }
     if (lineNumber < 0) RemoveInstruction(-lineNumber);
     else if (lineNumber != 0) { // if linenumber is 0, then it is a comment
+        command = ToUpperCaseStr(command);
         if (command == LET) {
             instructions.push_back(new LetInstruction(lineNumber, expression));
         }
@@ -139,4 +140,21 @@ void Computer::RemoveInstruction(int lineNumber){
 bool Computer::CompareInstructions(const Instruction* a, const Instruction* b) {
     return a->getLineNumber() < b->getLineNumber();
 }
+string Computer::ToUpperCaseStr(const string& str)
+{
+    string result;
+    for (char ch : str) {
+        result += toupper(ch);
+    }
+    return result;
+}
+
+std::ostream &operator<<(std::ostream &os, const Computer &pc) {
+    os << "[Computer]: size: " << sizeof(pc) << " byte, Number of instructions: " << pc.instructions.size() << " Instruction size: " << sizeof(pc.instructions) << " byte\nInstructions:\n";
+    for (size_t i = 0; i < pc.instructions.size(); ++i) {
+        os << *pc.instructions[i] << "\n";
+    }
+    return os;
+}
+
 

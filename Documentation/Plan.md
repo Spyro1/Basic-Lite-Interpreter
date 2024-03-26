@@ -16,3 +16,12 @@
 | 9         | =            | Értékadás (jobbról balra) | 1                        |
 
 ## Hibakezelés - Lehetséges hibajelzések
+| Hiba                                                     | Leírása                                            |
+|----------------------------------------------------------|----------------------------------------------------|
+| [Error]: Unknown error in line: #                        | Ismeretlen eredetű hiba                            |
+| [Computer]: Unrecognizable command                       | Nem felismerhető parancs                           |
+|                                                          | Új utasítás felvétele már letező sorszámmal        |
+| [Error]: "filename" file not found!                      | Nem található a kívánt fájl                        |
+| [Runtime error]: Program shutdown due to infinite cycle! | A program futás közben leállt végteln ciklus miatt |
+|                                                          |                                                    |
+|
