@@ -77,16 +77,19 @@ Computer::~Computer() {
     ClearInstructions();
 }
 void Computer::ProcessProgramLine(const string& line) {
+    // Output vars
     int lineNumber = 0;
     string expression;
     string command;
-
+    // Spolit to tokens
     SplitLineToTokens(line, lineNumber, command, expression);
+    // Test if line identifier already exists
     if (std::any_of(instructions.begin(), instructions.end(),[&lineNumber](Instruction* inst) { return inst->getLineNumber() == lineNumber; })){
-        throw std::logic_error(string("Syntax error: Line indentifier already exists: ") + std::to_string(lineNumber));
+        throw std::runtime_error(string("[Syntax error]: Line indentifier already exists: ") + std::to_string(lineNumber));
     }
+    // Remove instruction line if it is a negative number
     if (lineNumber < 0) RemoveInstruction(-lineNumber);
-    else if (lineNumber != 0) { // if linenumber is 0, then it is a comment
+    else if (lineNumber != 0) { // If linenumber is 0, then it is a comment
         command = ToUpperCaseStr(command);
         if (command == LET) {
             instructions.push_back(new LetInstruction(lineNumber, expression));
@@ -104,7 +107,8 @@ void Computer::ProcessProgramLine(const string& line) {
             instructions.push_back(new ReadInstruction(lineNumber, expression));
         }
         else {
-            throw std::logic_error(string("Syntax error: Instruction not recognized in line: ") + std::to_string(lineNumber));
+            // Instruction not recognized
+            throw std::logic_error(string("[Syntax error]: Instruction not recognized in line: ") + std::to_string(lineNumber));
         }
     }
 }
@@ -136,25 +140,30 @@ void Computer::RemoveInstruction(int lineNumber){
         }
     }
 }
-
 bool Computer::CompareInstructions(const Instruction* a, const Instruction* b) {
     return a->getLineNumber() < b->getLineNumber();
 }
-string Computer::ToUpperCaseStr(const string& str)
-{
+string Computer::ToUpperCaseStr(const string& str) {
     string result;
     for (char ch : str) {
         result += toupper(ch);
     }
     return result;
 }
-
 std::ostream &operator<<(std::ostream &os, const Computer &pc) {
-    os << "[Computer]: size: " << sizeof(pc) << " byte, Number of instructions: " << pc.instructions.size() << " Instruction size: " << sizeof(pc.instructions) << " byte\nInstructions:\n";
-    for (size_t i = 0; i < pc.instructions.size(); ++i) {
-        os << *pc.instructions[i] << "\n";
+//    os << "[Computer]: Number of instructions: " << pc.instructions.size() << "\n";
+    for (auto instruction : pc.instructions) {
+        os << *instruction << "\n";
     }
     return os;
+}
+size_t Computer::getInstructionCount() const {
+    return instructions.size();
+}
+
+void Computer::ClearProgram() {
+    registers.clear();
+    ClearInstructions();
 }
 
 

@@ -19,6 +19,8 @@ public:
      * Creates a computer object that can run a BASIC-lite program.
      */
     explicit Computer();
+    // -- Getters --
+    size_t getInstructionCount() const;
     // -- Functions --
     /**
      * Reads the program from the given file into the 'instructions' list.
@@ -39,6 +41,7 @@ public:
      *  which is modified according to the previous instrcution.
      */
     void RunProgram();
+    void ClearProgram();
     /**
      * Lists the instructions strored int he memory of the computer.
      * @return Returns a string containing all the instructions displayed line by line.

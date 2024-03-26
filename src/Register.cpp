@@ -1,7 +1,6 @@
 //
 // Created by Szenes Márton on 2024. 03. 14..
 //
-#include <cstring>
 #include <algorithm>
 #include "../include/Register.h"
 

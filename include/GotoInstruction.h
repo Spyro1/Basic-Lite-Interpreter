@@ -17,5 +17,4 @@ public:
     ~GotoInstruction() override;
 };
 
-
 #endif //NAGYHAZI_GOTOINSTRUCTION_H

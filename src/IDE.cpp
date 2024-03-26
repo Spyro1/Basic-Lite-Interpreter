@@ -21,7 +21,7 @@ void IDE::Run() {
     Computer pc;
     string line, commandStr, argumentStr;
     // Print TITLE
-
+    PrintTitle();
     // Run program loop
     while (runIDE){
         cout << "> ";
@@ -54,7 +54,7 @@ void IDE::Run() {
             else if (commandStr == SAVE_CMD){
                 cout << "Program saved to file";
             }
-            else if (isNumber(commandStr) /*!commandStr.empty() && std::all_of(commandStr.begin(), commandStr.end(), ::isdigit)*/){
+            else if (isNumber(commandStr)){
                 // Add new instruction to computer
                 pc.NewInstruction(line);
             }
@@ -67,11 +67,15 @@ void IDE::Run() {
 
     }
 }
-
-void IDE::PrintHelpCommandList(){
+void IDE::PrintTitle() const {
+    cout << "================================== BASIC-lite ====================================\n"
+    <<      "\t\t\t     Made by: Szenes Marton\n"
+    <<      "==================================================================================" << endl;
+}
+void IDE::PrintHelpCommandList() const {
     const string tab = "\t\t\t\t";
     cout << "===================================== HELP =======================================\n"
-    << RUN_CMD << tab << "Runs the instrcutions of the program laoded to the memory\n"
+    << RUN_CMD << tab << "Runs the the program loaded to the memory\n"
     << END_CMD << tab << "Exits the application\n"
     << LIST_CMD << tab << "Displays the instructions of the program in order\n"
     << NEW_CMD << tab << "Creates a new project\n"
@@ -81,7 +85,9 @@ void IDE::PrintHelpCommandList(){
     << "-<id>" << tab << "Remove instruction by the given line number\n"
     << "==================================================================================" << endl;
 }
+void IDE::PrintInstructionList() const {
 
+}
 bool IDE::isNumber(const std::string& str) {
     size_t i = 0;
     bool hasDigits = false;

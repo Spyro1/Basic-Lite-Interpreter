@@ -11,10 +11,8 @@
 using std::string;
 
 class Register {
-//    char* name;
-    string name;
-    float value = 0;
-
+    string name; // Register name
+    float value = 0; // Register value
 public:
     // -- Constructors --
     Register();

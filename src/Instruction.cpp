@@ -267,22 +267,6 @@ string Instruction::RemoveWhiteSpace(const string& str){
     shortened.erase(std::remove_if(shortened.begin(), shortened.end(), ::isspace), shortened.end());
     return shortened;
 }
-size_t Instruction::FindIndexOf(const string& str, char searched) {
-    size_t found = str.find(searched);
-    if (found > str.length()) {
-        return nopos; // Return -1 if not found
-    } else {
-        return found; // Return index if found
-    }
-}
-size_t Instruction::FindLastIndexOf(const string& str, char searched) {
-    size_t found = str.find_last_of(searched);
-    if (found > str.length()) {
-        return nopos; // Return -1 if not found
-    } else {
-        return found; // Return index if found
-    }
-}
 size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPair, char ClosePair)
 {
     size_t closePos = openPos;

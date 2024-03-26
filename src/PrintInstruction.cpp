@@ -19,18 +19,11 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
         //  Remove whitespace
         string shortExpression = RemoveWhiteSpace(expression);
         string evaluated = ProcessExpression(shortExpression, registers);
-        cout << stof(evaluated);
-//        size_t regindex = 0;
-//        while (regindex < registers.size() && registers[regindex].getName() != expression)
-//        { regindex++; }
-//        // Error handling if unrecognized variable was in expression
-//        if (regindex >= registers.size()){
-//            throw logic_error(string("Syntax error: Unrecognized register name in line: ") + to_string(lineNumber));
-//        }
-//        else{
-////            PrintToConsole(to_string(registers[regindex].getValue()));
-//            cout << registers[regindex].getValue();
-//        }
+        try{
+            cout << stof(evaluated);
+        } catch (std::exception& e){
+            throw std::runtime_error(string("[Syntax error]: Can not recognize \"") + expression + string("\" as a print argument in line: ") + std::to_string(lineNumber));
+        }
     }
     else if (doubleComma % 2 == 0){
         size_t begining = expression.find_first_of('"');
@@ -42,7 +35,7 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
         cout << cutted;
     }
     else
-        throw runtime_error(string("Wrong string literal in line: ") + to_string(lineNumber));
+        throw runtime_error(string("[Syntax error]: Wrong string literal in line: ") + to_string(lineNumber));
     instructionIndex++;
 }
 

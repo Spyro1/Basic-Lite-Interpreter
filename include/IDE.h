@@ -21,14 +21,16 @@ class IDE {
     bool runIDE;
     string filename;
 public:
+    // -- Constructors --
     IDE();
+    // -- Functions --
     void Run();
+    static bool isNumber(const string &str) ;
 private:
-    void EvaluateCommand(const string& inputLine);
-
-    void PrintHelpCommandList();
-
-    bool isNumber(const string &str);
+    // -- Private Functions --
+    void PrintHelpCommandList() const;
+    void PrintTitle() const;
+    void PrintInstructionList() const;
 };
 
 #endif //NAGYHAZI_IDE_H

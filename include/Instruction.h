@@ -26,13 +26,11 @@ class Instruction {
 
 protected:
     int lineNumber = -1;
-//    char* expression;
     string expression;
     InstructionType instrTy;
 public:
     // -- Constructors --
     Instruction();
-    //    Instruction(int lineNumber_, const char* expression_);
     Instruction(int lineNumber_, const string& expression_);
     // -- Getters --
     int getLineNumber() const;
@@ -43,8 +41,9 @@ public:
     virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
     // -- Operators --
     friend std::ostream& operator<<(std::ostream& os, const Instruction& inst);
+
     // -- Destructor --
-    virtual ~Instruction() = 0;
+    virtual ~Instruction();
 protected:
     // -- Protected functions --
     string ProcessExpression(string &argument, vector<Register> &registers);
@@ -52,11 +51,8 @@ protected:
     int CountCharacter(const string &str, char ch);
     string RemoveWhiteSpace(const string& str);
     void SplitAndProcessArguemnts(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1) ;
-    size_t FindIndexOf(const string &str, char searched);
-    size_t FindLastIndexOf(const string &str, char searched);
     size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')');
-    inline bool Exists(size_t value) { return value != nopos; }
-
+    static inline bool Exists(size_t value) { return value != nopos; }
 };
 
 
