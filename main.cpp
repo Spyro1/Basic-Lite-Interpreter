@@ -2,7 +2,7 @@
 
 //#define MEMTRACE
 
-#define CPORTA
+//#define CPORTA
 
 #include "memtrace.h"
 #include "include/Computer.h"

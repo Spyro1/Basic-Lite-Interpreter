@@ -20,8 +20,6 @@ using std::vector;
 
 enum InstructionType { NoType, Print, Let, If, Goto, Read };
 
-enum ReturnType { Void, Integer, Boolean};
-
 class Instruction {
 
 protected:

@@ -28,24 +28,6 @@ Megj: nem BASIC interpretert kell írni!
 ```mermaid
 classDiagram
     direction TB
-%%namespace BasicInterpreter {
-%%    class List~C~{
-%%        <<generic>>
-%%        - headPtr*: Node~C~
-%%        - count: int
-%%        + List()
-%%        + getCount() int
-%%        + Add(newItem: C) void
-%%        + Remove(toRemove: C*) bool
-%%        + Clear() void
-%%        + Sort() void
-%%        + operator[](idx: int) C
-%%    }
-%%    class Node { 
-%%        + dataPtr*: C
-%%        + next*: Node~C~ 
-%%    }
-    
     class Computer {
         - registers: List~Register~
         - instructions: List~Instruction~
@@ -67,10 +49,6 @@ classDiagram
         <<enumeration>>
         NoType, Print, Let, If, Goto, Read 
     }
-    class ReturnType{
-        <<enumeration>>
-        Void, Integer, Boolean
-    }
     class Instruction {
         <<abstract>>
         - lineNumber: int
@@ -79,6 +57,7 @@ classDiagram
         + Instruction(lineNumber: int, expression: string)
         + getLineNumber() int
         + getInstructionTypeStr() string
+        + getInstructionType() InstructionType
         + getExpression() string
         + Execute(registers: Vector~Register~, instructions: Vector~Instruction~, instructionIndex: int) void*
     }
@@ -88,7 +67,6 @@ classDiagram
     class IfInstruction
     class ReadInstruction
     
-%%namespace Interface {
     class IDE{
       - active: bool
       + IDE()
@@ -107,10 +85,8 @@ classDiagram
     class LISTCommand
     class NEWCommand
     class LOADCommand
-    class SAVECommand  
-%%}
-%%    direction TB
-%%}
+    class SAVECommand
+    
 %%    Computer --> List : uses   
 %%    List "1" *-- "0..*" Node : contains
     IDE "1" *-- "1" Computer : contains

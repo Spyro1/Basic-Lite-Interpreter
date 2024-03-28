@@ -16,6 +16,7 @@ add_executable(Nagyhazi main.cpp
         include/GotoInstruction.h   src/GotoInstruction.cpp
         include/ReadInstruction.h   src/ReadInstruction.cpp
         include/IDE.h src/IDE.cpp
+        include/Command.h
 )
 add_compile_definitions(MEMTRACE)
 target_compile_options(Nagyhazi PRIVATE -Wall -Werror)
