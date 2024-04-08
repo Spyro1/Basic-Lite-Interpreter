@@ -14,12 +14,12 @@
 #define SAVE_CMD "SAVE"
 
 #include <string>
+#include "Computer.h"
 
 using std::string;
 
 class IDE {
     bool runIDE;
-    string filename;
 public:
     // -- Constructors --
     IDE();
@@ -30,7 +30,9 @@ private:
     // -- Private Functions --
     void PrintHelpCommandList() const;
     void PrintTitle() const;
-    void PrintInstructionList() const;
+    void LoadProgramFile(Computer &pc, const string& file);
+    void SaveProgramFile(Computer &pc, const string &file);
+    void NewProgramProject(Computer &pc);
 };
 
 #endif //NAGYHAZI_IDE_H

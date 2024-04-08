@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <regex>
+#include <fstream>
 #include "../include/IDE.h"
 #include "../include/Computer.h"
 
@@ -12,24 +13,27 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-IDE::IDE() {
-
-}
+IDE::IDE() : runIDE(true) { }
 void IDE::Run() {
     using namespace std;
-    runIDE = true;
-    Computer pc;
-    string line, commandStr, argumentStr;
-    // Print TITLE
+    Computer pc; // Computer of the program
+    // Print Title
     PrintTitle();
     // Run program loop
     while (runIDE){
         cout << "> ";
         // Read line
+        string line, commandStr, argumentStr; // Input line
+        cin.clear();
         std::getline(cin, line);
+//        cin >> line;
+//        cout << cin.good() ;
+
         // Split line tot tokens
         std::istringstream iss(line);
         std::getline(iss >> commandStr >> std::ws, argumentStr);
+//        std::getline(cin >> commandStr >> std::ws, argumentStr);
+
         // Convert command string to upper case for comparing
         commandStr = Computer::ToUpperCaseStr(commandStr);
         try {
@@ -38,6 +42,7 @@ void IDE::Run() {
             }
             else if (commandStr == RUN_CMD){
                 pc.RunProgram();
+                cout << "[Computer]: Ready." << endl;
             }
             else if (commandStr == END_CMD){
                 runIDE = false;
@@ -46,13 +51,13 @@ void IDE::Run() {
                 cout << pc << endl;
             }
             else if (commandStr == NEW_CMD){
-                cout << "New program created";
+                NewProgramProject(pc);
             }
             else if (commandStr == LOAD_CMD){
-                cout << "Program loaded from file";
+                LoadProgramFile(pc, argumentStr);
             }
             else if (commandStr == SAVE_CMD){
-                cout << "Program saved to file";
+                SaveProgramFile(pc, argumentStr);
             }
             else if (isNumber(commandStr)){
                 // Add new instruction to computer
@@ -62,14 +67,14 @@ void IDE::Run() {
                 cout << "[Computer]: Unrecognizable command!" << endl;
             }
         } catch (std::exception& e){
-            cout << "\n" << e.what() << endl;
+            cout/* << "\n"*/ << e.what() << endl;
         }
 
     }
 }
 void IDE::PrintTitle() const {
     cout << "================================== BASIC-lite ====================================\n"
-    <<      "\t\t\t     Made by: Szenes Marton\n"
+    <<      "\t\t\t     Made by: Marton Szenes\n"
     <<      "==================================================================================" << endl;
 }
 void IDE::PrintHelpCommandList() const {
@@ -85,8 +90,25 @@ void IDE::PrintHelpCommandList() const {
     << "-<id>" << tab << "Remove instruction by the given line number\n"
     << "==================================================================================" << endl;
 }
-void IDE::PrintInstructionList() const {
-
+void IDE::LoadProgramFile(Computer& pc, const string& file) {
+    pc.ReadProgramFromFile(file);
+    cout << "[Computer]: Program loaded from file." << endl;
+}
+void IDE::SaveProgramFile(Computer& pc, const string& file){
+    std::fstream fileWriter;
+    fileWriter.open(file, std::ios::out);
+    if (fileWriter.is_open()){
+        fileWriter << pc << endl;
+        cout << "[Computer]: Program saved to file." << endl;
+    }
+    else{
+        cout << "[Computer]: Can not save to file." << endl;
+    }
+    fileWriter.close();
+}
+void IDE::NewProgramProject(Computer& pc){
+    pc.ClearProgram();
+    cout << "[Computer]: New program created." << endl;
 }
 bool IDE::isNumber(const std::string& str) {
     size_t i = 0;

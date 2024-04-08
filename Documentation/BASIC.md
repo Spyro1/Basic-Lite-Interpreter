@@ -72,26 +72,11 @@ classDiagram
       + IDE()
       + Run() void
     }
-    class CommandType { RUN, END, LIST, NEW, LOAD, SAVE }
-    class Command{
-      <<abstract>>
-      - cmdTy: CommandType
-      + Command()
-      + Execute(argument: string) void*
-    }
-    class HELPCommand
-    class RUNCommand
-    class ENDCommand
-    class LISTCommand
-    class NEWCommand
-    class LOADCommand
-    class SAVECommand
     
 %%    Computer --> List : uses   
 %%    List "1" *-- "0..*" Node : contains
     IDE "1" *-- "1" Computer : contains
     CommandType <-- Command : uses
-    IDE --> Command : uses
 %%    Computer "1" --* "1" IDE
     
     Computer "1" *-- "0..*" Instruction : contains
@@ -110,37 +95,25 @@ classDiagram
     Instruction <|-- IfInstruction
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
-    
-    
-    Command <|-- HELPCommand
-    Command <|-- RUNCommand
-    Command <|-- ENDCommand
-    Command <|-- LISTCommand
-    Command <|-- NEWCommand
-    Command <|-- LOADCommand
-    Command <|-- SAVECommand
-    
-    %% Notes
-      
 ```
 
 
 ### Hátralévő feladatok
-- [ ] Let Instruction kidolgozása
+- [x] Let Instruction kidolgozása
 - [x] Print Instruction kidolgozása
   - [x] Regsizter kiiratás
   - [x] Szöveg kiiratás
 - [x] If Instrucion kidolgozása
 - [x] Goto Instruction kidolgozása
-- [ ] Read Instrucition kidolgozása
+- [x] Read Instrucition kidolgozása
 - [x] ExecuteNextInstruction megírása
-- [ ] Interfész kidolgozása
-  - [ ] RUN utasítás
-  - [ ] HELP utasítás
-  - [ ] END utasítás
-  - [ ] LIST utasítás
-  - [ ] NEW utasítás
-  - [ ] SAVE utasítás
+- [x] Interfész kidolgozása
+  - [x] RUN utasítás
+  - [x] HELP utasítás
+  - [x] END utasítás
+  - [x] LIST utasítás
+  - [x] NEW utasítás
+  - [x] SAVE utasítás
   - [x] LOAD utasítás
 
 ## Interfész parancsok

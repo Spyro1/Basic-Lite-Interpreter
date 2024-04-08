@@ -54,6 +54,7 @@ void Computer::NewInstruction(const string& programLine) {
 void Computer::RunProgram() {
     int counter = 0;
     const int infiniteCycle = 10000;
+    instructionIndex = 0;
     while ((size_t)instructionIndex < instructions.size() && counter <= infiniteCycle){
         ExecuteNextInstruction();
         counter++;

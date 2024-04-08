@@ -1,4 +1,4 @@
-10 print "Írjon be egy számot: "
+10 print "Irjon be egy szamot: "
 15 let szam = 0
 20 read szam
 0 let szam = 11
@@ -10,8 +10,8 @@
 80 goto 106
 90 goto 40
 
-100 print "\nNem prím szám"
+100 print "\nNem prim szam"
 101 goto 110
 
-106 print "\nPrím szám"
+106 print "\nPrim szam"
 110 print ""
