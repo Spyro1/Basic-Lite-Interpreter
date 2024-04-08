@@ -57,9 +57,9 @@ Ezalól kivétel ha sztringet írunk be a `print` utasításhoz, aminél termés
 
 Így például a `10 let a = 4 * ( b - c )` sort így bontja fel:
 
-| Sorszám | Utasítás | Praméter    |
-| ------- | -------- | ----------- |
-| `10`    | `let`    | `a=4*(b-c)` |
+| Sorszám   | Utasítás  | Praméter    |
+|-----------|-----------|-------------|
+| `10`      | `let`     | `a=4*(b-c)` |
 
 Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, ahol `b` és `c` regiszterneveket jelölnek, és annak értékeire hivatkoznak.
 

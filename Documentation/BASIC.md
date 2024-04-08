@@ -28,6 +28,11 @@ Megj: nem BASIC interpretert kell írni!
 ```mermaid
 classDiagram
     direction TB
+    class IDE{
+      - active: bool
+      + IDE()
+      + Run() void
+    }
     class Computer {
         - registers: List~Register~
         - instructions: List~Instruction~
@@ -67,29 +72,12 @@ classDiagram
     class IfInstruction
     class ReadInstruction
     
-    class IDE{
-      - active: bool
-      + IDE()
-      + Run() void
-    }
-    
-%%    Computer --> List : uses   
-%%    List "1" *-- "0..*" Node : contains
-    IDE "1" *-- "1" Computer : contains
-    CommandType <-- Command : uses
-%%    Computer "1" --* "1" IDE
-    
+    IDE "1" *-- "1" Computer : contains    
     Computer "1" *-- "0..*" Instruction : contains
     Computer "1" *-- "2..*" Register : contains
-    
-    ReturnType <-- Instruction : uses
-    InstructionType <-- Instruction : uses
+    InstructionType "1" --* "1" Instruction : defines
     Register <-- Instruction : uses
-    
-%%    List <-- Instruction : uses
-%%    Instruction --> InstructionType : uses
-%%    Instruction --> ReturnType : uses
-    
+
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
     Instruction <|-- IfInstruction
@@ -97,24 +85,9 @@ classDiagram
     Instruction <|-- ReadInstruction
 ```
 
-
 ### Hátralévő feladatok
-- [x] Let Instruction kidolgozása
-- [x] Print Instruction kidolgozása
-  - [x] Regsizter kiiratás
-  - [x] Szöveg kiiratás
-- [x] If Instrucion kidolgozása
-- [x] Goto Instruction kidolgozása
-- [x] Read Instrucition kidolgozása
-- [x] ExecuteNextInstruction megírása
-- [x] Interfész kidolgozása
-  - [x] RUN utasítás
-  - [x] HELP utasítás
-  - [x] END utasítás
-  - [x] LIST utasítás
-  - [x] NEW utasítás
-  - [x] SAVE utasítás
-  - [x] LOAD utasítás
+- [ ] Run után két > > -t rak valamiért
+- [ ] Run -read-be karaktert írva végtelen >-t ír ki 
 
 ## Interfész parancsok
 A program indulásakot egy CLI-s felület fogadja a felhasználót. Itt az alábbi parancsok adhatóak ki:
