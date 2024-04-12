@@ -20,6 +20,10 @@ public:
      */
     explicit Computer();
     // -- Getters --
+    /**
+     * Gives the number of instructions in the program
+     * @return Number of instructions
+     */
     size_t getInstructionCount() const;
     // -- Functions --
     /**
@@ -41,9 +45,12 @@ public:
      *  which is modified according to the previous instrcution.
      */
     void RunProgram();
+    /**
+     * Clears the list of instructions from the program memory and resets the instruction count to 0.
+     */
     void ClearProgram();
     /**
-     * Lists the instructions strored int he memory of the computer.
+     * Lists the instructions strored in the memory of the computer.
      * @return Returns a string containing all the instructions displayed line by line.
      */
     friend std::ostream& operator<<(std::ostream& os, const Computer& pc);
@@ -51,21 +58,51 @@ public:
     // -- Destructor --
     ~Computer();
     /**
-     *
-     * @param str
-     * @return
+     * Converts the string to upper case letters
+     * @param str Input string
+     * @return Upper case lettered string
      */
     static string ToUpperCaseStr(const string &str);
 
 private:
     // -- Private functions--
+    /**
+     * Executes the next instruction in the line based on the instrcutionIndex's value
+     */
     void ExecuteNextInstruction();
+    /**
+     * Evaluates the inputed line. Seperates the input line to tokens (line number, instruction, argument),
+     * and adds the new instrcutin to the list.
+     * @param inputLine New instruction line: <id> <instruction> <parameter>
+     */
     void ProcessProgramLine(const string& inputLine);
+    /**
+     *
+     * @param inputLine
+     * @param lineNumber
+     * @param command
+     * @param expression
+     */
     void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
-
+    /**
+     *
+     */
     void ClearInstructions();
+    /**
+     *
+     */
     void SortInstructions();
+    /**
+     *
+     * @param lineNumber
+     */
     void RemoveInstruction(int lineNumber);
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     static bool CompareInstructions(const Instruction *a, const Instruction *b);
 };
 

@@ -60,7 +60,7 @@ void Computer::RunProgram() {
         counter++;
     }
     if (counter >= infiniteCycle) throw std::runtime_error(string("[Runtime error]: Program shutdown due to infinite cycle!"));
-    std::cout << std::endl;
+    //std::cout << std::endl;
 }
 
 void Computer::ExecuteNextInstruction() {

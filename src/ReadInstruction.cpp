@@ -14,7 +14,7 @@ void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> 
     size_t regIndex = Register::FindRegisterIndex(registers, expression);
     // Error handling if unrecognized variable was in expression
     if (regIndex >= registers.size()) {
-        throw logic_error(string("[Syntax error]: Uninitialized register used in line: ") + to_string(lineNumber));
+        throw std::runtime_error(string("[Syntax error]: Uninitialized register used in line: ") + to_string(lineNumber));
     }
     else{
         float newValue;

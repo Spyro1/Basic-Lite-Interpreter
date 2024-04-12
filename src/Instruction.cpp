@@ -9,8 +9,8 @@
 Instruction::Instruction() : lineNumber(0) { instrTy = InstructionType::NoType; }
 
 Instruction::Instruction(int lineNumber_, const string &expression_) {
-    this->expression = expression_;
     this->lineNumber = lineNumber_;
+    this->expression = RemoveWhiteSpace(expression_);
     instrTy = InstructionType::NoType;
 }
 int Instruction::getLineNumber() const {
@@ -34,7 +34,7 @@ string Instruction::getExpression() const {
 }
 
 std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
-    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") <<  inst.getExpression();
+    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") << inst.getExpression();
     return os;
 }
 Instruction::~Instruction() = default;
