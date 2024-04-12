@@ -15,24 +15,33 @@
 
 #include <string>
 #include "Computer.h"
+#include "Command.h"
 
 using std::string;
 
+
 class IDE {
-    bool runIDE;
+    static bool active;
+    static Computer pc; // Computer of the program
+    static string filename;
+    std::vector<Command> commands;
 public:
     // -- Constructors --
     IDE();
     // -- Functions --
     void Run();
-    static bool isNumber(const string &str) ;
 private:
     // -- Private Functions --
-    void PrintHelpCommandList() const;
-    void PrintTitle() const;
-    void LoadProgramFile(Computer &pc, const string& file);
-    void SaveProgramFile(Computer &pc, const string &file);
-    void NewProgramProject(Computer &pc);
+    bool isNumber(const string &str);
+    // -- Finctions to commands --
+    void PrintTitle();
+    static void HelpCommandFunc();
+    static void RunCommandFunc();
+    static void EndCommandFunc();
+    static void ListCommandFunc();
+    static void LoadCommandFunc();
+    static void SaveCommandFunc();
+    static void NewCommandFunc();
 };
 
 #endif //NAGYHAZI_IDE_H

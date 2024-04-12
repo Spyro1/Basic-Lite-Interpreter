@@ -13,14 +13,26 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-IDE::IDE() : runIDE(true) { }
+bool IDE::active = true;
+Computer IDE::pc;
+string IDE::filename;
+
+IDE::IDE() {
+    commands.emplace_back(HELP_CMD, HelpCommandFunc);
+    commands.emplace_back(RUN_CMD, RunCommandFunc);
+    commands.emplace_back(END_CMD, EndCommandFunc);
+    commands.emplace_back(LIST_CMD, ListCommandFunc);
+    commands.emplace_back(LOAD_CMD, LoadCommandFunc);
+    commands.emplace_back(SAVE_CMD, SaveCommandFunc);
+    commands.emplace_back(NEW_CMD, NewCommandFunc);
+}
 void IDE::Run() {
     using namespace std;
-    Computer pc; // Computer of the program
+//    Computer pc;
     // Print Title
     PrintTitle();
     // Run program loop
-    while (runIDE){
+    while (active){
         cout << "> ";
         // Read line
         string line, commandStr, argumentStr; // Input line
@@ -36,48 +48,37 @@ void IDE::Run() {
 
         // Convert command string to upper case for comparing
         commandStr = Computer::ToUpperCaseStr(commandStr);
+        filename = argumentStr;
         try {
-            if (commandStr == HELP_CMD){
-                PrintHelpCommandList();
+            // Iterate through commands
+            size_t i = 0;
+            while (i < commands.size()){
+                if (commands[i] == commandStr) { // check if the command is the inputed one
+                    commands[i](); // Call command fucntion
+                    break;
+                }
+                i++;
             }
-            else if (commandStr == RUN_CMD){
-                pc.RunProgram();
-                cout << "[Computer]: Ready." << endl;
-            }
-            else if (commandStr == END_CMD){
-                runIDE = false;
-            }
-            else if (commandStr == LIST_CMD){
-                cout << pc << endl;
-            }
-            else if (commandStr == NEW_CMD){
-                NewProgramProject(pc);
-            }
-            else if (commandStr == LOAD_CMD){
-                LoadProgramFile(pc, argumentStr);
-            }
-            else if (commandStr == SAVE_CMD){
-                SaveProgramFile(pc, argumentStr);
-            }
-            else if (isNumber(commandStr)){
-                // Add new instruction to computer
-                pc.NewInstruction(line);
-            }
-            else if (!commandStr.empty()){
-                cout << "[Computer]: Unrecognizable command!" << endl;
+            if (i >= commands.size()){
+                if (isNumber(commandStr)){
+                    pc.NewInstruction(line); // Add new instruction to computer
+                }
+                else if (!commandStr.empty()){
+                    cout << "[Computer]: Unrecognizable command!" << endl;
+                }
             }
         } catch (std::exception& e){
-            cout/* << "\n"*/ << e.what() << endl;
+            cout << "\n" << e.what() << endl;
         }
 
     }
 }
-void IDE::PrintTitle() const {
+void IDE::PrintTitle() {
     cout << "================================== BASIC-lite ====================================\n"
     <<      "\t\t\t     Made by: Marton Szenes\n"
     <<      "==================================================================================" << endl;
 }
-void IDE::PrintHelpCommandList() const {
+void IDE::HelpCommandFunc() {
     const string tab = "\t\t\t\t";
     cout << "===================================== HELP =======================================\n"
     << RUN_CMD << tab << "Runs the the program loaded to the memory\n"
@@ -88,27 +89,39 @@ void IDE::PrintHelpCommandList() const {
     << SAVE_CMD << " <filename>\t\t\tSaves the opened project with the given file name\n"
     << "<id> <instruction> <parameter>\tAdd new instruction to the program\n"
     << "-<id>" << tab << "Remove instruction by the given line number\n"
-    << "==================================================================================" << endl;
+    << "==================================================================================\n" << endl;
 }
-void IDE::LoadProgramFile(Computer& pc, const string& file) {
-    pc.ReadProgramFromFile(file);
-    cout << "[Computer]: Program loaded from file." << endl;
+void IDE::RunCommandFunc() {
+    pc.RunProgram();
+    cout << "[Computer]: Ready.\n" << endl;
 }
-void IDE::SaveProgramFile(Computer& pc, const string& file){
+
+void IDE::EndCommandFunc() {
+    active = false;
+}
+void IDE::ListCommandFunc() {
+    cout << pc;
+    cout << "[Computer]: Instructions listed.\n" << endl;
+}
+void IDE::LoadCommandFunc() {
+    pc.ReadProgramFromFile(filename);
+    cout << "[Computer]: Program loaded from file.\n" << endl;
+}
+void IDE::SaveCommandFunc(){
     std::fstream fileWriter;
-    fileWriter.open(file, std::ios::out);
+    fileWriter.open(filename, std::ios::out);
     if (fileWriter.is_open()){
         fileWriter << pc << endl;
-        cout << "[Computer]: Program saved to file." << endl;
+        cout << "[Computer]: Program saved to file.\n" << endl;
     }
     else{
-        cout << "[Computer]: Can not save to file." << endl;
+        cout << "[Computer]: Can not save to file.\n" << endl;
     }
     fileWriter.close();
 }
-void IDE::NewProgramProject(Computer& pc){
+void IDE::NewCommandFunc(){
     pc.ClearProgram();
-    cout << "[Computer]: New program created." << endl;
+    cout << "[Computer]: New program created.\n" << endl;
 }
 bool IDE::isNumber(const std::string& str) {
     size_t i = 0;
@@ -122,3 +135,7 @@ bool IDE::isNumber(const std::string& str) {
     }
     return i == str.length() && hasDigits;
 }
+
+
+
+
