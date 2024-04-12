@@ -73,11 +73,29 @@ void IDE::Run() {
 
     }
 }
+
+// -- Private Functions --
+
 void IDE::PrintTitle() {
     cout << "================================== BASIC-lite ====================================\n"
     <<      "\t\t\t     Made by: Marton Szenes\n"
     <<      "==================================================================================" << endl;
 }
+bool IDE::isNumber(const std::string& str) {
+    size_t i = 0;
+    bool hasDigits = false;
+    // Check for optional presign
+    if (i < str.length() && (str[i] == '+' || str[i] == '-')) { i++; }
+    // Check for digits
+    while (i < str.length() && std::isdigit(str[i])) {
+        hasDigits = true;
+        i++;
+    }
+    return i == str.length() && hasDigits;
+}
+
+// -- Functions to commands --
+
 void IDE::HelpCommandFunc(Computer& pc, const string& filename) {
     const string tab = "\t\t\t\t";
     cout << "===================================== HELP =======================================\n"
@@ -95,7 +113,6 @@ void IDE::RunCommandFunc(Computer& pc, const string& filename) {
     pc.RunProgram();
     cout << "[Computer]: Ready.\n" << endl;
 }
-
 void IDE::EndCommandFunc(Computer& pc, const string& filename) {
     active = false;
 }
@@ -123,18 +140,7 @@ void IDE::NewCommandFunc(Computer& pc, const string& filename){
     pc.ClearProgram();
     cout << "[Computer]: New program created.\n" << endl;
 }
-bool IDE::isNumber(const std::string& str) {
-    size_t i = 0;
-    bool hasDigits = false;
-    // Check for optional presign
-    if (i < str.length() && (str[i] == '+' || str[i] == '-')) { i++; }
-    // Check for digits
-    while (i < str.length() && std::isdigit(str[i])) {
-        hasDigits = true;
-        i++;
-    }
-    return i == str.length() && hasDigits;
-}
+
 
 
 

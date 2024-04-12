@@ -27,28 +27,42 @@ Megj: nem BASIC interpretert kell írni!
 ## BASIC interpreter - Osztálydiagram
 ```mermaid
 classDiagram
-    direction TB
+    direction LR
     class IDE{
       - active: bool
+      - pc: Computer
+      - commands[]: Command
       + IDE()
       + Run() void
+      - PrintTitle() void
+      - isNumber() bool$
+      - HelpCommandFunc() void$
+      - RunCommandFunc() void$
+      - EndCommandFunc() void$
+      - ListCommandFunc() void$
+      - LoadCommandFunc() void$
+      - SaveCommandFunc() void$
+      - NewCommandFunc() void$
     }
     class Computer {
         - registers: List~Register~
         - instructions: List~Instruction~
         - instructionIndex: int
-        + Computer(registerCount: int)
+        + Computer()
+        + getInstructionCount() int
         + ReadProgramFromFile(filename: string) void
         + NewInstruction(programLine: string) void
         + RunProgram() void
-        + ExecuteNextInstruction() void        
+        + ClearProgram() void
+        - ExecuteNextInstruction() void
     }    
     class Register{
         - name: string
-        - value: int
+        - value: float
         + Register(name: string, value: int)
         + getName() string
         + getValue() int
+        + setValue(newValue: float) void
     }
     class InstructionType { 
         <<enumeration>>
@@ -65,6 +79,7 @@ classDiagram
         + getInstructionType() InstructionType
         + getExpression() string
         + Execute(registers: Vector~Register~, instructions: Vector~Instruction~, instructionIndex: int) void*
+        - ProcessExpression(argument: string, registers: Vector~Register~) string
     }
     class LetInstruction
     class PrintInstruction
@@ -72,10 +87,18 @@ classDiagram
     class IfInstruction
     class ReadInstruction
     
+    class Command{
+        - command: string
+        - (*func)() void
+        + Command(cmdStr: string, (*funcPtr)(): void)
+        + operator()() void
+        + operator==() bool
+    }
+    
     IDE "1" *-- "1" Computer : contains    
+    IDE "1" *-- "0..*" Command
     Computer "1" *-- "0..*" Instruction : contains
-    Computer "1" *-- "2..*" Register : contains
-    InstructionType "1" --* "1" Instruction : defines
+    Computer "1" *-- "1..*" Register : contains
     Register <-- Instruction : uses
 
     Instruction <|-- LetInstruction
@@ -83,6 +106,8 @@ classDiagram
     Instruction <|-- IfInstruction
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
+    Instruction "1" *-- "1" InstructionType : defines
+    
 ```
 
 ### Hátralévő feladatok

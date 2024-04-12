@@ -19,7 +19,6 @@
 
 using std::string;
 
-
 class IDE {
     static bool active;
     Computer pc; // Computer of the program
@@ -28,13 +27,13 @@ class IDE {
 public:
     // -- Constructors --
     IDE();
-    // -- Functions --
+    // -- Public Functions --
     void Run();
 private:
     // -- Private Functions --
-    bool isNumber(const string &str);
-    // -- Finctions to commands --
     void PrintTitle();
+    static bool isNumber(const string &str);
+    // -- Functions to commands --
     static void HelpCommandFunc(Computer& pc, const string& filename);
     static void RunCommandFunc(Computer& pc, const string& filename);
     static void EndCommandFunc(Computer& pc, const string& filename);

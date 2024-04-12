@@ -20,7 +20,7 @@ public:
      * @param cmdStr String literal fo the command
      * @param funcPtr This function is calld, when the command is inputed
      */
-    Command(const char* cmdStr, void (*funcPtr)(Computer& pc, const string& filename));
+    explicit Command(const char* cmdStr,  void (*funcPtr)(Computer& pc, const string& filename) = nullptr);
     // -- Operators --
     /**
      * Calls the Function dedicated to this command
@@ -33,6 +33,5 @@ public:
      */
     bool operator==(const string& str);
 };
-
 
 #endif //NAGYHAZI_COMMAND_H
