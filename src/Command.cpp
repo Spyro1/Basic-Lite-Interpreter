@@ -4,10 +4,10 @@
 
 #include "../include/Command.h"
 
-Command::Command(const char* cmdStr, void (*funcPtr)()) : command(cmdStr), func(funcPtr) {}
+Command::Command(const char* cmdStr, void (*funcPtr)(Computer& pc, const string& filename)) : command(cmdStr), func(funcPtr) {}
 
-void Command::operator()() {
-    func();
+void Command::operator()(Computer& pc, const string& filename) {
+    func(pc, filename);
 }
 
 bool Command::operator==(const string &str) {

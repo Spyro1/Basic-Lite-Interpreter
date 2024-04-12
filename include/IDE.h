@@ -22,8 +22,8 @@ using std::string;
 
 class IDE {
     static bool active;
-    static Computer pc; // Computer of the program
-    static string filename;
+    Computer pc; // Computer of the program
+//    string filename;
     std::vector<Command> commands;
 public:
     // -- Constructors --
@@ -35,13 +35,13 @@ private:
     bool isNumber(const string &str);
     // -- Finctions to commands --
     void PrintTitle();
-    static void HelpCommandFunc();
-    static void RunCommandFunc();
-    static void EndCommandFunc();
-    static void ListCommandFunc();
-    static void LoadCommandFunc();
-    static void SaveCommandFunc();
-    static void NewCommandFunc();
+    static void HelpCommandFunc(Computer& pc, const string& filename);
+    static void RunCommandFunc(Computer& pc, const string& filename);
+    static void EndCommandFunc(Computer& pc, const string& filename);
+    static void ListCommandFunc(Computer& pc, const string& filename);
+    static void LoadCommandFunc(Computer& pc, const string& filename);
+    static void SaveCommandFunc(Computer& pc, const string& filename);
+    static void NewCommandFunc(Computer& pc, const string& filename);
 };
 
 #endif //NAGYHAZI_IDE_H

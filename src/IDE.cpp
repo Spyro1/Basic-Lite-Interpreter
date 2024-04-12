@@ -14,8 +14,8 @@ using std::cout;
 using std::endl;
 
 bool IDE::active = true;
-Computer IDE::pc;
-string IDE::filename;
+//Computer IDE::pc;
+//string IDE::filename;
 
 IDE::IDE() {
     commands.emplace_back(HELP_CMD, HelpCommandFunc);
@@ -48,13 +48,13 @@ void IDE::Run() {
 
         // Convert command string to upper case for comparing
         commandStr = Computer::ToUpperCaseStr(commandStr);
-        filename = argumentStr;
+//        filename = argumentStr;
         try {
             // Iterate through commands
             size_t i = 0;
             while (i < commands.size()){
                 if (commands[i] == commandStr) { // check if the command is the inputed one
-                    commands[i](); // Call command fucntion
+                    commands[i](pc, argumentStr); // Call command fucntion
                     break;
                 }
                 i++;
@@ -78,7 +78,7 @@ void IDE::PrintTitle() {
     <<      "\t\t\t     Made by: Marton Szenes\n"
     <<      "==================================================================================" << endl;
 }
-void IDE::HelpCommandFunc() {
+void IDE::HelpCommandFunc(Computer& pc, const string& filename) {
     const string tab = "\t\t\t\t";
     cout << "===================================== HELP =======================================\n"
     << RUN_CMD << tab << "Runs the the program loaded to the memory\n"
@@ -91,23 +91,23 @@ void IDE::HelpCommandFunc() {
     << "-<id>" << tab << "Remove instruction by the given line number\n"
     << "==================================================================================\n" << endl;
 }
-void IDE::RunCommandFunc() {
+void IDE::RunCommandFunc(Computer& pc, const string& filename) {
     pc.RunProgram();
     cout << "[Computer]: Ready.\n" << endl;
 }
 
-void IDE::EndCommandFunc() {
+void IDE::EndCommandFunc(Computer& pc, const string& filename) {
     active = false;
 }
-void IDE::ListCommandFunc() {
+void IDE::ListCommandFunc(Computer& pc, const string& filename) {
     cout << pc;
     cout << "[Computer]: Instructions listed.\n" << endl;
 }
-void IDE::LoadCommandFunc() {
+void IDE::LoadCommandFunc(Computer& pc, const string& filename) {
     pc.ReadProgramFromFile(filename);
     cout << "[Computer]: Program loaded from file.\n" << endl;
 }
-void IDE::SaveCommandFunc(){
+void IDE::SaveCommandFunc(Computer& pc, const string& filename){
     std::fstream fileWriter;
     fileWriter.open(filename, std::ios::out);
     if (fileWriter.is_open()){
@@ -119,7 +119,7 @@ void IDE::SaveCommandFunc(){
     }
     fileWriter.close();
 }
-void IDE::NewCommandFunc(){
+void IDE::NewCommandFunc(Computer& pc, const string& filename){
     pc.ClearProgram();
     cout << "[Computer]: New program created.\n" << endl;
 }
