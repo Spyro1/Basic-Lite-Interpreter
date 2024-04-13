@@ -30,7 +30,6 @@ classDiagram
     direction LR
     class IDE{
       - active: bool
-      - pc: Computer
       - commands[]: Command
       + IDE()
       + Run() void
@@ -45,8 +44,8 @@ classDiagram
       - NewCommandFunc() void$
     }
     class Computer {
-        - registers: List~Register~
-        - instructions: List~Instruction~
+        - registers: Register[]
+        - instructions: Instruction[]
         - instructionIndex: int
         + Computer()
         + getInstructionCount() int
@@ -78,8 +77,8 @@ classDiagram
         + getInstructionTypeStr() string
         + getInstructionType() InstructionType
         + getExpression() string
-        + Execute(registers: Vector~Register~, instructions: Vector~Instruction~, instructionIndex: int) void*
-        - ProcessExpression(argument: string, registers: Vector~Register~) string
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void*
+        - ProcessExpression(argument: string, registers: Register[]) string
     }
     class LetInstruction
     class PrintInstruction
@@ -88,7 +87,7 @@ classDiagram
     class ReadInstruction
     
     class Command{
-        - command: string
+        - cmdStr: string
         - (*func)() void
         + Command(cmdStr: string, (*funcPtr)(): void)
         + operator()() void
@@ -99,7 +98,7 @@ classDiagram
     IDE "1" *-- "0..*" Command
     Computer "1" *-- "0..*" Instruction : contains
     Computer "1" *-- "1..*" Register : contains
-    Register <-- Instruction : uses
+    Register o-- Instruction : uses
 
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
@@ -115,7 +114,7 @@ sequenceDiagram
     actor User
     
     loop 
-    User ->> IDE: input command line
+    User ->> IDE: input cmdStr line
         IDE ->> Computer : Inetrpret line
     end
 ```

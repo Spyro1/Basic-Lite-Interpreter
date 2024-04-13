@@ -27,7 +27,7 @@ Az alábbi **BASIC-lite** program például kiírja az első 5db páratlan szám
 
 ## IDE - Interfész
 
-A program indulásakot egy CLI-s felület fogadja a felhasználót. Itt az alábbi parancsok adhatóak ki:
+A program indulásakor egy CLI-s felület fogadja a felhasználót. Itt az alábbi parancsok adhatóak ki:
 
 - `HELP`: Kiírja az interfész parancsait, és működésüket
 - `RUN`: Futtatja a betöltött programot.
@@ -65,7 +65,7 @@ Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, aho
 
 ### Sorszám:
 
-Egy program kódsor sorszám egy 0-nál nagyobb pozitív egész szám mindig.
+Egy program kódsor sorszám egy 0-nál yobbo pozitív egész szám mindig.
 Amennyiben a sorszám 0, úgy az a sor kommentnek tekintendő, és nem kerül kiértékelésre a futtatás során.
 Ha a sorszám negatív, úgy a fent említett módon törlődik az utasítás a program memóriából. Minden más esetben, ha az első argumentum nem egy egész szám, úgy a program hibát dob.
 

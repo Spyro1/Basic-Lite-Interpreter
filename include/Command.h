@@ -11,7 +11,7 @@
 using std::string;
 
 class Command {
-    string command;
+    string cmdStr;
     void (*func)(Computer& pc, const string& filename);
 public:
     // -- Constructor --

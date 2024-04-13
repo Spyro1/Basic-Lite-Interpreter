@@ -28,7 +28,7 @@ IDE::IDE() {
 }
 void IDE::Run() {
     using namespace std;
-//    Computer pc;
+    Computer pc;
     // Print Title
     PrintTitle();
     // Run program loop

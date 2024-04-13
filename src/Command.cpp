@@ -11,10 +11,10 @@
 //}
 
 bool Command::operator==(const string &str) {
-    return command == str;
+    return cmdStr == str;
 }
 
-Command::Command(const char *cmdStr, void (*funcPtr)(Computer &, const string &)) : command(cmdStr), func(funcPtr) {}
+Command::Command(const char *cmdStr, void (*funcPtr)(Computer &, const string &)) : cmdStr(cmdStr), func(funcPtr) {}
 
 void Command::operator()(Computer &pc, const string &filename) {
     func(pc, filename);

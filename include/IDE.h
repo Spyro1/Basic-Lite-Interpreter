@@ -21,8 +21,6 @@ using std::string;
 
 class IDE {
     static bool active;
-    Computer pc; // Computer of the program
-//    string filename;
     std::vector<Command> commands;
 public:
     // -- Constructors --
