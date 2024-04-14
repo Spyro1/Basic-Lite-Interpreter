@@ -112,7 +112,7 @@ Ha a sorszám negatív, úgy a fent említett módon törlődik az utasítás a 
 ### Utasítás típus: `instrTy`
 
 A második paraméter az utasítás kulcsszó. 
-Ezt egy enumerátorként tárolja el az osztály, hogy a kiirításnál stringgé alakítható legyen 
+Ezt egy enumerátorként tárolja el az osztály, hogy a kiirításnál stringgé alakítható legyen az utasítás neve. 
 
 ### Paraméter: `expression`
 
