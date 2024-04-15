@@ -3,9 +3,15 @@
 > Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ
 
 ## Tartalom
-1. [Feladatspecifikáció](#)
-2. [Interfész](#)
-3. [BASIC-lite szintaxis](#)
+1. [Feladatspecifikáció](#feladatspecifikáció)
+2. [Interfész](#interfész-ide)
+   - [Interfész parancsok](#interfész-parnacsok-command)
+   - [Kódolás](#kódolás)
+3. [BASIC-lite szintaxis](#basic-lite-szintaxis)
+4. [Regiszterek](#regiszterek-register)
+5. [Program utasítás](#program-utasítás-instruction)
+   - [Értelmezett utasítások](#értelmezett-utasítások)
+6. [Hibakezelés](#hibakezelés)
 
 ## Feladatspecifikáció
 
@@ -78,7 +84,28 @@ Ezalól kivétel ha sztringet írunk be a `print` utasításhoz, aminél termés
 
 Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, ahol `b` és `c` regiszterneveket jelölnek, és annak értékeire hivatkoznak.
 
-### Program utasítások: `Instruction`
+## Regiszterek: `Register`
+
+Az értelmező dinamikusan létrehoz regisztereket (más néven változókat), ha az értékadás bal oldalán új regiszter név szerepel. Ezeket a program `Register` osztályban tárolja.
+```mermaid
+classDiagram
+    class Register{
+        - name: string
+        - value: float
+        + Register(name: string, value: int)
+        + getName() string
+        + getValue() int
+        + setValue(newValue: float) void
+    }
+```
+
+Regiszter neve: `name`
+: Az értékadás bal oldalán szereplő kifejezés lesz regiszter neve, ahogy később hibatkozni lehet rá.
+
+Értéke: `value`
+: A regiszter aktuális értékét tárolja. Alap értéke 0.
+
+## Program utasítás: `Instruction`
 
 A program az egyes kódsorokat az `Instruction` absztrakt osztályból származtatott alosztályokban tárolja.
 
@@ -117,8 +144,6 @@ Ezt egy enumerátorként tárolja el az osztály, hogy a kiirításnál stringg�
 Paraméter: `expression`
 : Ezután következik a harmadik paraméter, ami egészen a sor végéig tart.
 
-## Értelmezés
-
 Értelmezés: `Execute(...)`
 : Az egyes utasítások egyedi értelmezését az `Execute(...)` tisztán virtuális függvény kezeli, amely abszrtaktá teszi az `Instruction` osztályt.  
 
@@ -141,7 +166,7 @@ Kiértékelés: `ProcessExpression(...)`
 
 
 
-## Értelmezett utasítások
+### Értelmezett utasítások
 A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színtaktikájuk:
 
 Értékadás: `LetInstruction`
@@ -159,7 +184,8 @@ Ugrás: `GotoInstruction`
 Beolvasás: `ReadInstrucion`
 : `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
 
+## Hibakezelés
 
-
-
+Az `IDE` minden helytelenül bevitt parancsra hibát dob, és ki is írja mi a hiba oka.
+Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kivételt dob, mely tartalmazza a hiba részletes okát, és helyét a kódban.
 
