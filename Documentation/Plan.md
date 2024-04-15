@@ -36,9 +36,11 @@ classDiagram
     }
     IDE "1" *-- "0..*" Command
 ```
-Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
+Interfész állapot: `active`
+: Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
 
-A `commands[]` tárolja a felhasználó által végrehajtható parancsokat, melyek egy-egy `Command` class elemei, ami a parancs megnevezését(`cmdStr`), és a végrehajtásakor meghívandó függvénypointerét(`(*func)()`) tartalmazza.
+Interfész parancsok: `commands[]`
+: A `commands[]` tárolja a felhasználó által végrehajtható parancsokat, melyek egy-egy `Command` class elemei, ami a parancs megnevezését(`cmdStr`), és a végrehajtásakor meghívandó függvénypointerét(`(*func)()`) tartalmazza.
 
 ### Interfész parnacsok: `Command`
 
@@ -78,7 +80,7 @@ Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, aho
 
 ### Program utasítások: `Instruction`
 
-A program az egyes kódsorokat az `Instruction` absztrakt osztályból származtatott alosztályokként tárolja.
+A program az egyes kódsorokat az `Instruction` absztrakt osztályból származtatott alosztályokban tárolja.
 
 ```mermaid
 classDiagram
@@ -103,31 +105,28 @@ classDiagram
     Instruction <|-- ReadInstruction
 ```
 
-### Sorszám: `lineNumber`
-
-Egy program kódsor sorszám egy 0-nál nagyobb pozitív egész szám mindig.
+Sorszám: `lineNumber`
+: Egy program kódsor sorszám egy 0-nál nagyobb pozitív egész szám mindig.
 Amennyiben a sorszám 0, úgy az a sor kommentnek tekintendő, és nem kerül kiértékelésre a futtatás során.
 Ha a sorszám negatív, úgy a fent említett módon törlődik az utasítás a program memóriából. Minden más esetben, ha az első argumentum nem egy egész szám, akkor az értelmező hibát dob.
 
-### Utasítás típus: `instrTy`
-
-A második paraméter az utasítás kulcsszó. 
+Utasítás típus: `instrTy`
+: A második paraméter az utasítás kulcsszó. 
 Ezt egy enumerátorként tárolja el az osztály, hogy a kiirításnál stringgé alakítható legyen az utasítás neve. 
 
-### Paraméter: `expression`
+Paraméter: `expression`
+: Ezután következik a harmadik paraméter, ami egészen a sor végéig tart.
 
-Ezután következik a harmadik paraméter, ami egészen a sor végéig tart.  
-A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színtaktikájuk:
+## Értelmezés
 
-- `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`)
-- `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
-- `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
-- `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
-- `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
+Értelmezés: `Execute(...)`
+: Az egyes utasítások egyedi értelmezését az `Execute(...)` tisztán virtuális függvény kezeli, amely abszrtaktá teszi az `Instruction` osztályt.  
 
+Kiértékelés: `ProcessExpression(...)`
+: A harmadik paraméterként kapott kifejezések (pl: `a = 4*(b-c)`) kiértékelésért a `ProcessExpression(...)` függvény felel, ami a kapott bemeneti stringet kiértékeli, és egy stringben egy számértéket ad vissza. Ez végzi el a műveleteket és az értékadást, illetve ha színtaktikai hibát talál, akkor kivételt dob a hiba leírásával.
 
+#### Műveleti sorrend és kiértékelése
 
-## Paraméter kiértékelése
 | Matematikai</br>Prioritás |        Operátor        | Magyarázat                | Kiertékelési</br>sorrend |
 |:-------------------------:|:----------------------:|---------------------------|:------------------------:|
 |            1.             |        `(`,`)`         | Zárójelezés               |            2.            |
@@ -139,4 +138,28 @@ A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színt
 |            7.             |          `&&`          | Logikai ÉS                |            4.            |
 |            8.             |         `\|\|`         | Logikai VAGY              |            3.            |
 |            9.             |          `=`           | Értékadás (jobbról balra) |            1.            |
+
+
+
+## Értelmezett utasítások
+A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színtaktikájuk:
+
+Értékadás: `LetInstruction`
+: `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`)
+
+Kiiratás: `PrintInstruction`
+: `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
+
+Feltételes utasítás: `IfInstruciton`
+: `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
+
+Ugrás: `GotoInstruction`
+: `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
+
+Beolvasás: `ReadInstrucion`
+: `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
+
+
+
+
 
