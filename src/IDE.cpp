@@ -7,17 +7,14 @@
 #include <regex>
 #include <fstream>
 #include "../include/IDE.h"
-#include "../include/Computer.h"
 
 using std::cin;
 using std::cout;
 using std::endl;
 
 bool IDE::active = true;
-//Computer IDE::pc;
-//string IDE::filename;
 
-IDE::IDE() {
+IDE::IDE(std::ostream& out_, std::istream& in_) : out(out_), in(in_) {
     commands.emplace_back(HELP_CMD, HelpCommandFunc);
     commands.emplace_back(RUN_CMD, RunCommandFunc);
     commands.emplace_back(END_CMD, EndCommandFunc);
@@ -38,17 +35,12 @@ void IDE::Run() {
         string line, commandStr, argumentStr; // Input line
         cin.clear();
         std::getline(cin, line);
-//        cin >> line;
-//        cout << cin.good() ;
-
         // Split line tot tokens
         std::istringstream iss(line);
         std::getline(iss >> commandStr >> std::ws, argumentStr);
-//        std::getline(cin >> commandStr >> std::ws, argumentStr);
-
         // Convert command string to upper case for comparing
         commandStr = Computer::ToUpperCaseStr(commandStr);
-//        filename = argumentStr;
+
         try {
             // Iterate through commands
             size_t i = 0;
@@ -70,7 +62,6 @@ void IDE::Run() {
         } catch (std::exception& e){
             cout << "\n" << e.what() << endl;
         }
-
     }
 }
 

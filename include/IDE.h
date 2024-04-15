@@ -21,15 +21,20 @@ using std::string;
 
 class IDE {
     static bool active;
+    // Stream references
+    std::ostream& out;
+    std::istream& in;
+
     std::vector<Command> commands;
+
 public:
     // -- Constructors --
-    IDE();
+    explicit IDE(std::ostream& out = std::cout, std::istream& in = std::cin);
     // -- Public Functions --
     void Run();
 private:
     // -- Private Functions --
-    void PrintTitle();
+    static void PrintTitle();
     static bool isNumber(const string &str);
     // -- Functions to commands --
     static void HelpCommandFunc(Computer& pc, const string& filename);
