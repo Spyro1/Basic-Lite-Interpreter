@@ -3,16 +3,19 @@
 > Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.04.16. Budapest
 
 ## Tartalom
-1. [Feladatspecifikáció](#feladatspecifikáció)
-2. [Interfész](#interfész-ide)
-   - [Interfész parancsok](#interfész-parnacsok-command)
-   - [Kódolás](#kódolás)
-3. [BASIC-lite szintaxis](#basic-lite-szintaxis)
-4. [Regiszterek](#regiszterek-register)
-5. [Program utasítás](#program-utasítás-instruction)
-   - [Értelmezett utasítások](#értelmezett-utasítások)
-6. [Hibakezelés](#hibakezelés)
-7. [UML osztálydiagram](#uml-osztálydiagram)
+- [BASIC-lite interpreter - Terv](#basic-lite-interpreter---terv)
+  - [Tartalom](#tartalom)
+  - [Feladatspecifikáció](#feladatspecifikáció)
+  - [Interfész: `IDE`](#interfész-ide)
+    - [Interfész parancsok: `Command`](#interfész-parancsok-command)
+    - [Kódolás](#kódolás)
+  - [BASIC-lite szintaxis](#basic-lite-szintaxis)
+  - [Regiszterek: `Register`](#regiszterek-register)
+  - [Program utasítás: `Instruction`](#program-utasítás-instruction)
+      - [Műveleti sorrend és kiértékelése](#műveleti-sorrend-és-kiértékelése)
+    - [Értelmezett utasítások](#értelmezett-utasítások)
+  - [Hibakezelés](#hibakezelés)
+  - [UML osztálydiagram](#uml-osztálydiagram)
 
 ## Feladatspecifikáció
 
@@ -87,7 +90,8 @@ Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, aho
 
 ## Regiszterek: `Register`
 
-Az értelmező dinamikusan létrehoz regisztereket (más néven változókat), ha az értékadás bal oldalán új regiszter név szerepel. Ezeket a program `Register` osztályban tárolja.
+Az értelmező dinamikusan létrehoz regisztereket (más néven változókat), ha az értékadás bal oldalán új regiszter név szerepel.  
+Ezeket a program `Register` osztályban tárolja.
 ```mermaid
 classDiagram
     class Register{
@@ -202,7 +206,7 @@ Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kiv�
 
 ```mermaid
 classDiagram
-    direction TB
+    direction LR
     class IDE{
       - active: bool
       - commands[]: Command
@@ -269,8 +273,10 @@ classDiagram
         + operator==() bool
     }
     
-    IDE "1" *-- "1" Computer : contains    
+%%    IDE "1" *-- "1" Computer : contains    
+    Computer "1" --* "1" IDE : contains    
     IDE "1" *-- "0..*" Command : contains
+    
     Computer "1" *-- "0..*" Instruction : contains
     Computer "1" *-- "1..*" Register : contains
     Register <-- Instruction : uses
