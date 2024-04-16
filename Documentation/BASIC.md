@@ -27,7 +27,7 @@ Megj: nem BASIC interpretert kell írni!
 ## BASIC interpreter - Osztálydiagram
 ```mermaid
 classDiagram
-    direction LR
+    direction TB
     class IDE{
       - active: bool
       - commands[]: Command
@@ -95,10 +95,10 @@ classDiagram
     }
     
     IDE "1" *-- "1" Computer : contains    
-    IDE "1" *-- "0..*" Command
+    IDE "1" *-- "0..*" Command : contains
     Computer "1" *-- "0..*" Instruction : contains
     Computer "1" *-- "1..*" Register : contains
-    Register o-- Instruction : uses
+    Register <-- Instruction : uses
 
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction

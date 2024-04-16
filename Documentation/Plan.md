@@ -1,6 +1,6 @@
 # BASIC-lite interpreter - Terv
 
-> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ
+> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.04.16. Budapest
 
 ## Tartalom
 1. [Feladatspecifikáció](#feladatspecifikáció)
@@ -12,12 +12,13 @@
 5. [Program utasítás](#program-utasítás-instruction)
    - [Értelmezett utasítások](#értelmezett-utasítások)
 6. [Hibakezelés](#hibakezelés)
+7. [UML osztálydiagram](#uml-osztálydiagram)
 
 ## Feladatspecifikáció
 
-A program egy **BASIC**-szerű programozási nyelv butított, egyszerűsített változatát valósítja meg, továbbiakban **BASIC-lite**-nak nevezve. Biztosít a programkód írásához egy interfészt, alap parancsokat a kód szereksztéséhez, mentéséhez, beolvasásához és futtatásához.
+A program egy **BASIC**-szerű programozási nyelv butított, egyszerűsített változatát valósítja meg, továbbiakban **BASIC-lite**-nak nevezve. Biztosít a programkód írásához egy interfészt, alap parancsokat a kód szerkesztéséhez, mentéséhez, beolvasásához és futtatásához.
 
-Az értelmező képes regiszterekben számértékeket eltárolni és azokkal műveleteket végezni, feltételes utasításokat végrehajtani, és ugrani a programkódon belül, kiírni a standard kiementre, és olvasni a standard bementről.
+Az értelmező képes regiszterekben számértékeket eltárolni és azokkal műveleteket végezni, feltételes utasításokat végrehajtani, és ugrani a programkódon belül, kiírni a standard kimenetre, és olvasni a standard bementről.
 
 ## Interfész: `IDE`
 
@@ -48,7 +49,7 @@ Interfész állapot: `active`
 Interfész parancsok: `commands[]`
 : A `commands[]` tárolja a felhasználó által végrehajtható parancsokat, melyek egy-egy `Command` class elemei, ami a parancs megnevezését(`cmdStr`), és a végrehajtásakor meghívandó függvénypointerét(`(*func)()`) tartalmazza.
 
-### Interfész parnacsok: `Command`
+### Interfész parancsok: `Command`
 
 - `HELP`: Kiírja az interfész parancsait, és működésüket.
 - `RUN`: Futtatja a betöltött programot.
@@ -74,11 +75,11 @@ Egy program kódsornak 3 argumentuma van mindig: `sorszám`, `utasítás`, `para
 Ezen paraméterek egymástól legalább egy szóközzel kell legyenek elválasztva.
 A paraméteren belül tetszőleges 'whitespace' lehet, mivel az értelmező törli majd ezeket.
 Ezért fontos, hogy ha két karaktersorozatot egymás mellé írunk egy szóközzel elválasztva, úgy azt az értelmező egy szóként fogja kezelni.
-Ezalól kivétel ha sztringet írunk be a `print` utasításhoz, aminél természetesen nem törlődnek a 'whitespace' karakterek.
+Ezalól kivétel, ha sztringet írunk be a `print` utasításhoz, aminél természetesen nem törlődnek a 'whitespace' karakterek.
 
 Így például a `10 let a = 4 * ( b - c )` sort így bontja fel:
 
-| Sorszám   | Utasítás  | Praméter    |
+| Sorszám   | Utasítás  | Paraméter   |
 |-----------|-----------|-------------|
 | `10`      | `let`     | `a=4*(b-c)` |
 
@@ -100,7 +101,7 @@ classDiagram
 ```
 
 Regiszter neve: `name`
-: Az értékadás bal oldalán szereplő kifejezés lesz regiszter neve, ahogy később hibatkozni lehet rá.
+: Az értékadás bal oldalán szereplő kifejezés lesz regiszter neve, ahogy később hivatkozni lehet rá.
 
 Értéke: `value`
 : A regiszter aktuális értékét tárolja. Alap értéke 0.
@@ -139,16 +140,24 @@ Ha a sorszám negatív, úgy a fent említett módon törlődik az utasítás a 
 
 Utasítás típus: `instrTy`
 : A második paraméter az utasítás kulcsszó. 
-Ezt egy enumerátorként tárolja el az osztály, hogy a kiirításnál stringgé alakítható legyen az utasítás neve. 
+Ezt egy enumerátorként tárolja el az osztály, hogy a kiiratásnál sztringgé alakítható legyen az utasítás neve. 
 
+```mermaid
+classDiagram
+   class InstructionType {
+      <<enumeration>>
+      NoType, Print, Let, If, Goto, Read
+   }
+```
 Paraméter: `expression`
 : Ezután következik a harmadik paraméter, ami egészen a sor végéig tart.
+
 
 Értelmezés: `Execute(...)`
 : Az egyes utasítások egyedi értelmezését az `Execute(...)` tisztán virtuális függvény kezeli, amely abszrtaktá teszi az `Instruction` osztályt.  
 
 Kiértékelés: `ProcessExpression(...)`
-: A harmadik paraméterként kapott kifejezések (pl: `a = 4*(b-c)`) kiértékelésért a `ProcessExpression(...)` függvény felel, ami a kapott bemeneti stringet kiértékeli, és egy stringben egy számértéket ad vissza. Ez végzi el a műveleteket és az értékadást, illetve ha színtaktikai hibát talál, akkor kivételt dob a hiba leírásával.
+: A harmadik paraméterként kapott kifejezések (pl: `a = 4*(b-c)`) kiértékelésért a `ProcessExpression(...)` függvény felel, ami a kapott bemeneti sztringet kiértékeli, és egy sztringben egy számértéket ad vissza. Ez végzi el a műveleteket és az értékadást, illetve, ha színtaktikai hibát talál, akkor kivételt dob a hiba leírásával.
 
 #### Műveleti sorrend és kiértékelése
 
@@ -179,7 +188,7 @@ Feltételes utasítás: `IfInstruciton`
 : `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
 
 Ugrás: `GotoInstruction`
-: `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
+: `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
 
 Beolvasás: `ReadInstrucion`
 : `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
@@ -189,3 +198,90 @@ Beolvasás: `ReadInstrucion`
 Az `IDE` minden helytelenül bevitt parancsra hibát dob, és ki is írja mi a hiba oka.
 Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kivételt dob, mely tartalmazza a hiba részletes okát, és helyét a kódban.
 
+## UML osztálydiagram
+
+```mermaid
+classDiagram
+    direction TB
+    class IDE{
+      - active: bool
+      - commands[]: Command
+      + IDE()
+      + Run() void
+      - PrintTitle() void
+      - isNumber() bool$
+      - HelpCommandFunc() void$
+      - RunCommandFunc() void$
+      - EndCommandFunc() void$
+      - ListCommandFunc() void$
+      - LoadCommandFunc() void$
+      - SaveCommandFunc() void$
+      - NewCommandFunc() void$
+    }
+    class Computer {
+        - registers: Register[]
+        - instructions: Instruction[]
+        - instructionIndex: int
+        + Computer()
+        + getInstructionCount() int
+        + ReadProgramFromFile(filename: string) void
+        + NewInstruction(programLine: string) void
+        + RunProgram() void
+        + ClearProgram() void
+        - ExecuteNextInstruction() void
+    }    
+    class Register{
+        - name: string
+        - value: float
+        + Register(name: string, value: int)
+        + getName() string
+        + getValue() int
+        + setValue(newValue: float) void
+    }
+    class InstructionType { 
+        <<enumeration>>
+        NoType, Print, Let, If, Goto, Read 
+    }
+    class Instruction {
+        <<abstract>>
+        - lineNumber: int
+        - expression: string
+        - instrTy: InstructionType
+        + Instruction(lineNumber: int, expression: string)
+        + getLineNumber() int
+        + getInstructionTypeStr() string
+        + getInstructionType() InstructionType
+        + getExpression() string
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void*
+        - ProcessExpression(argument: string, registers: Register[]) string
+    }
+    class LetInstruction
+    class PrintInstruction
+    class GotoInstruction
+    class IfInstruction
+    class ReadInstruction
+    
+    class Command{
+        - cmdStr: string
+        - (*func)() void
+        + Command(cmdStr: string, (*funcPtr)(): void)
+        + operator()() void
+        + operator==() bool
+    }
+    
+    IDE "1" *-- "1" Computer : contains    
+    IDE "1" *-- "0..*" Command : contains
+    Computer "1" *-- "0..*" Instruction : contains
+    Computer "1" *-- "1..*" Register : contains
+    Register <-- Instruction : uses
+
+    Instruction <|-- LetInstruction
+    Instruction <|-- PrintInstruction
+    Instruction <|-- IfInstruction
+    Instruction <|-- GotoInstruction
+    Instruction <|-- ReadInstruction
+    Instruction "1" *-- "1" InstructionType : defines
+    
+```
+
+> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.04.16. Budapest
