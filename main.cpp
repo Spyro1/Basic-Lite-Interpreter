@@ -1,10 +1,13 @@
 #include <iostream>
 
-//#define MEMTRACE
-
-//#define CPORTA
+#define CPORTA
 
 #include "memtrace.h"
+#include "include/LetInstruction.h"
+#include "include/PrintInstruction.h"
+#include "include/GotoInstruction.h"
+#include "include/ReadInstruction.h"
+#include "include/IfInstruction.h"
 #include "include/Computer.h"
 #include "include/IDE.h"
 #include "gtest_lite.h"
@@ -21,8 +24,37 @@ int main() {
 
 // === RUN TESTS ===
 #ifdef CPORTA
-    // Coputer tests
 
+    // Register tests
+    TEST(Register, DefConstructor){
+        Register reg;
+        EXPECT_FLOAT_EQ(.0f, reg.getValue());
+        EXPECT_STREQ("", reg.getName().c_str());
+    } END
+    TEST(Register, ParamConstructor){
+        Register reg("a", 11.3);
+        EXPECT_FLOAT_EQ(11.3f, reg.getValue());
+        EXPECT_STREQ("a", reg.getName().c_str());
+        reg.SetValue((float)2/3);
+        EXPECT_FLOAT_EQ((float)2/3, reg.getValue());
+    } END
+
+    // Instruction tests
+    TEST(Instruction, Getters) {
+        Instruction* instr = new PrintInstruction(10, "\"kiirat\"");
+        EXPECT_STREQ("\"kiirat\"", instr->getExpression().c_str());
+        EXPECT_EQ(10, instr->getLineNumber());
+        EXPECT_EQ(InstructionType::Print, instr->getInstructionType());
+        EXPECT_STREQ(PRINT, instr->getInstructionTypeStr().c_str());
+        delete instr;
+    } END
+//    TEST (Instruciton, PrintExecute){
+//        Instruction* instr = new PrintInstruction(10, "\"kiirat\"");
+//        EXPECT_NO_THROW(instr->Execute())
+//
+//    } END
+
+    // Coputer tests
     Computer pc;
     TEST(ComputerTest1, ReadNonExistingFile) {
         EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), runtime_error&); // File not found
@@ -59,6 +91,8 @@ int main() {
 
     if (!gtest_lite::test.fail())
       std::cout << "\nMinden teszt lefutott.\nA program tokeletesen mukodik!" << std::endl;
+    string str;
+    std::cin >> str;
 #endif
 
 // === RUN PROGRAM INTERFACE ===
