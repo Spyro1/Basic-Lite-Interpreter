@@ -8,6 +8,7 @@
 #include <fstream>
 #include "../include/IDE.h"
 
+
 using std::cin;
 using std::cout;
 using std::endl;
@@ -52,7 +53,7 @@ void IDE::Run() {
                 i++;
             }
             if (i >= commands.size()){
-                if (isNumber(commandStr)){
+                if (Instruction::isNumber(commandStr)){
                     pc.NewInstruction(line); // Add new instruction to computer
                 }
                 else if (!commandStr.empty()){
@@ -72,18 +73,7 @@ void IDE::PrintTitle() {
     <<      "\t\t\t     Made by: Marton Szenes\n"
     <<      "==================================================================================" << endl;
 }
-bool IDE::isNumber(const std::string& str) {
-    size_t i = 0;
-    bool hasDigits = false;
-    // Check for optional presign
-    if (i < str.length() && (str[i] == '+' || str[i] == '-')) { i++; }
-    // Check for digits
-    while (i < str.length() && std::isdigit(str[i])) {
-        hasDigits = true;
-        i++;
-    }
-    return i == str.length() && hasDigits;
-}
+
 
 // -- Functions to commands --
 

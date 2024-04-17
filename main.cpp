@@ -48,11 +48,51 @@ int main() {
         EXPECT_STREQ(PRINT, instr->getInstructionTypeStr().c_str());
         delete instr;
     } END
-//    TEST (Instruciton, PrintExecute){
-//        Instruction* instr = new PrintInstruction(10, "\"kiirat\"");
-//        EXPECT_NO_THROW(instr->Execute())
-//
-//    } END
+
+    vector<Instruction*> instructions; // Instruction list
+    vector<Register> registers; // Register list
+    int index = 0;
+
+    TEST (Instruciton, PrintInstruction_Correct){
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"helyes kiiras\"")));
+        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+    } END
+
+    TEST (Instruction, PrintInstruction_Error){
+        index = 1; // Set back
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(20, "\"rossz")));
+        // [Syntax error]: Wrong string literal in line: #
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception& e);
+        instructions.pop_back(); // Pop from array
+        index = 1; // Set back
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(20, "valami")));
+        // [Syntax error]: Can not recognize "argument" as a print argument in line: #
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception& e);
+        instructions.pop_back(); // Pop from array
+    } END
+
+    TEST (Instruction, LetInstruction_Correct){
+        index = 1;
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-1)/2")));
+        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+        EXPECT_EQ(6.f, registers[0].getValue());
+    } END
+
+    TEST(Instruction, LetInstruction_Error){
+        index = 2;
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-b)/2")));
+        // [Syntax error]: Uninitialized register used in line: #
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception&);
+        instructions.pop_back();
+    } END
+//        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 1")));
+//        EXPECT_NO_THROW(instructions.push_back(new IfInstruction(30, "a==1")));
+//                instructions.push_back(new PrintInstruction(10, "\"kiirat\""));
+//        instructions.push_back(new PrintInstruction(10, "\"kiirat\""));
+//        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+
+
+//        EXPECT_FLOAT_EQ(1.f, registers[0].getValue());
 
     // Coputer tests
     Computer pc;

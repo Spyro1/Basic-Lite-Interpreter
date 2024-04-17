@@ -72,15 +72,19 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
         size_t regIndex = Register::FindRegisterIndex(registers, regName);
         string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers);
-        auto newValue = std::stof(evaluatedValueToAssign);
-        if (Exists(regIndex)) {
-            // Assign value to existing register
-            registers[regIndex].SetValue(newValue);
-        } else {
-            // Create new register and initialize it
-            registers.emplace_back(regName, newValue);
-        }
-        return evaluatedValueToAssign;
+//        try {
+            auto newValue = std::stof(evaluatedValueToAssign);
+            if (Exists(regIndex)) {
+                // Assign value to existing register
+                registers[regIndex].SetValue(newValue);
+            } else {
+                // Create new register and initialize it
+                registers.emplace_back(regName, newValue);
+            }
+            return evaluatedValueToAssign;
+//        } catch (exception& e){
+//            throw std::runtime_error(string("[Syntax error]: Uninitialized register used in line: ") + to_string(lineNumber));
+//        }
     }
 
     #pragma endregion
@@ -230,13 +234,8 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     #pragma endregion
 
     #pragma region == 4. level: Register Value ==
-    // Test if register name exists. if not, then throw error
+    // Test if register name exists. if yes, then return value
     size_t regIndex = Register::FindRegisterIndex(registers, argument);
-//    if ( regIndex == -1 ) {
-//        // Register name not found
-//        throw std::runtime_error(string("Syntax error: Use of undeclared register in line: ") + std::to_string(lineNumber));
-//    }
-//    else {
     if (Exists(regIndex)) {
         // Return value from existing register
         evaluated = std::to_string(registers[regIndex].getValue());
@@ -244,6 +243,10 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     }
     #pragma endregion
 
+    // Test if argument is still a register name that is not defined, throw error
+    if (!isNumber(argument)){
+        throw std::runtime_error(string("[Syntax error]: Uninitialized register used in line: ") + to_string(lineNumber));
+    }
     return argument;
 }
 
@@ -298,7 +301,18 @@ void Instruction::SplitAndProcessArguemnts(const string &inputArg, vector<Regist
     evaluatedArg2 = stof(evaluatedRightSide);
 }
 
-
+bool Instruction::isNumber(const std::string& str) {
+    size_t i = 0;
+    bool hasDigits = false;
+    // Check for optional presign
+    if (i < str.length() && (str[i] == '+' || str[i] == '-')) { i++; }
+    // Check for digits
+    while (i < str.length() && std::isdigit(str[i])) {
+        hasDigits = true;
+        i++;
+    }
+    return i == str.length() && hasDigits;
+}
 
 
 

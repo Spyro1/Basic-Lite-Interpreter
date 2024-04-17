@@ -39,7 +39,8 @@ public:
     virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
     // -- Operators --
     friend std::ostream& operator<<(std::ostream& os, const Instruction& inst);
-
+    // -- Static functions --
+    static bool isNumber(const string &str);
     // -- Destructor --
     virtual ~Instruction();
 protected:

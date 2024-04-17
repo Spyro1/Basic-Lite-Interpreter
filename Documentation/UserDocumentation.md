@@ -12,10 +12,11 @@
 | [Syntax error]: Can not recognize "argument" as an if condition in line: #  | If nem megfelelő feltétel                                |
 | [Syntax error]: Wrong string literal in line: #                             | Nem megfelelő sztring szintaxis, hiányzó idézőjel        |
 | [Syntax error]: Unrecognized register name in line: #                       | Nem deklarált regiszter használta                        |
+| [Syntax error]: Uninitialized register used in line: #                      |                                                          |
 | [Runtime error]: No line identifier found to jump to in line:               | Nem létező sor azonosító lett megadva goto paraméterként |
 | [Runtime error]: Program shutdown due to infinite cycle!                    | A program futás közben leállt végteln ciklus miatt       |
 | [Computer]: Ready.                                                          | A program sikeresen lefutott                             |
-| [Computer]: Unrecognizable cmdStr                                          | Nem felismerhető parancs                                 |
+| [Computer]: Unrecognizable cmdStr                                           | Nem felismerhető parancs                                 |
 | [Computer]: Program loaded from file.                                       | Sikeres a program beolvasása fájlból                     |
 | [Computer]: Program saved to file.                                          | Sikeres a program kiírása fájlba                         |
 | [Computer]: Can not save to file.                                           | Nem sikerült fájlba írni a programot                     |

@@ -35,7 +35,6 @@ public:
 private:
     // -- Private Functions --
     static void PrintTitle();
-    static bool isNumber(const string &str);
     // -- Functions to commands --
     static void HelpCommandFunc(Computer& pc, const string& filename);
     static void RunCommandFunc(Computer& pc, const string& filename);
