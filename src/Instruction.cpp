@@ -10,7 +10,7 @@ Instruction::Instruction() : lineNumber(0) { instrTy = InstructionType::NoType; 
 
 Instruction::Instruction(int lineNumber_, const string &expression_) {
     this->lineNumber = lineNumber_;
-    this->expression = RemoveWhiteSpace(expression_);
+    this->expression = expression_;
     instrTy = InstructionType::NoType;
 }
 int Instruction::getLineNumber() const {
@@ -245,7 +245,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     // Test if argument is still a register name that is not defined, throw error
     if (!isNumber(argument)){
-        throw std::runtime_error(string("[Syntax error]: Uninitialized register used in line: ") + to_string(lineNumber));
+        throw std::runtime_error(string("[Syntax error]: Unrecognized register name in line: ") + to_string(lineNumber));
     }
     return argument;
 }
@@ -307,7 +307,7 @@ bool Instruction::isNumber(const std::string& str) {
     // Check for optional presign
     if (i < str.length() && (str[i] == '+' || str[i] == '-')) { i++; }
     // Check for digits
-    while (i < str.length() && std::isdigit(str[i])) {
+    while (i < str.length() && (std::isdigit(str[i]) || str[i] == '.' || str[i] == ',')) {
         hasDigits = true;
         i++;
     }

@@ -3,8 +3,8 @@
 #define CPORTA
 
 #include "memtrace.h"
-#include "include/LetInstruction.h"
 #include "include/PrintInstruction.h"
+#include "include/LetInstruction.h"
 #include "include/GotoInstruction.h"
 #include "include/ReadInstruction.h"
 #include "include/IfInstruction.h"
@@ -76,16 +76,27 @@ int main() {
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-1)/2")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         EXPECT_EQ(6.f, registers[0].getValue());
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(30, "a = b = 1")));
+        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+        EXPECT_EQ(1.f, registers[0].getValue());
+        EXPECT_EQ(1.f, registers[1].getValue());
     } END
 
     TEST(Instruction, LetInstruction_Error){
-        index = 2;
-        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-b)/2")));
-        // [Syntax error]: Uninitialized register used in line: #
+        index = 3;
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(40, "a = c")));
+        // [Syntax error]: Unrecognized register name in line: #
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception&);
-        instructions.pop_back();
+//        instructions.pop_back();
     } END
-//        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 1")));
+
+    TEST(Instruction, GotoInstruction_Correct){
+        index = 4;
+        EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(50, "40")));
+        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+        // Last test's error again after goto back to line 40
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception&);
+    } END
 //        EXPECT_NO_THROW(instructions.push_back(new IfInstruction(30, "a==1")));
 //                instructions.push_back(new PrintInstruction(10, "\"kiirat\""));
 //        instructions.push_back(new PrintInstruction(10, "\"kiirat\""));
