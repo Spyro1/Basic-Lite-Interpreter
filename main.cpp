@@ -53,12 +53,12 @@ int main() {
     vector<Register> registers; // Register list
     int index = 0;
 
-    TEST (Instruciton, PrintInstruction_Correct){
+    TEST (PrintInstruction, Correct){
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"helyes kiiras\"")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
     } END
 
-    TEST (Instruction, PrintInstruction_Error){
+    TEST (PrintInstruction, Error){
         index = 1; // Set back
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(20, "\"rossz")));
         // [Syntax error]: Wrong string literal in line: #
@@ -71,7 +71,7 @@ int main() {
         instructions.pop_back(); // Pop from array
     } END
 
-    TEST (Instruction, LetInstruction_Correct){
+    TEST (LetInstruction, Correct){
         index = 1;
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-1)/2")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
@@ -82,7 +82,7 @@ int main() {
         EXPECT_EQ(1.f, registers[1].getValue());
     } END
 
-    TEST(Instruction, LetInstruction_Error){
+    TEST(LetInstruction, Error){
         index = 3;
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(40, "a = c")));
         // [Syntax error]: Unrecognized register name in line: #
@@ -90,7 +90,7 @@ int main() {
 //        instructions.pop_back();
     } END
 
-    TEST(Instruction, GotoInstruction_Correct){
+    TEST(GotoInstruction, Correct){
         index = 4;
         EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(50, "40")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
@@ -104,6 +104,8 @@ int main() {
 
 
 //        EXPECT_FLOAT_EQ(1.f, registers[0].getValue());
+
+
 
     // Coputer tests
     Computer pc;
@@ -159,5 +161,15 @@ int main() {
     return 0;
 }
 
+/**
+ * Parancs osztály jelenleg leginkább csak egy struct, amit meg tudsz hívni. Legyen inkább több leszármazottja
+ * (`HelpCommand`, `RunCommand`, stb.), amiket egy heterogén kollekcióban tárolsz. (Úgy is használhatsz `std::vector`-t.)
+ * Parancs lefuttatásakor minden `Command`-nak odaadod a parancsot, és ők majd eldöntik, hogy az nekik szól-e.
+ * (Vagy valami hasonló módszer is teljesen jó lehet, csak ez jutott most gyorsan eszembe. Itt lehet, hogy az egyes
+ * parancsoknak kell majd ismernie valamilyen osztályt (`Computer`, `IDE`, stb.), de ezt a konstruktorban oda tudod majd adni.)
 
-// TODO: Ötletek: Függvényhívás implemetálás
+    `Instruction`-nál szerepeljenek a leszármazottakban azok a függvények, amiket felüldefiniálnak.
+
+    Fájlkezelésről még írhatnál pár sort.
+
+Amúgy nagyon szép és igényes az egész terv, külön dicséret, hogy az UML osztálydiagramok nem képként vannak benne.

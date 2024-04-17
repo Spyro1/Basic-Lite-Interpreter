@@ -17,7 +17,7 @@ Megj: nem BASIC interpretert kell írni!
 
 ## Program parancsok
 
-- `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`)
+- `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`,`%`)
 - `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
 - `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
 - `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
@@ -27,14 +27,13 @@ Megj: nem BASIC interpretert kell írni!
 ## BASIC interpreter - Osztálydiagram
 ```mermaid
 classDiagram
-    direction TB
+    direction LR
     class IDE{
       - active: bool
       - commands[]: Command
       + IDE()
       + Run() void
       - PrintTitle() void
-      - isNumber() bool$
       - HelpCommandFunc() void$
       - RunCommandFunc() void$
       - EndCommandFunc() void$
@@ -77,14 +76,30 @@ classDiagram
         + getInstructionTypeStr() string
         + getInstructionType() InstructionType
         + getExpression() string
+        + isNumber() bool$
         + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void*
         - ProcessExpression(argument: string, registers: Register[]) string
     }
-    class LetInstruction
-    class PrintInstruction
-    class GotoInstruction
-    class IfInstruction
-    class ReadInstruction
+    class LetInstruction{
+        + LetInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class PrintInstruction{
+        + PrintInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class GotoInstruction{
+        + GotoInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class IfInstruction{
+        + IfInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class ReadInstruction{
+        + ReadInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
     
     class Command{
         - cmdStr: string
@@ -94,7 +109,8 @@ classDiagram
         + operator==() bool
     }
     
-    IDE "1" *-- "1" Computer : contains    
+%%    IDE "1" *-- "1" Computer : contains
+    Computer "1" --* "1" IDE : contains
     IDE "1" *-- "0..*" Command : contains
     Computer "1" *-- "0..*" Instruction : contains
     Computer "1" *-- "1..*" Register : contains

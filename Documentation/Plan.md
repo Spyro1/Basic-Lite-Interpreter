@@ -8,6 +8,8 @@
   - [Feladatspecifikáció](#feladatspecifikáció)
   - [Interfész: `IDE`](#interfész-ide)
     - [Interfész parancsok: `Command`](#interfész-parancsok-command)
+    - [Parancstípusok](#parancstípusok)
+    - [Fájlkezelés](#fájlkezelés)
     - [Kódolás](#kódolás)
   - [BASIC-lite szintaxis](#basic-lite-szintaxis)
   - [Regiszterek: `Register`](#regiszterek-register)
@@ -26,7 +28,7 @@ Az értelmező képes regiszterekben számértékeket eltárolni és azokkal mű
 ## Interfész: `IDE`
 
 A program indulásakor egy CLI-s felület fogadja a felhasználót. 
-Ezt az `IDE` osztály fogja működtetni. Az itt kiadható parancsokat `Command`-ként tartja nyilván az `IDE` egy listában.
+Ezt az `IDE` osztály fogja működtetni. Az itt kiadható parancsokat `Command`-ként tartja nyilván az `IDE` egy heterogén kollekcióban.
 
 ```mermaid
 classDiagram
@@ -37,14 +39,13 @@ classDiagram
           + IDE()
           + Run() void
     }
-    class Command{
-        - cmdStr: string
-        - (*func)() void
-        + Command(cmdStr: string, (*funcPtr)(): void)
-        + operator()() void
-        + operator==() bool
-    }
-    IDE "1" *-- "0..*" Command
+  class Command{
+    - cmdStr: string
+    - pc&: Computer
+    + Command(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void = 0*
+  }
+  IDE "1" *-- "0..*" Command : contains
 ```
 Interfész állapot: `active`
 : Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
@@ -54,6 +55,50 @@ Interfész parancsok: `commands[]`
 
 ### Interfész parancsok: `Command`
 
+Az `IDE`-ben kiadható parancsokat egy `Command` absztrakt osztályból származtatott típusokat egy heterogén kollekcióban tárolja a program.  
+Minden parancstípus saját eljárást futtat a végrehajtásra, erre szolgál a teljesen virtuális `operator()` a `Command` osztályból. 
+
+```mermaid
+classDiagram
+    direction TB
+  class Command{
+    - cmdStr: string
+    - pc&: Computer
+    + Command(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void = 0*
+  }
+  class HelpCommand{
+  }
+  class RunCommand{
+  }
+  class EndCommand{
+
+  }
+  class ListCommand{
+
+  }
+  class NewCommand{
+
+  }
+  class LoadCommand{
+
+  }
+  class SaveCommand{
+  
+  }
+  Command <|-- HelpCommand
+  Command <|-- RunCommand
+  Command <|-- EndCommand
+  Command <|-- ListCommand
+  Command <|-- NewCommand
+  Command <|-- LoadCommand
+  Command <|-- SaveCommand
+```
+Parancsnév: `cmdStr`
+: A parancs kulcsszava.
+
+### Parancstípusok
+
 - `HELP`: Kiírja az interfész parancsait, és működésüket.
 - `RUN`: Futtatja a betöltött programot.
 - `END`: Lezárja az aktuális interfészt (kód szerkesztő/alkalmazás).
@@ -61,6 +106,12 @@ Interfész parancsok: `commands[]`
 - `NEW`: Új programot hoz létre.
 - `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
 - `SAVE <fájlnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
+
+### Fájlkezelés
+
+A `IDE` valósít meg fájlkezelést a `SAVE` és a `LOAD` parancsok kiadásakor.  
+A `SAVE` parancsra a program a paraméterként kapott fájlnévvel elmenti a `Computer`-ben tárolt összes utasítást szöveges fájlba írva. Ha nem sikerül a fájlba írás, akkor hibát dob.  
+A `LOAD` parancsra a program beolvassa a praméterként kapott fájlnév által meghatározott fájlból az utasításokat. Ha nem létezik ilyen fájl, vagy sikertelen a beolvasás, akkor hibát dob.
 
 ### Kódolás
 
@@ -71,6 +122,7 @@ Az `IDE` folyamatosan bekér a felhasználótól egy sort, aminek végén `Enter
 - Ha a program utasítás sorszáma negatív, akkor az annak a sorszámnak vett abszolút értékű utasítást törli az értelmező(`Computer`) a program memóriájából, ha van ilyen.
 
 Az interfész utasítás abban különbözik a program kódsortól, hogy a kódsor első argumentuma egy sorszám, míg az `IDE` utasítás első argumentuma nem tartalmazhat számot.
+
 
 ## BASIC-lite szintaxis
 
@@ -213,14 +265,6 @@ classDiagram
       + IDE()
       + Run() void
       - PrintTitle() void
-      - isNumber() bool$
-      - HelpCommandFunc() void$
-      - RunCommandFunc() void$
-      - EndCommandFunc() void$
-      - ListCommandFunc() void$
-      - LoadCommandFunc() void$
-      - SaveCommandFunc() void$
-      - NewCommandFunc() void$
     }
     class Computer {
         - registers: Register[]
@@ -256,22 +300,64 @@ classDiagram
         + getInstructionTypeStr() string
         + getInstructionType() InstructionType
         + getExpression() string
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void*
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void = 0*
         - ProcessExpression(argument: string, registers: Register[]) string
     }
-    class LetInstruction
-    class PrintInstruction
-    class GotoInstruction
-    class IfInstruction
-    class ReadInstruction
+  class LetInstruction{
+    + LetInstruction(lineNumber: int, expression: string)
+    + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+  }
+  class PrintInstruction{
+    + PrintInstruction(lineNumber: int, expression: string)
+    + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+  }
+  class GotoInstruction{
+    + GotoInstruction(lineNumber: int, expression: string)
+    + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+  }
+  class IfInstruction{
+    + IfInstruction(lineNumber: int, expression: string)
+    + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+  }
+  class ReadInstruction{
+    + ReadInstruction(lineNumber: int, expression: string)
+    + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+  }
     
-    class Command{
-        - cmdStr: string
-        - (*func)() void
-        + Command(cmdStr: string, (*funcPtr)(): void)
-        + operator()() void
-        + operator==() bool
-    }
+  class Command{
+      - cmdStr: string
+      - pc&: Computer
+      + Command(cmdStr: string, pc: Computer)
+      + operator()(commandExpression: string) void = 0*
+  }
+  class HelpCommand{
+    + HelpCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void
+  }
+  class RunCommand{
+    + RunCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void
+  }
+  class EndCommand{
+    + EndCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void
+  }
+  class ListCommand{
+    + ListCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void
+  }
+  class NewCommand{
+    + NewCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void
+  }
+  class LoadCommand{
+    + LoadCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void
+  }
+  class SaveCommand{
+    + SaveCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void
+  }
     
 %%    IDE "1" *-- "1" Computer : contains    
     Computer "1" --* "1" IDE : contains    
@@ -287,6 +373,15 @@ classDiagram
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
     Instruction "1" *-- "1" InstructionType : defines
+    
+    Command <|-- HelpCommand
+    Command <|-- RunCommand
+    Command <|-- EndCommand
+    Command <|-- ListCommand
+    Command <|-- NewCommand
+    Command <|-- LoadCommand
+    Command <|-- SaveCommand
+    
     
 ```
 
