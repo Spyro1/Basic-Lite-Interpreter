@@ -28,7 +28,8 @@ Az értelmező képes regiszterekben számértékeket eltárolni és azokkal mű
 ## Interfész: `IDE`
 
 A program indulásakor egy CLI-s felület fogadja a felhasználót. 
-Ezt az `IDE` osztály fogja működtetni. Az itt kiadható parancsokat `Command`-ként tartja nyilván az `IDE` egy heterogén kollekcióban.
+Ezt az `IDE` osztály fogja működtetni. Az itt kiadható parancsokat [`Command`](#interfész-parancsok-command) -ként tartja nyilván 
+az `IDE` egy heterogén kollekcióban. ([Teljes UML osztálydiagram](#uml-osztálydiagram))
 
 ```mermaid
 classDiagram
@@ -53,10 +54,13 @@ Interfész állapot: `active`
 Interfész parancsok: `commands[]`
 : A `commands[]` tárolja a felhasználó által végrehajtható parancsokat, melyek egy-egy `Command` class elemei, ami a parancs megnevezését(`cmdStr`), és a végrehajtásakor meghívandó függvénypointerét(`(*func)()`) tartalmazza.
 
+Interfész futtatása: `Run()`
+: Ezt a függvényt hívja meg a main az `IDE` futtatásához.
+
 ### Interfész parancsok: `Command`
 
-Az `IDE`-ben kiadható parancsokat egy `Command` absztrakt osztályból származtatott típusokat egy heterogén kollekcióban tárolja a program.  
-Minden parancstípus saját eljárást futtat a végrehajtásra, erre szolgál a teljesen virtuális `operator()` a `Command` osztályból. 
+Az `IDE`-ben kiadható parancsokat egy `Command` absztrakt osztályból származtatott parancstípusokat egy heterogén kollekcióban tárolja a program.  
+Minden parancstípus saját eljárást futtat a végrehajtásra, erre szolgál a teljesen virtuális `operator()` a `Command` osztályból. ([Teljes UML osztálydiagram](#uml-osztálydiagram)) 
 
 ```mermaid
 classDiagram
@@ -67,25 +71,13 @@ classDiagram
     + Command(cmdStr: string, pc: Computer)
     + operator()(commandExpression: string) void = 0*
   }
-  class HelpCommand{
-  }
-  class RunCommand{
-  }
-  class EndCommand{
-
-  }
-  class ListCommand{
-
-  }
-  class NewCommand{
-
-  }
-  class LoadCommand{
-
-  }
-  class SaveCommand{
-  
-  }
+  class HelpCommand
+  class RunCommand
+  class EndCommand
+  class ListCommand
+  class NewCommand
+  class LoadCommand
+  class SaveCommand
   Command <|-- HelpCommand
   Command <|-- RunCommand
   Command <|-- EndCommand
@@ -96,6 +88,9 @@ classDiagram
 ```
 Parancsnév: `cmdStr`
 : A parancs kulcsszava.
+
+Értelmező referencia: `pc&`
+: A parancsok végrehajtása során kihatással lehetnek az értelmezőre ([`Computer`](#program-értelmező-computer)), ezért referenciaként kapja meg az osztály ezt. 
 
 ### Parancstípusok
 
@@ -143,7 +138,7 @@ Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, aho
 ## Regiszterek: `Register`
 
 Az értelmező dinamikusan létrehoz regisztereket (más néven változókat), ha az értékadás bal oldalán új regiszter név szerepel.  
-Ezeket a program `Register` osztályban tárolja.
+Ezeket a program `Register` osztályban tárolja. ([Teljes UML osztálydiagram](#uml-osztálydiagram))
 ```mermaid
 classDiagram
     class Register{
@@ -164,7 +159,7 @@ Regiszter neve: `name`
 
 ## Program utasítás: `Instruction`
 
-A program az egyes kódsorokat az `Instruction` absztrakt osztályból származtatott alosztályokban tárolja.
+A program az egyes kódsorokat az `Instruction` absztrakt osztályból származtatott alosztályokban tárolja. ([Teljes UML osztálydiagram](#uml-osztálydiagram))
 
 ```mermaid
 classDiagram
@@ -248,6 +243,44 @@ Ugrás: `GotoInstruction`
 
 Beolvasás: `ReadInstrucion`
 : `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
+
+## Program értelmező: `Computer`
+
+A program kódsor értelmezésének futtatásáért a `Computer` osztály felelős. Ez tárolja a szükséges utasításokat és regisztereket. Kívülről hozzá lehet adni utasítást, beolvastatni fájlból kódsort, valamint törölni az utasításkészletet. ([Teljes UML osztálydiagram](#uml-osztálydiagram))   
+
+```mermaid
+classDiagram
+  class Computer {
+    - registers: Register[]
+    - instructions: Instruction[]
+    - instructionIndex: int
+    + Computer()
+    + getInstructionCount() int
+    + ReadProgramFromFile(filename: string) void
+    + NewInstruction(programLine: string) void
+    + RunProgram() void
+    + ClearProgram() void
+    - ExecuteNextInstruction() void
+  }
+```
+
+Regiszrterek: `register[]`
+: Ez a tömb tárolja a regiszterek neveit és aktuális értékeit
+
+Utasítások: `instructions[]`
+: Ez a tömb tárolja a program kódsor utasításait soronként egy heterogén kollekcióban.
+
+Program beolvasása fájlból: `ReadProgramFromFile(filename)`
+: Ez a függvény beolvassa a kapott fájlból az utasításokat soronként. Ha nincs ilyen fájl, akkor hibát dob.
+
+Új utasítás felvétele: `NewInstruction(programLine)`
+: Hozzáadja a kapott utasítást a tömbhöz.
+
+Program futtatása: `RunProgram()`
+: Elindítja az értelmezőt, és felügyeli azt.
+
+Utasítások törlése: `ClearProgram()`
+: Üríti az utasítások tömbjét.
 
 ## Hibakezelés
 
