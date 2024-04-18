@@ -1,6 +1,6 @@
 # BASIC-lite interpreter - Terv
 
-> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.04.16. Budapest
+> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.04.18. Budapest
 
 ## Tartalom
 - [BASIC-lite interpreter - Terv](#basic-lite-interpreter---terv)
@@ -16,6 +16,7 @@
   - [Program utasítás: `Instruction`](#program-utasítás-instruction)
       - [Műveleti sorrend és kiértékelése](#műveleti-sorrend-és-kiértékelése)
     - [Értelmezett utasítások](#értelmezett-utasítások)
+  - [Program értelmező: `Computer`](#program-értelmező-computer)
   - [Hibakezelés](#hibakezelés)
   - [UML osztálydiagram](#uml-osztálydiagram)
 
@@ -89,8 +90,6 @@ classDiagram
 Parancsnév: `cmdStr`
 : A parancs kulcsszava.
 
-Értelmező referencia: `pc&`
-: A parancsok végrehajtása során kihatással lehetnek az értelmezőre ([`Computer`](#program-értelmező-computer)), ezért referenciaként kapja meg az osztály ezt. 
 
 ### Parancstípusok
 
@@ -264,7 +263,7 @@ classDiagram
   }
 ```
 
-Regiszrterek: `register[]`
+Regiszrterek: `registers[]`
 : Ez a tömb tárolja a regiszterek neveit és aktuális értékeit
 
 Utasítások: `instructions[]`
@@ -418,4 +417,4 @@ classDiagram
     
 ```
 
-> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.04.16. Budapest
+> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.04.18. Budapest
