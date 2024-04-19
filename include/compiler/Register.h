@@ -15,18 +15,12 @@ class Register {
     float value = 0; // Register value
 public:
     // -- Constructors --
-    Register();
     explicit Register(const string& name, float defValue = 0);
     // -- Getters --
     const string& getName() const { return name; }
     float getValue() const { return value; }
     // -- Setters --
     void SetValue(float newValue) { value = newValue; }
-    // -- Destructor --
-    ~Register();
-    // -- Static functions --
-
 };
-
 
 #endif //NAGYHAZI_REGISTER_H

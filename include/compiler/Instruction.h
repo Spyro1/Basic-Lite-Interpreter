@@ -7,6 +7,9 @@
 #include <vector>
 #include "Register.h"
 #include "../exceptions/SyntaxError.h"
+#include "../exceptions/CompileError.h"
+#include "../exceptions/UniqueError.h"
+
 
 using std::string;
 using std::vector;

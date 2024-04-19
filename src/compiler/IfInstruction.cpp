@@ -11,14 +11,14 @@ IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruc
 void IfInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
     //  Remove whitespace
     string argument = RemoveWhiteSpace(expression);
-    // Process expression as a bollean return value
+    // Process expression as a boolean return value
     string evaluatedArgument = ProcessExpression(argument, registers);
     // Convert "0" or "1" to int
     int argumentValue;
     try {
         argumentValue = stoi(evaluatedArgument);
     } catch (std::exception& e){
-        throw std::runtime_error(string("[Syntax error]: Can not recognize \"") + expression + string("\" as a if condition in line: ") + std::to_string(lineNumber));
+        throw SyntaxError("Can not recognize \"" + expression + "\" as an if condition", lineNumber);
     }
     // If true (1) then jump to the line after "if". If not true, jump to the second line below.
     if (argumentValue == 0){

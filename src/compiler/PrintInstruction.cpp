@@ -22,7 +22,7 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
         try{
             cout << stof(evaluated);
         } catch (std::exception& e){
-            throw std::runtime_error(string("[Syntax error]: Can not recognize \"") + expression + string("\" as a print argument in line: ") + std::to_string(lineNumber));
+            throw SyntaxError("Can not recognize \"" + expression + "\" as a print argument", lineNumber);
         }
     }
     else if (doubleComma % 2 == 0){
@@ -35,7 +35,7 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
         cout << cutted;
     }
     else
-        throw runtime_error(string("[Syntax error]: Wrong string literal in line: ") + to_string(lineNumber));
+        throw SyntaxError("Wrong string literal", lineNumber);
     instructionIndex++;
 }
 

@@ -15,7 +15,7 @@ void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>&
     try{
         jumpNumber = std::stoi(expression); // Try to parse to int
     } catch (std::exception& e){
-        throw std::runtime_error(string("[Syntax error]: Can not recognize \"") + expression + string("\" as a goto argument in line: ") + std::to_string(lineNumber));
+        throw SyntaxError("Can not recognize \"" + expression + "\" as a goto argument", lineNumber);
     }
     size_t i = 0;
     bool found = false;
@@ -26,6 +26,6 @@ void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>&
         }
         i++;
     }
-    if (!found) throw std::runtime_error(string("[Runtime error]: No line identifier found to jump to in line: ") + std::to_string(lineNumber));
+    if (!found) throw CompileError("No line identifier found to jump to", lineNumber);
 }
 GotoInstruction::~GotoInstruction() = default;
