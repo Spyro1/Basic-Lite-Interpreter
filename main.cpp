@@ -1,15 +1,15 @@
 #include <iostream>
 
-#define CPORTA
+//#define CPORTA
 
 #include "memtrace.h"
+#include "include/IDE.h"
+#include "include/compiler/Computer.h"
 #include "include/compiler/PrintInstruction.h"
 #include "include/compiler/LetInstruction.h"
 #include "include/compiler/GotoInstruction.h"
 #include "include/compiler/ReadInstruction.h"
 #include "include/compiler/IfInstruction.h"
-#include "include/compiler/Computer.h"
-#include "include/IDE.h"
 #include "gtest_lite.h"
 
 
@@ -175,6 +175,8 @@ int main() {
 #endif
     return 0;
 }
+
+// DONE: NOT operátor implementálása
 
 // TODO: Custom Syntax Error exception class implementation
 

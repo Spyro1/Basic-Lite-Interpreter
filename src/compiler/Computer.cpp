@@ -6,87 +6,107 @@
 #include <sstream>
 #include <algorithm>
 #include "../../include/compiler/Computer.h"
-#include "../../include/compiler/LetInstruction.h"
-#include "../../include/compiler/PrintInstruction.h"
-#include "../../include/compiler/IfInstruction.h"
-#include "../../include/compiler/GotoInstruction.h"
-#include "../../include/compiler/ReadInstruction.h"
 
-
+// -- Constructor --
 Computer::Computer() {
-    // Clear instructions
+    // Clear instructions array
     ClearInstructions();
-    // Adding default registers
+    // Clear register array
     registers.clear();
 }
 
+// -- Getters --
+size_t Computer::getInstructionCount() const {
+    return instructions.size();
+}
+
+// -- Functions --
 void Computer::ReadProgramFromFile(const string& filename) {
     using namespace std;
-    // If this computer has read a program before, then free dynamic memory from registers and istructions
+    // If this computer has read a program before, then free dynamic memory from registers and instructions
     ClearInstructions();
-    // Read file
+    // File reader
     fstream filereader;
     filereader.open(filename,ios::in); // Open file
     // If file doesn't exist, then throw exception
     if (!filereader.is_open()){
         filereader.close();
-        throw runtime_error(string("[Error]: \"") + filename + string("\" file not found!"));
+        throw UniqueError('\"' + filename + "\" file not found!");
     }
     // File opened, read in file:
     string line;
     while (std::getline(filereader, line, '\n')) {
         ProcessProgramLine(line);
     }
-
     filereader.close(); // Close File
-    instructionIndex = 0;
+    instructionIndex = 0; // Set instruction index to the beginning
     // Make instruction in order based on the line number
     SortInstructions();
-    #ifdef DEBUG
-        cout << "First line test cout: " << *instructions[0] << endl;
-    #endif
 }
+
 void Computer::NewInstruction(const string& programLine) {
-    instructionIndex = 0;
-    ProcessProgramLine(programLine);
-    SortInstructions();
+    instructionIndex = 0; // Set instruction index to the beginning
+    ProcessProgramLine(programLine); // Processing the new instruction
+    SortInstructions(); // Make instruction in order based on the line number
 }
+
 void Computer::RunProgram() {
     int counter = 0;
+    instructionIndex = 0; // Set instruction index to the beginning
     const int infiniteCycle = 10000;
-    instructionIndex = 0;
+    registers.clear();
     while ((size_t)instructionIndex < instructions.size() && counter <= infiniteCycle){
         ExecuteNextInstruction();
         counter++;
     }
-    if (counter >= infiniteCycle) throw std::runtime_error(string("[Runtime error]: Program shutdown due to infinite cycle!"));
+    if (counter >= infiniteCycle) throw CompileError("Program shutdown due to infinite cycle!");
     std::cout << std::endl;
 }
 
-void Computer::ExecuteNextInstruction() {
-    try{
-        // Execute the next line's instruction
-        instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
-    } catch (std::exception& e){
-        // Throw error if something passed the error check and it can't compile
-        throw std::runtime_error(string("[Error]: Unknown error (") + e.what() + string(") in line: ") + std::to_string(instructions[instructionIndex]->getLineNumber()));
-    }
-
-}
-
-Computer::~Computer() {
+void Computer::ClearProgram() {
+    registers.clear();
     ClearInstructions();
 }
+
+std::ostream &operator<<(std::ostream &os, const Computer &pc) {
+//    os << "[Computer]: Number of instructions: " << pc.instructions.size() << "\n";
+    for (auto instruction : pc.instructions) {
+        os << *instruction << "\n";
+    }
+    return os;
+}
+
+string Computer::ToUpperCaseStr(const string& str) {
+    string result;
+    for (char ch : str) {
+        result += (char)toupper(ch);
+    }
+    return result;
+}
+
+// -- Private functions--
+void Computer::ExecuteNextInstruction() {
+    instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
+//    try{
+//        // Execute the next line's instruction
+//    } catch (std::exception& e){
+//        // Throw error if something passed the error check, and it can't compile
+//        throw UniqueError(string("Unknown error (") + e.what() + string(")"),instructions[instructionIndex]->getLineNumber());
+//    }
+
+}
+
 void Computer::ProcessProgramLine(const string& line) {
     // Output vars
     int lineNumber = 0;
     string expression;
     string command;
-    // Spolit to tokens
+    // Split to tokens
+
     SplitLineToTokens(line, lineNumber, command, expression);
     // Test if line identifier already exists
     if (std::any_of(instructions.begin(), instructions.end(),[&lineNumber](Instruction* inst) { return inst->getLineNumber() == lineNumber; })){
-        throw std::runtime_error(string("[Syntax error]: Line indentifier already exists: ") + std::to_string(lineNumber));
+        throw SyntaxError("Line identifier already exists: " + std::to_string(lineNumber));
     }
     // Remove instruction line if it is a negative number
     if (lineNumber < 0) RemoveInstruction(-lineNumber);
@@ -109,10 +129,11 @@ void Computer::ProcessProgramLine(const string& line) {
         }
         else {
             // Instruction not recognized
-            throw std::logic_error(string("[Syntax error]: Instruction not recognized in line: ") + std::to_string(lineNumber));
+            throw SyntaxError("Instruction not recognized", lineNumber );
         }
     }
 }
+
 void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, string&command, string& expression) {
     std::istringstream iss(inputLine);
     iss >> lineNumber >> command;
@@ -121,16 +142,19 @@ void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, strin
         std::cout << "Tokens: "<< lineNumber << "| " << command << " | " << expression << std::endl; // Debug
     #endif
 }
+
 void Computer::ClearInstructions() {
-    for (size_t i = 0; i < instructions.size(); ++i) {
-        delete instructions[i];
+    for (auto& instruction : instructions) {
+        delete instruction;
     }
     instructions.clear();
     instructionIndex = -1;
 }
+
 void Computer::SortInstructions() {
     std::sort(instructions.begin(), instructions.end(), CompareInstructions);
 }
+
 void Computer::RemoveInstruction(int lineNumber){
     for (auto it = instructions.begin(); it != instructions.end(); ++it) {
         if ((*it)->getLineNumber() == lineNumber) { // Replace getField() with the appropriate field and desiredValue with the value to match
@@ -141,30 +165,12 @@ void Computer::RemoveInstruction(int lineNumber){
         }
     }
 }
+
 bool Computer::CompareInstructions(const Instruction* a, const Instruction* b) {
     return a->getLineNumber() < b->getLineNumber();
 }
-string Computer::ToUpperCaseStr(const string& str) {
-    string result;
-    for (char ch : str) {
-        result += toupper(ch);
-    }
-    return result;
-}
-std::ostream &operator<<(std::ostream &os, const Computer &pc) {
-//    os << "[Computer]: Number of instructions: " << pc.instructions.size() << "\n";
-    for (auto instruction : pc.instructions) {
-        os << *instruction << "\n";
-    }
-    return os;
-}
-size_t Computer::getInstructionCount() const {
-    return instructions.size();
-}
 
-void Computer::ClearProgram() {
-    registers.clear();
+// -- Destructor --
+Computer::~Computer() {
     ClearInstructions();
 }
-
-

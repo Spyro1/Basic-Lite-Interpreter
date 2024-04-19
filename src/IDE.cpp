@@ -36,7 +36,7 @@ void IDE::Run() {
         string line, commandStr, argumentStr; // Input line
         cin.clear();
         std::getline(cin, line);
-        // Split line tot tokens
+        // Split line to tokens
         std::istringstream iss(line);
         std::getline(iss >> commandStr >> std::ws, argumentStr);
         // Convert command string to upper case for comparing

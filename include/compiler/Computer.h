@@ -6,8 +6,15 @@
 #define NAGYHAZI_COMPUTER_H
 
 #include <vector>
-#include "Instruction.h"
+
 #include "Register.h"
+#include "Instruction.h"
+#include "LetInstruction.h"
+#include "PrintInstruction.h"
+#include "IfInstruction.h"
+#include "GotoInstruction.h"
+#include "ReadInstruction.h"
+#include "../exceptions/CompileError.h"
 
 class Computer {
     std::vector<Register> registers;       // List of registers
@@ -83,7 +90,7 @@ private:
      * @param command
      * @param expression
      */
-    void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
+    static void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
     /**
      *
      */

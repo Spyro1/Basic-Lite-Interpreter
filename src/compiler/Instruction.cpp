@@ -6,12 +6,12 @@
 #include <stdexcept>
 #include "../../include/compiler/Instruction.h"
 
-Instruction::Instruction() : lineNumber(0) { instrTy = InstructionType::NoType; }
+Instruction::Instruction() : lineNumber(0), instrTy(NoType) {}
 
-Instruction::Instruction(int lineNumber_, const string &expression_) {
-    this->lineNumber = lineNumber_;
-    this->expression = expression_;
-    instrTy = InstructionType::NoType;
+Instruction::Instruction(int lineNumber_, const string &expression_) : lineNumber(lineNumber_), expression(expression_), instrTy(NoType) {
+//    this->lineNumber = lineNumber_;
+//    this->expression = expression_;
+//    instrTy = InstructionType::NoType;
 }
 int Instruction::getLineNumber() const {
     return lineNumber;
@@ -34,8 +34,7 @@ string Instruction::getExpression() const {
 }
 
 std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
-    os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") << inst.getExpression();
-    return os;
+    return os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") << inst.getExpression();
 }
 Instruction::~Instruction() = default;
 
@@ -47,10 +46,11 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     size_t assignValueSignIndex = argument.find('='),
            orIndex = argument.rfind("||"),
            andIndex = argument.rfind("&&"),
-           biggerIndex = argument.rfind('>' ),
+           biggerIndex = argument.rfind('>'),
            smallerIndex = argument.rfind('<'),
            equalsIndex = argument.rfind("=="),
            notEqualsIndex = argument.rfind("!="),
+           notIndex = argument.rfind('!'),
            plusIndex = argument.rfind('+'),
            minusIndex = argument.rfind('-'),
            multiplyIndex = argument.rfind('*'),
@@ -89,6 +89,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     #pragma endregion
 
+
     #pragma region == 2. level: Brackets ==
 
     if (Exists(firstOpeningBracket) && Exists(firstClosingBracket)) {
@@ -119,14 +120,14 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     // == 2/1/1 : OR ==
     if (Exists(orIndex)){
         // Evaluate expression as OR logic
-        SplitAndProcessArguemnts(argument,registers, orIndex,leftValue, rightValue, 2);
+        SplitAndProcessArguments(argument, registers, orIndex, leftValue, rightValue, 2);
         evaluated = (leftValue != 0) || (rightValue != 0) ? '1' : '0';
         return evaluated;
     }
     // == 2/1/2 : AND ==
     else if (Exists(andIndex)){
         // Evaluate expression as AND logic
-        SplitAndProcessArguemnts(argument,registers, andIndex,leftValue, rightValue, 2);
+        SplitAndProcessArguments(argument, registers, andIndex, leftValue, rightValue, 2);
         evaluated = (leftValue != 0) && (rightValue != 0) ? '1' : '0';
         return evaluated;
     }
@@ -138,12 +139,12 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         }
         if (Exists(equalsIndex) && decider != 2) { // EQ
             // Evaluate expression as EQ logic
-            SplitAndProcessArguemnts(argument,registers, equalsIndex,leftValue, rightValue, 2);
+            SplitAndProcessArguments(argument, registers, equalsIndex, leftValue, rightValue, 2);
             evaluated = leftValue == rightValue ? '1' : '0';
         }
         else if (Exists(notEqualsIndex) && decider != 1) { // NOTEQ
             // Evaluate expression as NOTEQ logic
-            SplitAndProcessArguemnts(argument,registers, notEqualsIndex,leftValue, rightValue, 2);
+            SplitAndProcessArguments(argument, registers, notEqualsIndex, leftValue, rightValue, 2);
             evaluated = leftValue != rightValue ? '1' : '0';
         }
         return evaluated;
@@ -157,29 +158,34 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         if (Exists(biggerIndex) && decider != 2) { // BIGGER
             // Evaluate expression as BIGGER
             if (biggerIndex + 1 == assignValueSignIndex){
-                SplitAndProcessArguemnts(argument,registers, biggerIndex,leftValue, rightValue, 2);
+                SplitAndProcessArguments(argument, registers, biggerIndex, leftValue, rightValue, 2);
                 evaluated = leftValue >= rightValue ? '1' : '0';
             }
             else {
-                SplitAndProcessArguemnts(argument,registers, biggerIndex,leftValue, rightValue);
+                SplitAndProcessArguments(argument, registers, biggerIndex, leftValue, rightValue);
                 evaluated = leftValue > rightValue ? '1' : '0';
             }
         }
         else if (Exists(smallerIndex) && decider != 1) { // SMALLER
             // Evaluate expression as SMALLER
             if (smallerIndex + 1 == assignValueSignIndex){
-                SplitAndProcessArguemnts(argument,registers, smallerIndex,leftValue, rightValue, 2);
+                SplitAndProcessArguments(argument, registers, smallerIndex, leftValue, rightValue, 2);
                 evaluated = leftValue <= rightValue ? '1' : '0';
             }
             else {
-                SplitAndProcessArguemnts(argument,registers, smallerIndex,leftValue, rightValue);
+                SplitAndProcessArguments(argument, registers, smallerIndex, leftValue, rightValue);
                 evaluated = leftValue < rightValue ? '1' : '0';
             }
         }
         return evaluated;
     }
-
     // == 2/1/5 : NOT
+    else if (Exists(notIndex)){
+        // Evaluate expression as EQ logic
+        SplitAndProcessArguments(argument, registers, notIndex, leftValue, rightValue);
+        evaluated = rightValue == 0 ? '1' : '0';
+        return evaluated;
+    }
     #pragma endregion
 
 
@@ -193,17 +199,17 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         }
         if (Exists(plusIndex) && decider != 2) { // PLUS
             // Evaluate expression as adding
-            SplitAndProcessArguemnts(argument,registers, plusIndex,leftValue, rightValue);
+            SplitAndProcessArguments(argument, registers, plusIndex, leftValue, rightValue);
             evaluated = std::to_string(leftValue + rightValue);
         }
         else if (Exists(minusIndex) && decider != 1) { // MINUS
             // Evaluate expression as subtracting
-            SplitAndProcessArguemnts(argument,registers, minusIndex,leftValue, rightValue);
+            SplitAndProcessArguments(argument, registers, minusIndex, leftValue, rightValue);
             evaluated = std::to_string(leftValue - rightValue);
         }
         return evaluated;
     }
-        // == 2/1/2 : MULTIPLY / DIVIDE
+    // == 2/1/2 : MULTIPLY / DIVIDE
     else if (Exists(multiplyIndex) || Exists(divideIndex) || Exists(modIndex)) {
         int decider = 0; // 0: only one 1: MULTIPLY, 2: DIVIDE, 3: MOD
         if (Exists(multiplyIndex) && Exists(divideIndex) && Exists(modIndex)) { // Contains both
@@ -216,17 +222,17 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
         if (Exists(multiplyIndex) && (decider == 1 || decider == 0)) { // MULTIPLY
             // Evaluate expression as multiplication
-            SplitAndProcessArguemnts(argument,registers, multiplyIndex,leftValue, rightValue);
+            SplitAndProcessArguments(argument, registers, multiplyIndex, leftValue, rightValue);
             evaluated = std::to_string(leftValue * rightValue);
         }
         else if (Exists(divideIndex) && (decider == 2 || decider == 0)) { // DIVIDE
             // Evaluate expression as division
-            SplitAndProcessArguemnts(argument,registers, divideIndex,leftValue, rightValue);
+            SplitAndProcessArguments(argument, registers, divideIndex, leftValue, rightValue);
             evaluated = std::to_string(leftValue / rightValue);
         }
         else if (Exists(modIndex) && (decider == 3 || decider == 0)) { // DIVIDE
             // Evaluate expression as division
-            SplitAndProcessArguemnts(argument,registers, modIndex,leftValue, rightValue);
+            SplitAndProcessArguments(argument, registers, modIndex, leftValue, rightValue);
             evaluated = std::to_string((int)leftValue % (int)rightValue);
         }
         return evaluated;
@@ -245,7 +251,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     // Test if argument is still a register name that is not defined, throw error
     if (!isNumber(argument)){
-        throw SyntaxError(string("Unrecognized register name"), lineNumber);
+        throw SyntaxError(string("Unrecognized register name \"" + argument + '\"'), lineNumber);
     }
     return argument;
 }
@@ -299,11 +305,9 @@ size_t Instruction::FindRegisterIndex(const std::vector<Register>& registers, co
         return std::string::npos; // Return -1 to indicate register name is not found
     }
 }
-void Instruction::SplitAndProcessArguemnts(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
-//    size_t shifterR = operatorChars == 1 ? 1 : 0;
-//    size_t shifterL = operatorChars == 1 ? 0 : 1;
-    string leftSide = inputArg.substr(0, operatorIndex/* - shifterL*/);
-    string rightSide = inputArg.substr(operatorIndex + operatorChars, inputArg.length() - operatorIndex /*- shifterR*/);
+void Instruction::SplitAndProcessArguments(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
+    string leftSide = inputArg.substr(0, operatorIndex);
+    string rightSide = inputArg.substr(operatorIndex + operatorChars, inputArg.length() - operatorIndex);
     if (leftSide.empty()) leftSide = "0";
     if (rightSide.empty()) rightSide = "0";
     string evaluatedLeftSide = ProcessExpression(leftSide, registers);
