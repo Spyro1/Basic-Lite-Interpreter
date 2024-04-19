@@ -16,16 +16,16 @@ class Register {
 public:
     // -- Constructors --
     Register();
-    explicit Register(string name, float defValue = 0);
+    explicit Register(const string& name, float defValue = 0);
     // -- Getters --
     const string& getName() const { return name; }
     float getValue() const { return value; }
     // -- Setters --
-    void SetValue(float newValue) {value = newValue;}
+    void SetValue(float newValue) { value = newValue; }
     // -- Destructor --
     ~Register();
     // -- Static functions --
-    static size_t FindRegisterIndex(const std::vector<Register> &registers, const string &name);
+
 };
 
 

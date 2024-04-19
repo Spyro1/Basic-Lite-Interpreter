@@ -5,7 +5,7 @@
 #ifndef NAGYHAZI_GOTOINSTRUCTION_H
 #define NAGYHAZI_GOTOINSTRUCTION_H
 
-#include "../include/Instruction.h"
+#include "Instruction.h"
 
 class GotoInstruction : public Instruction{
 public:

@@ -3,12 +3,12 @@
 #define CPORTA
 
 #include "memtrace.h"
-#include "include/PrintInstruction.h"
-#include "include/LetInstruction.h"
-#include "include/GotoInstruction.h"
-#include "include/ReadInstruction.h"
-#include "include/IfInstruction.h"
-#include "include/Computer.h"
+#include "include/compiler/PrintInstruction.h"
+#include "include/compiler/LetInstruction.h"
+#include "include/compiler/GotoInstruction.h"
+#include "include/compiler/ReadInstruction.h"
+#include "include/compiler/IfInstruction.h"
+#include "include/compiler/Computer.h"
 #include "include/IDE.h"
 #include "gtest_lite.h"
 
@@ -25,7 +25,7 @@ int main() {
 // === RUN TESTS ===
 #ifdef CPORTA
 
-    // Register tests
+    // === Register tests ===
     TEST(Register, DefConstructor){
         Register reg;
         EXPECT_FLOAT_EQ(.0f, reg.getValue());
@@ -39,7 +39,7 @@ int main() {
         EXPECT_FLOAT_EQ((float)2/3, reg.getValue());
     } END
 
-    // Instruction tests
+    // === Instruction tests ===
     TEST(Instruction, Getters) {
         Instruction* instr = new PrintInstruction(10, "\"kiirat\"");
         EXPECT_STREQ("\"kiirat\"", instr->getExpression().c_str());
@@ -49,43 +49,49 @@ int main() {
         delete instr;
     } END
 
+    // === Instruction types tests ===
     vector<Instruction*> instructions; // Instruction list
     vector<Register> registers; // Register list
-    int index = 0;
+    int index; // Index of the instruction
 
     TEST (PrintInstruction, Correct){
+        index = 0; // Set to first
+        // Print string literal
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"helyes kiiras\"")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+        instructions.pop_back(); // Pop from array
     } END
 
     TEST (PrintInstruction, Error){
-        index = 1; // Set back
-        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(20, "\"rossz")));
+        index = 0; // Set back
         // [Syntax error]: Wrong string literal in line: #
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"rossz")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception& e);
-        instructions.pop_back(); // Pop from array
-        index = 1; // Set back
-        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(20, "valami")));
+
         // [Syntax error]: Can not recognize "argument" as a print argument in line: #
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "valami")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception& e);
-        instructions.pop_back(); // Pop from array
+        instructions.clear(); // Clear array
     } END
 
     TEST (LetInstruction, Correct){
-        index = 1;
-        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-1)/2")));
+        index = 0;
+        // Set value with all existing operations
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(10, "a = 4*(4-1)/2 % 4")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
-        EXPECT_EQ(6.f, registers[0].getValue());
-        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(30, "a = b = 1")));
+        EXPECT_EQ(2.f, registers[0].getValue());
+        // Chained assigning
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(10, "a = b = 1")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         EXPECT_EQ(1.f, registers[0].getValue());
         EXPECT_EQ(1.f, registers[1].getValue());
+        instructions.clear(); // Clear array
     } END
 
     TEST(LetInstruction, Error){
-        index = 3;
-        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(40, "a = c")));
+        index = 0;
         // [Syntax error]: Unrecognized register name in line: #
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(40, "a = c")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception&);
 //        instructions.pop_back();
     } END
@@ -97,15 +103,24 @@ int main() {
         // Last test's error again after goto back to line 40
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception&);
     } END
-//        EXPECT_NO_THROW(instructions.push_back(new IfInstruction(30, "a==1")));
-//                instructions.push_back(new PrintInstruction(10, "\"kiirat\""));
-//        instructions.push_back(new PrintInstruction(10, "\"kiirat\""));
-//        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
 
+    TEST(GotoInstruction, Error){
 
-//        EXPECT_FLOAT_EQ(1.f, registers[0].getValue());
+    } END
 
+    TEST(ReadInstruction, Correct){
 
+    } END
+    TEST (ReadInstruction, Error){
+
+    } END
+
+    TEST(IfInstruction, Correct){
+
+    } END
+    TEST (IfInstruction, Error){
+
+    } END
 
     // Coputer tests
     Computer pc;
@@ -143,7 +158,7 @@ int main() {
 //    }END
 
     if (!gtest_lite::test.fail())
-      std::cout << "\nMinden teszt lefutott.\nA program tokeletesen mukodik!" << std::endl;
+      std::cout << "\n\tMinden teszt lefutott.\n\tA program tokeletesen mukodik!" << std::endl;
     string str;
     std::cin >> str;
 #endif
@@ -161,15 +176,22 @@ int main() {
     return 0;
 }
 
-/**
- * Parancs osztály jelenleg leginkább csak egy struct, amit meg tudsz hívni. Legyen inkább több leszármazottja
- * (`HelpCommand`, `RunCommand`, stb.), amiket egy heterogén kollekcióban tárolsz. (Úgy is használhatsz `std::vector`-t.)
- * Parancs lefuttatásakor minden `Command`-nak odaadod a parancsot, és ők majd eldöntik, hogy az nekik szól-e.
- * (Vagy valami hasonló módszer is teljesen jó lehet, csak ez jutott most gyorsan eszembe. Itt lehet, hogy az egyes
- * parancsoknak kell majd ismernie valamilyen osztályt (`Computer`, `IDE`, stb.), de ezt a konstruktorban oda tudod majd adni.)
+// TODO: Custom Syntax Error exception class implementation
 
-    `Instruction`-nál szerepeljenek a leszármazottakban azok a függvények, amiket felüldefiniálnak.
+// TODO: IfInstruction tesztek írása
 
-    Fájlkezelésről még írhatnál pár sort.
+// TODO: ReadInstruction tesztek írása
 
-Amúgy nagyon szép és igényes az egész terv, külön dicséret, hogy az UML osztálydiagramok nem képként vannak benne.
+// TODO: Command class kibővítése leszármazottakkal (RunCommand, HelpCommand, ... )
+
+// TODO: IDE-ből eltávolítani a static függvényeket
+
+// TODO: Függvénydokumentáció írás:
+//  - Computer
+//  - Instruction leszármazottak
+//      - IfInstruction
+//      - ReadInstruction
+//      - LetInstruction
+//      - PrintInstruction
+//      - GotoInstruction
+//  - IDE

@@ -5,7 +5,7 @@
 #ifndef NAGYHAZI_IFINSTRUCTION_H
 #define NAGYHAZI_IFINSTRUCTION_H
 
-#include "../include/Instruction.h"
+#include "Instruction.h"
 
 class IfInstruction : public Instruction{
 public:

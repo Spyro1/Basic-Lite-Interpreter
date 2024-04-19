@@ -3,7 +3,7 @@
 //
 
 #include <stdexcept>
-#include "../include/IfInstruction.h"
+#include "../../include/compiler/IfInstruction.h"
 
 IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::If;

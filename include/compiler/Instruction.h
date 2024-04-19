@@ -6,6 +6,7 @@
 #define NAGYHAZI_INSTRUCTION_H
 #include <vector>
 #include "Register.h"
+#include "../exceptions/SyntaxError.h"
 
 using std::string;
 using std::vector;
@@ -51,6 +52,7 @@ protected:
     string RemoveWhiteSpace(const string& str);
     void SplitAndProcessArguemnts(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1) ;
     size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')');
+    static size_t FindRegisterIndex(const std::vector<Register> &registers, const string &name);
     static inline bool Exists(size_t value) { return value != nopos; }
 };
 

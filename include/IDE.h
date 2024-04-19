@@ -14,7 +14,7 @@
 #define SAVE_CMD "SAVE"
 
 #include <string>
-#include "Computer.h"
+#include "compiler/Computer.h"
 #include "Command.h"
 
 using std::string;

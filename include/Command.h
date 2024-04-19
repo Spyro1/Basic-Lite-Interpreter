@@ -6,7 +6,7 @@
 #define NAGYHAZI_COMMAND_H
 
 #include <string>
-#include "Computer.h"
+#include "compiler/Computer.h"
 
 using std::string;
 

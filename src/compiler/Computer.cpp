@@ -5,12 +5,12 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
-#include "../include/Computer.h"
-#include "../include/LetInstruction.h"
-#include "../include/PrintInstruction.h"
-#include "../include/IfInstruction.h"
-#include "../include/GotoInstruction.h"
-#include "../include/ReadInstruction.h"
+#include "../../include/compiler/Computer.h"
+#include "../../include/compiler/LetInstruction.h"
+#include "../../include/compiler/PrintInstruction.h"
+#include "../../include/compiler/IfInstruction.h"
+#include "../../include/compiler/GotoInstruction.h"
+#include "../../include/compiler/ReadInstruction.h"
 
 
 Computer::Computer() {

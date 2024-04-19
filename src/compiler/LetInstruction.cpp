@@ -2,7 +2,7 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 #include <vector>
-#include "../include/LetInstruction.h"
+#include "../../include/compiler/LetInstruction.h"
 
 LetInstruction::LetInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::Let;

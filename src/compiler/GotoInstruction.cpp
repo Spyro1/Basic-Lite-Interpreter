@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 #include <algorithm>
-#include "../include/GotoInstruction.h"
+#include "../../include/compiler/GotoInstruction.h"
 
 GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::Goto;

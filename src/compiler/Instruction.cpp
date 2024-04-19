@@ -4,7 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
-#include "../include/Instruction.h"
+#include "../../include/compiler/Instruction.h"
 
 Instruction::Instruction() : lineNumber(0) { instrTy = InstructionType::NoType; }
 
@@ -70,7 +70,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
          string regName = argument.substr(0, assignValueSignIndex); // Get register name
         string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
 
-        size_t regIndex = Register::FindRegisterIndex(registers, regName);
+        size_t regIndex = FindRegisterIndex(registers, regName);
         string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers);
 //        try {
             auto newValue = std::stof(evaluatedValueToAssign);
@@ -106,10 +106,10 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     }
     else if ((!Exists(firstOpeningBracket) && Exists(firstClosingBracket)) ||
               (Exists(firstOpeningBracket) && !Exists(firstClosingBracket))) {
-        throw std::logic_error(string("Syntax error: Missing brackets in line: ")+std::to_string(lineNumber));
+        throw SyntaxError(string("Syntax error: Missing brackets"), lineNumber);
     }
     else if (Exists(firstOpeningBracket) || Exists(firstClosingBracket)){
-        throw std::logic_error(string("Syntax error: Missing brackets in line: ")+std::to_string(lineNumber));
+        throw SyntaxError(string("Syntax error: Missing brackets"), lineNumber);
     }
     #pragma endregion
 
@@ -235,7 +235,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     #pragma region == 4. level: Register Value ==
     // Test if register name exists. if yes, then return value
-    size_t regIndex = Register::FindRegisterIndex(registers, argument);
+    size_t regIndex = FindRegisterIndex(registers, argument);
     if (Exists(regIndex)) {
         // Return value from existing register
         evaluated = std::to_string(registers[regIndex].getValue());
@@ -245,7 +245,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     // Test if argument is still a register name that is not defined, throw error
     if (!isNumber(argument)){
-        throw std::runtime_error(string("[Syntax error]: Unrecognized register name in line: ") + to_string(lineNumber));
+        throw SyntaxError(string("Unrecognized register name"), lineNumber);
     }
     return argument;
 }
@@ -287,7 +287,18 @@ size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPa
     else
         return closePos; // Pair found
 }
+size_t Instruction::FindRegisterIndex(const std::vector<Register>& registers, const string& name) {
+    // Iterate through the vector array
+    auto it = std::find_if(registers.begin(), registers.end(), [&name](const Register& reg) {
+        return reg.getName() == name;
+    });
 
+    if (it != registers.end()) {
+        return std::distance(registers.begin(), it); // Return the index of register in array if found
+    } else {
+        return std::string::npos; // Return -1 to indicate register name is not found
+    }
+}
 void Instruction::SplitAndProcessArguemnts(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
 //    size_t shifterR = operatorChars == 1 ? 1 : 0;
 //    size_t shifterL = operatorChars == 1 ? 0 : 1;

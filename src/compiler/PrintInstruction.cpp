@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
-#include "../include/PrintInstruction.h"
+#include "../../include/compiler/PrintInstruction.h"
 
 PrintInstruction::PrintInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
     instrTy = InstructionType::Print;
