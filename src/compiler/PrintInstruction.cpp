@@ -2,14 +2,11 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 #include <iostream>
-#include <iomanip>
 #include <cstring>
 #include "../../include/compiler/PrintInstruction.h"
 
-PrintInstruction::PrintInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
-    instrTy = InstructionType::Print;
-}
-// -- Virtual function --
+PrintInstruction::PrintInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Print) {}
+
 void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int& instructionIndex) {
     using namespace std;
     // If expression is a string
@@ -38,5 +35,3 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
         throw SyntaxError("Wrong string literal", lineNumber);
     instructionIndex++;
 }
-
-PrintInstruction::~PrintInstruction() = default;

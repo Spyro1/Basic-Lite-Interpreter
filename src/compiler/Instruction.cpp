@@ -8,11 +8,7 @@
 
 Instruction::Instruction() : lineNumber(0), instrTy(NoType) {}
 
-Instruction::Instruction(int lineNumber_, const string &expression_) : lineNumber(lineNumber_), expression(expression_), instrTy(NoType) {
-//    this->lineNumber = lineNumber_;
-//    this->expression = expression_;
-//    instrTy = InstructionType::NoType;
-}
+Instruction::Instruction(int lineNumber_, const string &expression_, InstructionType instructionType) : lineNumber(lineNumber_), expression(expression_), instrTy(instructionType) {}
 int Instruction::getLineNumber() const {
     return lineNumber;
 }

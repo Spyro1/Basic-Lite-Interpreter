@@ -5,9 +5,8 @@
 #include <stdexcept>
 #include "../../include/compiler/IfInstruction.h"
 
-IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
-    instrTy = InstructionType::If;
-}
+IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, If) {}
+
 void IfInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
     //  Remove whitespace
     string argument = RemoveWhiteSpace(expression);
@@ -31,4 +30,3 @@ void IfInstruction::Execute(vector<Register> &registers, vector<Instruction*> &i
         if(!isgoto) instructionIndex++;
     }
 }
-IfInstruction::~IfInstruction()  = default;

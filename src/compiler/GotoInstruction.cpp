@@ -6,9 +6,8 @@
 #include <algorithm>
 #include "../../include/compiler/GotoInstruction.h"
 
-GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
-    instrTy = InstructionType::Goto;
-}
+GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Goto) {}
+
 void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int &instructionIndex) {
     using namespace std;
     int jumpNumber;
@@ -28,4 +27,3 @@ void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>&
     }
     if (!found) throw CompileError("No line identifier found to jump to", lineNumber);
 }
-GotoInstruction::~GotoInstruction() = default;

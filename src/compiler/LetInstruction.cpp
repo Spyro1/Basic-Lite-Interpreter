@@ -4,9 +4,8 @@
 #include <vector>
 #include "../../include/compiler/LetInstruction.h"
 
-LetInstruction::LetInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
-    instrTy = InstructionType::Let;
-}
+LetInstruction::LetInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Let) {}
+
 void LetInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
     //  Remove whitespace
     string shortExpression = RemoveWhiteSpace(expression);
@@ -15,4 +14,3 @@ void LetInstruction::Execute(vector<Register> &registers, vector<Instruction*> &
     // Step to next instrcution
     instructionIndex++;
 }
-LetInstruction::~LetInstruction() = default;

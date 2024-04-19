@@ -3,6 +3,7 @@
 //#define CPORTA
 
 #include "memtrace.h"
+#include "gtest_lite.h"
 #include "include/IDE.h"
 #include "include/compiler/Computer.h"
 #include "include/compiler/PrintInstruction.h"
@@ -10,7 +11,6 @@
 #include "include/compiler/GotoInstruction.h"
 #include "include/compiler/ReadInstruction.h"
 #include "include/compiler/IfInstruction.h"
-#include "gtest_lite.h"
 
 
 
@@ -177,6 +177,8 @@ int main() {
 }
 
 // DONE: NOT operátor implementálása
+
+// TODO: Goto argument lehessen expression és register érték is
 
 // TODO: Custom Syntax Error exception class implementation
 

@@ -33,7 +33,7 @@ protected:
 public:
     // -- Constructors --
     Instruction();
-    Instruction(int lineNumber_, const string& expression_);
+    Instruction(int lineNumber_, const string& expression_, InstructionType instructionType = NoType);
     // -- Getters --
     int getLineNumber() const;
     string getInstructionTypeStr() const;

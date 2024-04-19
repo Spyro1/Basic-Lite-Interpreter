@@ -5,9 +5,7 @@
 
 #include "../../include/compiler/ReadInstruction.h"
 
-ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression) {
-    instrTy = InstructionType::Read;
-}
+ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Read) {}
 
 void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
     size_t regIndex = FindRegisterIndex(registers, expression);
@@ -22,4 +20,3 @@ void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> 
     }
     instructionIndex++;
 }
-ReadInstruction::~ReadInstruction()  = default;
