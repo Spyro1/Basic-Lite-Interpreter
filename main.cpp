@@ -178,7 +178,7 @@ int main() {
 
 // DONE: NOT operátor implementálása
 
-// TODO: Goto argument lehessen expression és register érték is
+// DONE: Goto argument lehessen expression és register érték is
 
 // TODO: Custom Syntax Error exception class implementation
 

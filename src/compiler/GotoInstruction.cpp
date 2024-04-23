@@ -11,8 +11,11 @@ GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Ins
 void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int &instructionIndex) {
     using namespace std;
     int jumpNumber;
+    //  Remove whitespace
+    string shortExpression = RemoveWhiteSpace(expression);
+    string evaluated = ProcessExpression(shortExpression, registers);
     try{
-        jumpNumber = std::stoi(expression); // Try to parse to int
+        jumpNumber = stoi(evaluated);
     } catch (std::exception& e){
         throw SyntaxError("Can not recognize \"" + expression + "\" as a goto argument", lineNumber);
     }
