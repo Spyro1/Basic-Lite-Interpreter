@@ -1,19 +1,12 @@
 # Prog 2 Nagyházi - BASIC interpeter
-## Feladatleírás
-Egy egyszerű BASIC-szerű nyelven programozható kalkulátornak egyetlen regisztere (a) és egy ciklusszámlálója (i) van. A számítási eredmények mindig az a regiszterben keletkeznek. A ciklusszámláló értékétől függően pedig feltételes ugrást lehet megvalósítani. Így igen egyszerű számítások programozhatók be. Az alábbi program például kiírja az első 5 páratlan számot.
-```
-10 let a=1
-20 let i=5
-30 print a
-40 let a=a+2
-50 let i=i-1
-60 if i>0
-70 goto 30
-```
-Készítsen objektummodellt a kalkulátor működésének modellezésére! Definiáljon utasítás-objektumokat (`Instruction`), melyek egy tároló (`List<Instruction> instructions`) objektumban tárolhatók. A működtető program (`Computer`) feladata a tárolóból kivenni a soron következő utasítás-objektumot és végrehajtani azt, majd meghatározni a soron következő utasítás helyét.
-Bővítse a modellt újabb utasításokkal (pl. input) és újabb regiszterekkel!
-Demonstrálja a működést egy olyan programmal ami n!-t számol! n értékét olvasa be! A megoldáshoz ne használjon STL tárolót!  
-Megj: nem BASIC interpretert kell írni!
+
+> Készítette: Szenes Márton - Spyro
+
+## Programról
+
+A program egy **BASIC**-szerű programozási nyelv butított, egyszerűsített változatát valósítja meg, továbbiakban **BASIC-lite**-nak nevezve. Biztosít a programkód írásához egy interfészt, alap parancsokat a kód szerkesztéséhez, mentéséhez, beolvasásához és futtatásához.
+
+Az értelmező képes regiszterekben számértékeket eltárolni és azokkal műveleteket végezni, feltételes utasításokat végrehajtani, és ugrani a programkódon belül, kiírni a standard kimenetre, és olvasni a standard bementről.
 
 ## Program parancsok
 
@@ -23,8 +16,17 @@ Megj: nem BASIC interpretert kell írni!
 - `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
 - `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
 
+## Interfész parancsok
 
-## BASIC interpreter - Osztálydiagram
+- `HELP`: Kiírja az interfész parancsait, és működésüket
+- `RUN`: Futtatja a betöltött programot.
+- `END`: Lezárja az aktuális interfészt (kód szerkesztő/alkalmazás).
+- `LIST`: Kiírja a betöltött programot sorszám szerint növekvő sorban.
+- `NEW`: Új programot hoz létre.
+- `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
+- `SAVE <fájlnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
+
+## BASIC-lite interpreter - UML Osztálydiagram
 
 ```mermaid
 classDiagram
@@ -171,14 +173,4 @@ sequenceDiagram
 ```
 ### Hátralévő feladatok
 - [ ] Run után két > > -t rak valamiért
-- [ ] Run -read-be karaktert írva végtelen >-t ír ki 
-
-## Interfész parancsok
-
-- `HELP`: Kiírja az interfész parancsait, és működésüket
-- `RUN`: Futtatja a betöltött programot.
-- `END`: Lezárja az aktuális interfészt (kód szerkesztő/alkalmazás).
-- `LIST`: Kiírja a betöltött programot sorszám szerint növekvő sorban.
-- `NEW`: Új programot hoz létre.
-- `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
-- `SAVE <fájlnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
+- [ ] Run -read-be karaktert írva végtelen >-t ír ki
