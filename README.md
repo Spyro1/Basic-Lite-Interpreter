@@ -161,16 +161,3 @@ classDiagram
     
     
 ```
-
-```mermaid
-sequenceDiagram
-    actor User
-    
-    loop 
-    User ->> IDE: input cmdStr line
-        IDE ->> Computer : Inetrpret line
-    end
-```
-### Hátralévő feladatok
-- [ ] Run után két > > -t rak valamiért
-- [ ] Run -read-be karaktert írva végtelen >-t ír ki

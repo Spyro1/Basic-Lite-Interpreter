@@ -17,7 +17,7 @@ void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>&
     try{
         jumpNumber = stoi(evaluated);
     } catch (std::exception& e){
-        throw SyntaxError("Can not recognize \"" + expression + "\" as a goto argument", lineNumber);
+        throw CompileError("Can not recognize \"" + expression + "\" as a goto argument", lineNumber);
     }
     size_t i = 0;
     bool found = false;
@@ -28,5 +28,5 @@ void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>&
         }
         i++;
     }
-    if (!found) throw CompileError("No line identifier found to jump to", lineNumber);
+    if (!found) throw SyntaxError("No line identifier found to jump to", lineNumber);
 }

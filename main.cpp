@@ -57,7 +57,7 @@ int main() {
     TEST (PrintInstruction, Correct){
         index = 0; // Set to first
         // Print string literal
-        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"helyes kiiras\"")));
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"output success\"")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         instructions.pop_back(); // Pop from array
     } END
@@ -65,23 +65,23 @@ int main() {
     TEST (PrintInstruction, Error){
         index = 0; // Set back
         // [Syntax error]: Wrong string literal in line: #
-        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"rossz")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception& e);
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"wrong")));
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError& e);
 
         // [Syntax error]: Can not recognize "argument" as a print argument in line: #
-        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "valami")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception& e);
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "something")));
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError& e);
         instructions.clear(); // Clear array
     } END
 
     TEST (LetInstruction, Correct){
         index = 0;
         // Set value with all existing operations
-        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(10, "a = 4*(4-1)/2 % 4")));
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-1)/2 % 4")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         EXPECT_EQ(2.f, registers[0].getValue());
         // Chained assigning
-        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(10, "a = b = 1")));
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = b = 1")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         EXPECT_EQ(1.f, registers[0].getValue());
         EXPECT_EQ(1.f, registers[1].getValue());
@@ -91,25 +91,32 @@ int main() {
     TEST(LetInstruction, Error){
         index = 0;
         // [Syntax error]: Unrecognized register name in line: #
-        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(40, "a = c")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception&);
-//        instructions.pop_back();
+        EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = c")));
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        instructions.pop_back();
     } END
 
     TEST(GotoInstruction, Correct){
-        index = 4;
-        EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(50, "40")));
+        index = 0;
+        EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(30, "30")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
-        // Last test's error again after goto back to line 40
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), exception&);
+        instructions.pop_back();
     } END
 
     TEST(GotoInstruction, Error){
-
+        index = 0;
+        EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(30, "somewhere")));
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(40, "")));
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        instructions.clear();
     } END
 
     TEST(ReadInstruction, Correct){
-
+        index = 0;
+        EXPECT_NO_THROW(instructions.push_back(new ReadInstruction(50, "a")));
+        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+        instructions.pop_back();
     } END
     TEST (ReadInstruction, Error){
 
@@ -125,7 +132,7 @@ int main() {
     // Coputer tests
     Computer pc;
     TEST(ComputerTest1, ReadNonExistingFile) {
-        EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), runtime_error&); // File not found
+        EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), UniqueError&); // File not found
     } END
     TEST(ComputerTest2, ReadExistingFile){
         EXPECT_NO_THROW(pc.ReadProgramFromFile("../programs/parosSzamok.dat")); // Found
@@ -158,7 +165,7 @@ int main() {
 //    }END
 
     if (!gtest_lite::test.fail())
-      std::cout << "\n\tMinden teszt lefutott.\n\tA program tokeletesen mukodik!" << std::endl;
+      std::cout << "\nMinden teszt lefutott.\nA program tokeletesen mukodik!" << std::endl;
     string str;
     std::cin >> str;
 #endif
