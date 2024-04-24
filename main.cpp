@@ -171,6 +171,8 @@ int main() {
     }
     catch (std::exception& e){
         cout << "\n[Error]: Undetected error in interface: " << e.what() << endl;
+        string a;
+        getline(cin,a);
     }
 #endif
     return 0;
@@ -180,7 +182,7 @@ int main() {
 
 // DONE: Goto argument lehessen expression és register érték is
 
-// TODO: Custom Syntax Error exception class implementation
+// DONE: Custom Syntax Error exception class implementation
 
 // TODO: IfInstruction tesztek írása
 

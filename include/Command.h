@@ -18,7 +18,7 @@ public:
     /**
      * Creates a command that the user can use from the IDE
      * @param cmdStr String literal fo the command
-     * @param funcPtr This function is calld, when the command is inputed
+     * @param funcPtr This function is called, when the command is inputed
      */
     explicit Command(const char* cmdStr,  void (*funcPtr)(Computer& pc, const string& filename) = nullptr);
     // -- Operators --

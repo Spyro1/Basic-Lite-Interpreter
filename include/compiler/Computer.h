@@ -43,13 +43,13 @@ public:
      * Evaluates the read character string line.
      * If the line number is positive, then the computer adds it to the instruction list,
      * if the number is negative, then the computer removes the corresponding instrcution
-     * wtih the absolute value of the given line number.
-     * @param programLine Inputed line containing the instruction: <lineNumber> <command> <argument>
+     * with the absolute value of the given line number.
+     * @param programLine Inputted line containing the instruction: <lineNumber> <command> <argument>
      */
     void NewInstruction(const string& programLine);
     /**
      *  Runs the program: Executes the instructions based on the instructionIndex value
-     *  which is modified according to the previous instrcution.
+     *  which is modified according to the previous instruction.
      */
     void RunProgram();
     /**
@@ -57,7 +57,7 @@ public:
      */
     void ClearProgram();
     /**
-     * Lists the instructions strored in the memory of the computer.
+     * Lists the instructions stored in the memory of the computer.
      * @return Returns a string containing all the instructions displayed line by line.
      */
     friend std::ostream& operator<<(std::ostream& os, const Computer& pc);
@@ -84,31 +84,32 @@ private:
      */
     void ProcessProgramLine(const string& inputLine);
     /**
-     *
-     * @param inputLine
-     * @param lineNumber
-     * @param command
-     * @param expression
+     * Splits a line of input into tokens representing different parts of a command.
+     * @param inputLine The input line to split.
+     * @param lineNumber Reference to an integer to store the line number.
+     * @param command Reference to a string to store the command token.
+     * @param expression Reference to a string to store the expression token.
      */
     static void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
     /**
-     *
+     * Clears all instructions stored in the computer's memory.
      */
     void ClearInstructions();
     /**
-     *
+     * Sorts the instructions stored in the computer's memory.
      */
     void SortInstructions();
+
     /**
-     *
-     * @param lineNumber
+     * Removes an instruction with the specified line number.
+     * @param lineNumber The line number of the instruction to remove.
      */
     void RemoveInstruction(int lineNumber);
     /**
-     *
-     * @param a
-     * @param b
-     * @return
+     * Compares two instruction pointers for sorting purposes.
+     * @param a Pointer to the first instruction.
+     * @param b Pointer to the second instruction.
+     * @return True if instruction 'a' should precede instruction 'b' in sorting, false otherwise.
      */
     static bool CompareInstructions(const Instruction *a, const Instruction *b);
 };
