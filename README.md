@@ -25,96 +25,122 @@ Megj: nem BASIC interpretert kell írni!
 
 
 ## BASIC interpreter - Osztálydiagram
+
 ```mermaid
 classDiagram
     direction LR
-    class IDE{
-      - active: bool
-      - commands[]: Command
-      + IDE()
-      + Run() void
-      - PrintTitle() void
-      - HelpCommandFunc() void$
-      - RunCommandFunc() void$
-      - EndCommandFunc() void$
-      - ListCommandFunc() void$
-      - LoadCommandFunc() void$
-      - SaveCommandFunc() void$
-      - NewCommandFunc() void$
-    }
-    class Computer {
-        - registers: Register[]
-        - instructions: Instruction[]
-        - instructionIndex: int
-        + Computer()
-        + getInstructionCount() int
-        + ReadProgramFromFile(filename: string) void
-        + NewInstruction(programLine: string) void
-        + RunProgram() void
-        + ClearProgram() void
-        - ExecuteNextInstruction() void
-    }    
-    class Register{
-        - name: string
-        - value: float
-        + Register(name: string, value: int)
-        + getName() string
-        + getValue() int
-        + setValue(newValue: float) void
-    }
-    class InstructionType { 
-        <<enumeration>>
-        NoType, Print, Let, If, Goto, Read 
-    }
-    class Instruction {
-        <<abstract>>
-        - lineNumber: int
-        - expression: string
-        - instrTy: InstructionType
-        + Instruction(lineNumber: int, expression: string)
-        + getLineNumber() int
-        + getInstructionTypeStr() string
-        + getInstructionType() InstructionType
-        + getExpression() string
-        + isNumber() bool$
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void*
-        - ProcessExpression(argument: string, registers: Register[]) string
-    }
-    class LetInstruction{
+%%    namespace interface{
+        class IDE{
+            - active: bool
+            - commands[]: Command
+            + IDE()
+            + Run() void
+            - PrintTitle() void
+        }
+        class Command{
+            - cmdStr: string
+            - pc&: Computer
+            + Command(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void = 0*
+        }
+        class HelpCommand{
+            + HelpCommand(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void
+        }
+        class RunCommand{
+            + RunCommand(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void
+        }
+        class EndCommand{
+            + EndCommand(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void
+        }
+        class ListCommand{
+            + ListCommand(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void
+        }
+        class NewCommand{
+            + NewCommand(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void
+        }
+        class LoadCommand{
+            + LoadCommand(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void
+        }
+        class SaveCommand{
+            + SaveCommand(cmdStr: string, pc: Computer)
+            + operator()(commandExpression: string) void
+        }
+%%    }
+
+%%    namespace interpreter{
+        
+        class Computer {
+            - registers: Register[]
+            - instructions: Instruction[]
+            - instructionIndex: int
+            + Computer()
+            + getInstructionCount() int
+            + ReadProgramFromFile(filename: string) void
+            + NewInstruction(programLine: string) void
+            + RunProgram() void
+            + ClearProgram() void
+            - ExecuteNextInstruction() void
+        }    
+        class Register{
+            - name: string
+            - value: float
+            + Register(name: string, value: int)
+            + getName() string
+            + getValue() int
+            + setValue(newValue: float) void
+        }
+        class InstructionType { 
+            <<enumeration>>
+            NoType, Print, Let, If, Goto, Read 
+        }
+        class Instruction {
+            <<abstract>>
+            - lineNumber: int
+            - expression: string
+            - instrTy: InstructionType
+            + Instruction(lineNumber: int, expression: string)
+            + getLineNumber() int
+            + getInstructionTypeStr() string
+            + getInstructionType() InstructionType
+            + getExpression() string
+            + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void = 0*
+            - ProcessExpression(argument: string, registers: Register[]) string
+        }
+      class LetInstruction{
         + LetInstruction(lineNumber: int, expression: string)
         + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-    }
-    class PrintInstruction{
+      }
+      class PrintInstruction{
         + PrintInstruction(lineNumber: int, expression: string)
         + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-    }
-    class GotoInstruction{
+      }
+      class GotoInstruction{
         + GotoInstruction(lineNumber: int, expression: string)
         + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-    }
-    class IfInstruction{
+      }
+      class IfInstruction{
         + IfInstruction(lineNumber: int, expression: string)
         + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-    }
-    class ReadInstruction{
+      }
+      class ReadInstruction{
         + ReadInstruction(lineNumber: int, expression: string)
         + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-    }
-    
-    class Command{
-        - cmdStr: string
-        - (*func)() void
-        + Command(cmdStr: string, (*funcPtr)(): void)
-        + operator()() void
-        + operator==() bool
-    }
-    
-%%    IDE "1" *-- "1" Computer : contains
-    Computer "1" --* "1" IDE : contains
+      }
+%%  }
+  
+%%      IDE "1" *-- "1" Computer : contains    
+    Computer "1" --* "1" IDE : contains    
     IDE "1" *-- "0..*" Command : contains
+    
+    Register <-- Instruction : uses
     Computer "1" *-- "0..*" Instruction : contains
     Computer "1" *-- "1..*" Register : contains
-    Register <-- Instruction : uses
 
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
@@ -122,6 +148,15 @@ classDiagram
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
     Instruction "1" *-- "1" InstructionType : defines
+    
+    Command <|-- HelpCommand
+    Command <|-- RunCommand
+    Command <|-- EndCommand
+    Command <|-- ListCommand
+    Command <|-- NewCommand
+    Command <|-- LoadCommand
+    Command <|-- SaveCommand
+    
     
 ```
 
@@ -139,7 +174,6 @@ sequenceDiagram
 - [ ] Run -read-be karaktert írva végtelen >-t ír ki 
 
 ## Interfész parancsok
-A program indulásakot egy CLI-s felület fogadja a felhasználót. Itt az alábbi parancsok adhatóak ki:
 
 - `HELP`: Kiírja az interfész parancsait, és működésüket
 - `RUN`: Futtatja a betöltött programot.

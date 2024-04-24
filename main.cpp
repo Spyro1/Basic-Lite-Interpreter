@@ -188,16 +188,16 @@ int main() {
 
 // TODO: ReadInstruction tesztek írása
 
-// TODO: Command class kibővítése leszármazottakkal (RunCommand, HelpCommand, ... )
+// DONE: Command class kibővítése leszármazottakkal (RunCommand, HelpCommand, ... )
 
-// TODO: IDE-ből eltávolítani a static függvényeket
+// DONE: IDE-ből eltávolítani a static függvényeket
 
 // TODO: Függvénydokumentáció írás:
-//  - Computer
-//  - Instruction leszármazottak
-//      - IfInstruction
-//      - ReadInstruction
-//      - LetInstruction
-//      - PrintInstruction
-//      - GotoInstruction
+//  + Computer
+//  + Instruction leszármazottak
+//      + IfInstruction
+//      + ReadInstruction
+//      + LetInstruction
+//      + PrintInstruction
+//      + GotoInstruction
 //  - IDE

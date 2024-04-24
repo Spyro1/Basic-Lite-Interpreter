@@ -38,14 +38,6 @@ public:
 private:
     // == Private Functions ==
     static void PrintTitle();
-    // == Functions to commands ==
-//    static void HelpCommandFunc(Computer& pc, const string& filename);
-//    static void RunCommandFunc(Computer& pc, const string& filename);
-//    static void EndCommandFunc(Computer& pc, const string& filename);
-//    static void ListCommandFunc(Computer& pc, const string& filename);
-//    static void LoadCommandFunc(Computer& pc, const string& filename);
-//    static void SaveCommandFunc(Computer& pc, const string& filename);
-//    static void NewCommandFunc(Computer& pc, const string& filename);
 };
 
 #endif //NAGYHAZI_IDE_H
