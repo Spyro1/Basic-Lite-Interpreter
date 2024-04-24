@@ -4,7 +4,7 @@
 
 #include "memtrace.h"
 #include "gtest_lite.h"
-#include "include/IDE.h"
+#include "include/interface/IDE.h"
 #include "include/compiler/Computer.h"
 #include "include/compiler/PrintInstruction.h"
 #include "include/compiler/LetInstruction.h"
