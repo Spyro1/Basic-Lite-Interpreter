@@ -11,24 +11,21 @@ void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> 
     float newValue;
     string readValue;
     size_t regIndex = FindRegisterIndex(registers, expression);
-#ifdef CPORTA
-    std::getline(inStream, readValue);
-#else
     std::getline(std::cin, readValue);
-#endif
+//    std::cin >> readValue;
 
-    // Error handling
+    // Error handling if not empty string
     if (!readValue.empty()){
         if (isNumber(readValue))
-            newValue = stof(readValue);
+            newValue = stof(readValue); // Convert value to float
         else
-            throw UniqueError("Incorrect input were given!");
-
+            throw UniqueError("Invalid input were given!"); // Can not convert, throw error
+        // Assign inputted value to register
         if (Exists(regIndex))
             registers[regIndex].SetValue(newValue); // Assign value to existing register
         else
             registers.emplace_back(expression, newValue); // Create new register and initialize it
     }
-
+    // Skip instruction if empty
     instructionIndex++;
 }

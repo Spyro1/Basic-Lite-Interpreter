@@ -58,7 +58,11 @@ int main() {
         index = 0; // Set to first
         // Print string literal
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"output success\"")));
+            stringbuf test_output(ios_base::out);
+            streambuf * const cout_buf = cout.rdbuf(&test_output);
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+            cout.rdbuf(cout_buf);
+        EXPECT_STREQ("output success", test_output.str().c_str()); // Test output content
         instructions.pop_back(); // Pop from array
     } END
 
@@ -86,6 +90,7 @@ int main() {
         EXPECT_EQ(1.f, registers[0].getValue());
         EXPECT_EQ(1.f, registers[1].getValue());
         instructions.clear(); // Clear array
+        registers.clear(); // Clear array
     } END
 
     TEST(LetInstruction, Error){
@@ -115,11 +120,22 @@ int main() {
     TEST(ReadInstruction, Correct){
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new ReadInstruction(50, "a")));
+            stringbuf test_input("3", ios_base::in); // Set cin input stringbuffer
+            streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+            cin.rdbuf(cin_buf); // Reset cin buffer
+        EXPECT_EQ(3.f, registers[0].getValue());
         instructions.pop_back();
     } END
-    TEST (ReadInstruction, Error){
 
+    TEST (ReadInstruction, Error){
+        index = 0;
+        EXPECT_NO_THROW(instructions.push_back(new ReadInstruction(50, "a")));
+            stringbuf test_input("novalue", ios_base::in); // Set cin input stringbuffer
+            streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), UniqueError&);
+            cin.rdbuf(cin_buf); // Reset cin buffer
+        instructions.pop_back();
     } END
 
     TEST(IfInstruction, Correct){
@@ -138,7 +154,11 @@ int main() {
         EXPECT_NO_THROW(pc.ReadProgramFromFile("../programs/parosSzamok.dat")); // Found
     } END
     TEST(ComputerTest3, RunEvenNumberProgram){
+        stringbuf test_output(ios_base::out);
+        streambuf * const cout_buf = cout.rdbuf(&test_output);
         EXPECT_NO_THROW(pc.RunProgram());
+        cout.rdbuf(cout_buf);
+        EXPECT_STREQ("Elso 5 paros szam: 2 4 6 8 10 ", test_output.str().c_str()); // Test cout resoult
     } END
     TEST(ComputerTest4, ClearProgram){
         EXPECT_NO_THROW(pc.ClearProgram());
@@ -164,10 +184,14 @@ int main() {
 //        EXPECT_NO_THROW(ide.Run()) << "Ennek nem igy kene mukodnie";
 //    }END
 
+    // == Reset cin buffer ==
+//    std::cin.rdbuf(orig);
+
     if (!gtest_lite::test.fail())
       std::cout << "\nMinden teszt lefutott.\nA program tokeletesen mukodik!" << std::endl;
     string str;
     std::cin >> str;
+
 #endif
 
 // === RUN PROGRAM INTERFACE ===
@@ -208,3 +232,5 @@ int main() {
 //      + PrintInstruction
 //      + GotoInstruction
 //  - IDE
+//  - HelpCommand
+//  - EndCommand

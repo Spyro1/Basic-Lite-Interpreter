@@ -7,13 +7,27 @@
 
 #include "Command.h"
 
-class SaveCommand : public Command{
+/**
+ * The SaveCommand class represents a command to save the program to a file.
+ * Inherits from the Command class.
+ */
+class SaveCommand : public Command {
 public:
     // == Constructor ==
+    /**
+     * Constructs a SaveCommand object.
+     * @param pc A reference to the Computer object.
+     */
     explicit SaveCommand(Computer& pc);
     // == Operator ==
-    void operator()(const string& filename, bool& active) override;
+    /**
+     * Executes the save command.
+     * @param filename The name of the file to save the program to.
+     * @param active A boolean reference indicating whether the interface is active.
+     */
+    void operator()(const std::string& filename, bool& active) override;
 };
+
 
 
 #endif //NAGYHAZI_SAVECOMMAND_H

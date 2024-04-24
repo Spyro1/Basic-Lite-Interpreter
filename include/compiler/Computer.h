@@ -21,18 +21,18 @@ class Computer {
     std::vector<Instruction*> instructions; // List of instructions line by line
     int instructionIndex = -1;      // Current Instruction index
 public:
-    // -- Constructor --
+    // == Constructor ==
     /**
      * Creates a computer object that can run a BASIC-lite program.
      */
     explicit Computer();
-    // -- Getters --
+    // == Getters ==
     /**
      * Gives the number of instructions in the program
      * @return Number of instructions
      */
     size_t getInstructionCount() const;
-    // -- Functions --
+    // == Functions ==
     /**
      * Reads the program from the given file into the 'instructions' list.
      * @param filename The name of the file that contains the program.
@@ -62,7 +62,7 @@ public:
      */
     friend std::ostream& operator<<(std::ostream& os, const Computer& pc);
 
-    // -- Destructor --
+    // == Destructor ==
     ~Computer();
     /**
      * Converts the string to upper case letters
@@ -72,7 +72,7 @@ public:
     static string ToUpperCaseStr(const string &str);
 
 private:
-    // -- Private functions--
+    // == Private functions==
     /**
      * Executes the next instruction in the line based on the instrcutionIndex's value
      */
@@ -99,7 +99,6 @@ private:
      * Sorts the instructions stored in the computer's memory.
      */
     void SortInstructions();
-
     /**
      * Removes an instruction with the specified line number.
      * @param lineNumber The line number of the instruction to remove.

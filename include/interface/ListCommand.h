@@ -7,11 +7,24 @@
 
 #include "Command.h"
 
+/**
+ * The ListCommand class represents a command that lists the instructions of the loaded program.
+ * Inherits from the Command class.
+ */
 class ListCommand : public Command{
 public:
     // == Constructor ==
+    /**
+     * Constructs a ListCommand object.
+     * @param pc A reference to the Computer object.
+     */
     explicit ListCommand(Computer& pc);
     // == Operator ==
+    /**
+    * Executes the List command.
+    * @param filename The name of the file.
+    * @param active A boolean reference indicating whether the interface is active.
+    */
     void operator()(const string& filename, bool& active) override;
 };
 

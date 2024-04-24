@@ -9,6 +9,7 @@
 Instruction::Instruction() : lineNumber(0), instrTy(NoType) {}
 
 Instruction::Instruction(int lineNumber_, const string &expression_, InstructionType instructionType) : lineNumber(lineNumber_), expression(expression_), instrTy(instructionType) {}
+
 int Instruction::getLineNumber() const {
     return lineNumber;
 }
@@ -36,9 +37,10 @@ Instruction::~Instruction() = default;
 
 string Instruction::ProcessExpression(string &argument, vector<Register> &registers) {
     using namespace std;
-    // == Declare testing values ==
+    // = Declare testing values =
     string evaluated; // Result string
-    float leftValue, rightValue;
+    float leftValue, rightValue; // Evaluated left or right side of operation
+    // = Find operator indexes =
     size_t assignValueSignIndex = argument.find('='),
            orIndex = argument.rfind("||"),
            andIndex = argument.rfind("&&"),
@@ -52,8 +54,8 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
            multiplyIndex = argument.rfind('*'),
            divideIndex = argument.rfind('/'),
            modIndex = argument.rfind('%'), // Index of +, -, *, /, % characters in argument
-           firstOpeningBracket = argument.find('('), //FindIndexOf(argument, '(');
-           firstClosingBracket = argument.rfind(')');//FindIndexOf(argument, ')');
+           firstOpeningBracket = argument.find('('),
+           firstClosingBracket = argument.rfind(')');
 
     #pragma region == 0. level: Simplify +-
     ReplaceCharacters(argument, "--", "+");

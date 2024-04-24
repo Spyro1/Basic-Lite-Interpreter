@@ -60,7 +60,9 @@ void Computer::RunProgram() {
         counter++;
     }
     if (counter >= infiniteCycle) throw CompileError("Program shutdown due to infinite cycle!");
-    std::cout << std::endl;
+    #ifndef CPORTA
+        std::cout << std::endl;
+    #endif
 }
 
 void Computer::ClearProgram() {

@@ -31,24 +31,24 @@ protected:
     string expression;
     InstructionType instrTy;
 public:
-    // -- Constructors --
+    // == Constructors ==
     Instruction();
     Instruction(int lineNumber_, const string& expression_, InstructionType instructionType = NoType);
-    // -- Getters --
+    // == Getters ==
     int getLineNumber() const;
     string getInstructionTypeStr() const;
     InstructionType getInstructionType() const;
     string getExpression() const;
-    // -- Virtual function --
+    // == Virtual function ==
     virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
-    // -- Operators --
+    // == Operators ==
     friend std::ostream& operator<<(std::ostream& os, const Instruction& inst);
-    // -- Static functions --
+    // == Static functions ==
     static bool isNumber(const string &str);
-    // -- Destructor --
+    // == Destructor ==
     virtual ~Instruction();
 protected:
-    // -- Protected functions --
+    // == Protected functions ==
     string ProcessExpression(string &argument, vector<Register> &registers);
     void ReplaceCharacters(string &inputStr, const string &searched, const string &replace);
     int CountCharacter(const string &str, char ch);
