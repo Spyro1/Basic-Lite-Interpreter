@@ -9,5 +9,5 @@ RunCommand::RunCommand(Computer &pc) : Command(pc, RUN_CMD) {}
 
 void RunCommand::operator()(const string &filename, bool &active) {
     pc.RunProgram();
-    std::cout << "[Computer]: Ready.\n" << std::endl;
+    std::cout << "\n[Computer]: Ready.\n" << std::endl;
 }

@@ -139,56 +139,76 @@ int main() {
     } END
 
     TEST(IfInstruction, Correct){
-
+        index = 0;
+        EXPECT_NO_THROW(instructions.push_back(new IfInstruction(10, "a > 1 && a <= 3")));
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(20, "\"true\"")));
+        EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(30, "\"false\"")));
+            stringbuf test_output(ios_base::out);
+            streambuf * const cout_buf = cout.rdbuf(&test_output);
+        EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+            cout.rdbuf(cout_buf);
+        EXPECT_STREQ("true", test_output.str().c_str());
+        instructions.clear();
     } END
     TEST (IfInstruction, Error){
-
+        index = 0;
+        EXPECT_NO_THROW(instructions.push_back(new IfInstruction(10, "a >| 1 &")));
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        instructions.clear();
     } END
 
-    // Coputer tests
+    // === Computer tests ===
     Computer pc;
-    TEST(ComputerTest1, ReadNonExistingFile) {
+    TEST(Computer, ReadNonExistingFile) {
         EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), UniqueError&); // File not found
     } END
-    TEST(ComputerTest2, ReadExistingFile){
+    TEST(Computer, ReadExistingFile){
         EXPECT_NO_THROW(pc.ReadProgramFromFile("../programs/parosSzamok.dat")); // Found
     } END
-    TEST(ComputerTest3, RunEvenNumberProgram){
-        stringbuf test_output(ios_base::out);
-        streambuf * const cout_buf = cout.rdbuf(&test_output);
+    TEST(Computer, RunEvenNumberProgram){
+            stringbuf test_output(ios_base::out); // Set up test output
+            streambuf * const cout_buf = cout.rdbuf(&test_output); // Store cout buffer
         EXPECT_NO_THROW(pc.RunProgram());
-        cout.rdbuf(cout_buf);
-        EXPECT_STREQ("Elso 5 paros szam: 2 4 6 8 10 ", test_output.str().c_str()); // Test cout resoult
+            cout.rdbuf(cout_buf); // Reset cout buffer
+        EXPECT_STREQ("Elso 5 paros szam: 2 4 6 8 10 ", test_output.str().c_str()); // Test cout result
     } END
-    TEST(ComputerTest4, ClearProgram){
+    TEST(Computer, ClearProgram){
         EXPECT_NO_THROW(pc.ClearProgram());
     }END
-    TEST(ComputerTest5, AddInstruction){
+    TEST(Computer, AddInstruction){
         pc.NewInstruction(string("10 let a = 10"));
         pc.NewInstruction(string("20 let a = (5 - 1) * (a % 6) / 2 + a"));
         pc.NewInstruction(string("30 print a"));
         EXPECT_EQ(3, (int)pc.getInstructionCount());
+            stringbuf test_output(ios_base::out); // Set up test output
+            streambuf * const cout_buf = cout.rdbuf(&test_output); // Store cout buffer
         EXPECT_NO_THROW(pc.RunProgram());
+            cout.rdbuf(cout_buf); // Reset cout buffer
+        EXPECT_STREQ("18", test_output.str().c_str());
     }END
-    TEST(ComputerTest6, RemoveInstruction){
+    TEST(Computer, RemoveInstruction){
         pc.NewInstruction(string("-20"));
         EXPECT_EQ(2, (int)pc.getInstructionCount());
+            stringbuf test_output(ios_base::out); // Set up test output
+            streambuf * const cout_buf = cout.rdbuf(&test_output); // Store cout buffer
         EXPECT_NO_THROW(pc.RunProgram());
+            cout.rdbuf(cout_buf); // Reset cout buffer
+        EXPECT_STREQ("10", test_output.str().c_str());
     }END
 
-    TEST(InterfaceTest1, CreateIDE){
+    TEST(Interface, CreateIDE){
         IDE ide;
     }END
-    IDE ide;
-//    TEST(InterfaceTest2, RunIDE){
-//        EXPECT_NO_THROW(ide.Run()) << "Ennek nem igy kene mukodnie";
-//    }END
-
-    // == Reset cin buffer ==
-//    std::cin.rdbuf(orig);
+    TEST(Interface, RunIDE){
+        IDE ide;
+            stringbuf test_input("10 LET a = 4 + 2\n20 PRINT a\nRUN\nEND", ios_base::in); // Set cin input stringbuffer
+            streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
+        EXPECT_NO_THROW(ide.Run()) << "Error during ide test.";
+            cin.rdbuf(cin_buf); // Reset cin buffer
+    }END
 
     if (!gtest_lite::test.fail())
-      std::cout << "\nMinden teszt lefutott.\nA program tokeletesen mukodik!" << std::endl;
+      std::cout << "\nAll test have been called.\nThe application works!" << std::endl;
     string str;
     std::cin >> str;
 
@@ -215,9 +235,9 @@ int main() {
 
 // DONE: Custom Syntax Error exception class implementation
 
-// TODO: IfInstruction tesztek írása
+// DONE: IfInstruction tesztek írása
 
-// TODO: ReadInstruction tesztek írása
+// DONE: ReadInstruction tesztek írása
 
 // DONE: Command class kibővítése leszármazottakkal (RunCommand, HelpCommand, ... )
 
