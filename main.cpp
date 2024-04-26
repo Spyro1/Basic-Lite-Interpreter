@@ -2,7 +2,6 @@
 
 //#define CPORTA
 
-#include "memtrace.h"
 #include "gtest_lite.h"
 #include "include/interface/IDE.h"
 #include "include/compiler/Computer.h"
@@ -12,6 +11,7 @@
 #include "include/compiler/ReadInstruction.h"
 #include "include/compiler/IfInstruction.h"
 
+#include "memtrace.h"
 
 
 //#define UTF8
@@ -63,6 +63,7 @@ int main() {
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
             cout.rdbuf(cout_buf);
         EXPECT_STREQ("output success", test_output.str().c_str()); // Test output content
+        delete instructions[0];
         instructions.pop_back(); // Pop from array
     } END
 
@@ -75,6 +76,8 @@ int main() {
         // [Syntax error]: Can not recognize "argument" as a print argument in line: #
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "something")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError& e);
+        delete instructions[0];
+        delete instructions[1];
         instructions.clear(); // Clear array
     } END
 
@@ -89,6 +92,8 @@ int main() {
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         EXPECT_EQ(1.f, registers[0].getValue());
         EXPECT_EQ(1.f, registers[1].getValue());
+        delete instructions[0];
+        delete instructions[1];
         instructions.clear(); // Clear array
         registers.clear(); // Clear array
     } END
@@ -98,6 +103,7 @@ int main() {
         // [Syntax error]: Unrecognized register name in line: #
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = c")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        delete instructions[0];
         instructions.pop_back();
     } END
 
@@ -105,6 +111,7 @@ int main() {
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(30, "30")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
+        delete instructions[0];
         instructions.pop_back();
     } END
 
@@ -114,6 +121,8 @@ int main() {
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
         EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(40, "")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        delete instructions[0];
+        delete instructions[1];
         instructions.clear();
     } END
 
@@ -125,6 +134,7 @@ int main() {
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
             cin.rdbuf(cin_buf); // Reset cin buffer
         EXPECT_EQ(3.f, registers[0].getValue());
+        delete instructions[0];
         instructions.pop_back();
     } END
 
@@ -135,6 +145,7 @@ int main() {
             streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), UniqueError&);
             cin.rdbuf(cin_buf); // Reset cin buffer
+        delete instructions[0];
         instructions.pop_back();
     } END
 
@@ -148,12 +159,16 @@ int main() {
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
             cout.rdbuf(cout_buf);
         EXPECT_STREQ("true", test_output.str().c_str());
+        delete instructions[0];
+        delete instructions[1];
+        delete instructions[2];
         instructions.clear();
     } END
     TEST (IfInstruction, Error){
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new IfInstruction(10, "a >| 1 &")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        delete instructions[0];
         instructions.clear();
     } END
 
@@ -203,14 +218,17 @@ int main() {
         IDE ide;
             stringbuf test_input("10 LET a = 4 + 2\n20 PRINT a\nRUN\nEND", ios_base::in); // Set cin input stringbuffer
             streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
+            stringbuf test_output(ios_base::out); // Redirect cout
+            streambuf * const cout_buf = cout.rdbuf(&test_output); // Save cout buffer
         EXPECT_NO_THROW(ide.Run()) << "Error during ide test.";
             cin.rdbuf(cin_buf); // Reset cin buffer
+            cout.rdbuf(cout_buf); // Reset cout buffer
     }END
 
     if (!gtest_lite::test.fail())
       std::cout << "\nAll test have been called.\nThe application works!" << std::endl;
-    string str;
-    std::cin >> str;
+//    string str;
+//    std::cin >> str;
 
 #endif
 
