@@ -2,14 +2,16 @@
 #define GTEST_LITE_H
 
 /**
- * \file gtest_lite.h  (v3/2019)
+ * \file gtest_lite.h  (v4/2022)
  *
  * Google gtest keretrendszerhez hasonló rendszer.
  * Sz.I. 2015., 2016., 2017. (_Has_X)
  * Sz.I. 2018 (template), ENDM, ENDMsg, nullptr_t
  * Sz.I. 2019 singleton
  * Sz.I. 2021 ASSERT.., STRCASE...
- * Sz.I. 2021 EXPEXT_REGEXP, CREATE_Has_fn_, cmp w. NULL
+ * Sz.I. 2021 EXPEXT_REGEXP, CREATE_Has_fn_, cmp w. NULL, EXPECT_ param fix
+ * V.B., Sz.I. 2022 almostEQ fix,
+ * Sz.I. 2022. EXPECT_THROW fix
  *
  * A tesztelés legalapvetőbb funkcióit támogató függvények és makrók.
  * Nem szálbiztos megvalósítás.
@@ -135,7 +137,7 @@
 
 /// Kivételt várunk
 #define EXPECT_THROW(statement, exception_type) try { gtest_lite::test.tmp = false; statement; } \
-    catch (exception_type) { gtest_lite::test.tmp = true; } \
+    catch (exception_type &e) { gtest_lite::test.tmp = true; } \
     catch (...) { } \
     EXPECTTHROW(statement, "kivetelt dob.", "nem dobott '"#exception_type"' kivetelt.")
 
@@ -156,7 +158,7 @@
 
 /// Kivételt várunk és továbbdobjuk -- ilyen nincs a gtest-ben
 #define EXPECT_THROW_THROW(statement, exception_type) try { gtest_lite::test.tmp = false; statement; } \
-    catch (exception_type) { gtest_lite::test.tmp = true; throw; } \
+    catch (exception_type &e) { gtest_lite::test.tmp = true; throw; } \
     EXPECTTHROW(statement, "kivetelt dob.", "nem dobott '"#exception_type"' kivetelt.")
 
 /// Környezeti változóhoz hasonlít -- ilyen nincs a gtest-ben
@@ -339,8 +341,8 @@ public:
 static Test& test = Test::getTest();
 
 /// általános sablon a várt értékhez.
-template <typename T>
-std::ostream& EXPECT_(T exp, T act, bool (*pred)(T, T), const char *file, int line,
+template <typename T1, typename T2>
+std::ostream& EXPECT_(T1 exp, T2 act, bool (*pred)(T1, T1), const char *file, int line,
                       const char *expr, const char *lhs = "elvart", const char *rhs = "aktual") {
     return test.expect(pred(exp, act), file, line, expr)
         << "** " << lhs << ": " << std::boolalpha << exp
@@ -348,8 +350,8 @@ std::ostream& EXPECT_(T exp, T act, bool (*pred)(T, T), const char *file, int li
 }
 
 /// pointerre specializált sablon a várt értékhez.
-template <typename T>
-std::ostream& EXPECT_(T* exp, T* act, bool (*pred)(T*, T*), const char *file, int line,
+template <typename T1, typename T2>
+std::ostream& EXPECT_(T1* exp, T2* act, bool (*pred)(T1*, T1*), const char *file, int line,
                       const char *expr, const char *lhs = "elvart", const char *rhs = "aktual") {
     return test.expect(pred(exp, act), file, line, expr)
         << "** " << lhs << ": " << (void*) exp
@@ -463,16 +465,16 @@ template <typename T>
 bool almostEQ(T a, T  b) {
     // eps: ha a relatív, vagy abszolút hiba ettől kisebb, akkor elfogadjuk
     T eps = 10 * std::numeric_limits<T>::epsilon(); // 10-szer a legkisebb érték
-    if (a == b) return true;
-    if (fabs(a - b) < eps)
+	T diff = fabs(a - b);
+    if (diff < eps)
        return true;
-    double aa = fabs(a);
-    double ba = fabs(b);
+    T aa = fabs(a);
+    T ba = fabs(b);
     if (aa < ba) {
         aa = ba;
         ba = fabs(a);
     }
-    return (aa - ba) < aa * eps;
+    return diff < aa * eps;
 }
 
 /// Segédsablon ostream átirányításához

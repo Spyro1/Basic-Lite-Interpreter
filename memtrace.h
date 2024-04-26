@@ -5,7 +5,7 @@ Keszitette: Peregi Tamas, BME IIT, 2011
 Kanari:     Szeberenyi Imre, 2013.,
 VS 2012:    Szeberényi Imre, 2015.,
 mem_dump:   2016.
-inclue-ok:  2017., 2018., 2019., 2021.
+inclue-ok:  2017., 2018., 2019., 2021., 2022.
 *********************************/
 
 #ifndef MEMTRACE_H
@@ -161,6 +161,7 @@ END_NAMESPACE
 	#include <ostream>
 	#include <stdexcept>
 	#include <ctime>
+	#include <random>
     #if __cplusplus >= 201103L
         #include <iterator>
         #include <regex>
