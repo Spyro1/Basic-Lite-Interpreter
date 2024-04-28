@@ -1,20 +1,21 @@
-#include <iostream>
-
 //#define CPORTA
+//#define UTF8
 
+#include <iostream>
 #include "gtest_lite.h"
 #include "include/interface/IDE.h"
 #include "include/compiler/Computer.h"
+
+#ifdef CPORTA
 #include "include/compiler/PrintInstruction.h"
 #include "include/compiler/LetInstruction.h"
 #include "include/compiler/GotoInstruction.h"
 #include "include/compiler/ReadInstruction.h"
 #include "include/compiler/IfInstruction.h"
-
+#endif
 #include "memtrace.h"
 
 
-//#define UTF8
 
 int main() {
     using namespace std;

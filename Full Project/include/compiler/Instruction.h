@@ -94,6 +94,8 @@ public:
      * @return True if the string represents a number, false otherwise.
      */
     static bool isNumber(const string &str);
+
+    virtual ~Instruction() = default;
 protected:
     // == Protected functions ==
     /**
