@@ -71,11 +71,11 @@ int main() {
         index = 0; // Set back
         // [Syntax error]: Wrong string literal in line: #
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"wrong")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError& e);
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
 
         // [Syntax error]: Can not recognize "argument" as a print argument in line: #
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "something")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError& e);
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
         delete instructions[0];
         delete instructions[1];
         instructions.clear(); // Clear array
@@ -102,7 +102,7 @@ int main() {
         index = 0;
         // [Syntax error]: Unrecognized register name in line: #
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = c")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
         delete instructions[0];
         instructions.pop_back();
     } END
@@ -118,9 +118,9 @@ int main() {
     TEST(GotoInstruction, Error){
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(30, "somewhere")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
         EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(40, "")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
         delete instructions[0];
         delete instructions[1];
         instructions.clear();
@@ -143,7 +143,7 @@ int main() {
         EXPECT_NO_THROW(instructions.push_back(new ReadInstruction(50, "a")));
             stringbuf test_input("novalue", ios_base::in); // Set cin input stringbuffer
             streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), UniqueError&);
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), UniqueError);
             cin.rdbuf(cin_buf); // Reset cin buffer
         delete instructions[0];
         instructions.pop_back();
@@ -167,7 +167,7 @@ int main() {
     TEST (IfInstruction, Error){
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new IfInstruction(10, "a >| 1 &")));
-        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError&);
+        EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
         delete instructions[0];
         instructions.clear();
     } END
@@ -175,7 +175,7 @@ int main() {
     // === Computer tests ===
     Computer pc;
     TEST(Computer, ReadNonExistingFile) {
-        EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), UniqueError&); // File not found
+        EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), UniqueError); // File not found
     } END
     TEST(Computer, ReadExistingFile){
         EXPECT_NO_THROW(pc.ReadProgramFromFile("../programs/parosSzamok.dat")); // Found

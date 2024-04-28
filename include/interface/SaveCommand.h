@@ -21,7 +21,7 @@ public:
     explicit SaveCommand(Computer& pc);
     // == Operator ==
     /**
-     * Executes the save command.
+     * Executes the Save command.
      * @param filename The name of the file to save the program to.
      * @param active A boolean reference indicating whether the interface is active.
      */

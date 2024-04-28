@@ -21,7 +21,7 @@ public:
     explicit LoadCommand(Computer& pc);
     // == Operator ==
     /**
-     * Executes the load command.
+     * Executes the Load command.
      * @param filename The name of the file to load the program from.
      * @param active A boolean reference indicating whether the interface is active.
      */

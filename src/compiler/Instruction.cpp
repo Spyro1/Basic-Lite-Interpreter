@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "../../include/compiler/Instruction.h"
 
-Instruction::Instruction() : lineNumber(0), instrTy(NoType) {}
+//Instruction::Instruction() : lineNumber(0), instrTy(NoType) {}
 
 Instruction::Instruction(int lineNumber_, const string &expression_, InstructionType instructionType) : lineNumber(lineNumber_), expression(expression_), instrTy(instructionType) {}
 
@@ -33,7 +33,6 @@ string Instruction::getExpression() const {
 std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
     return os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") << inst.getExpression();
 }
-Instruction::~Instruction() = default;
 
 string Instruction::ProcessExpression(string &argument, vector<Register> &registers) {
     using namespace std;

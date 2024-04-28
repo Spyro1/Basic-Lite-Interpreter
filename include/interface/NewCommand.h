@@ -22,7 +22,7 @@ public:
     // == Operator ==
     /**
      * Executes the New command.
-     * @param filename The name of the file to be executed on.
+     * @param filename The name of the file. (Unused)
      * @param active A boolean reference indicating whether the interface is active.
      */
     void operator()(const string& filename, bool& active) override;
