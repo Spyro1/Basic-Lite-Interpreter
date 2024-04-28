@@ -22,22 +22,15 @@ using std::string;
 class IDE {
     bool active = true;
     Computer pc;
-    // Stream references
-    std::ostream& out;
-    std::istream& in;
-
     std::vector<Command*> commands;
 
 public:
     // == Constructors ==
-    explicit IDE(std::ostream& out = std::cout, std::istream& in = std::cin);
+    explicit IDE();
     // == Public Functions ==
     void Run();
     // == Destructor ==
     ~IDE();
-private:
-    // == Private Functions ==
-    static void PrintTitle();
 };
 
 #endif //NAGYHAZI_IDE_H

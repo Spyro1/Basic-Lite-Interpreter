@@ -1,5 +1,4 @@
-
-#define CPORTA
+//#define CPORTA
 
 #include <iostream>
 #include "gtest_lite.h"
@@ -13,6 +12,8 @@
 #include "ReadInstruction.h"
 #include "IfInstruction.h"
 #endif
+
+#include "memtrace.h"
 
 
 int main() {

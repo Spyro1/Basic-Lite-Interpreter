@@ -22,8 +22,7 @@ public:
      * @param message The error message describing the syntax issue encountered.
      * @param lineNumber The line number in the source code where the syntax error occurred. Default is -1.
      */
-    explicit SyntaxError(const std::string& message, int lineNumber = -1)
-            : UniqueError(message, lineNumber, "Syntax error") {}
+    explicit SyntaxError(const std::string& message, int lineNumber = -1);
 };
 
 

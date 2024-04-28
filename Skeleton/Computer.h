@@ -9,17 +9,11 @@
 
 #include "Register.h"
 #include "Instruction.h"
-#include "LetInstruction.h"
-#include "PrintInstruction.h"
-#include "IfInstruction.h"
-#include "GotoInstruction.h"
-#include "ReadInstruction.h"
-#include "CompileError.h"
 
 class Computer {
-    std::vector<Register> registers;       // List of registers
+    std::vector<Register> registers;        // List of registers
     std::vector<Instruction*> instructions; // List of instructions line by line
-    int instructionIndex = -1;      // Current Instruction index
+    int instructionIndex = -1;              // Current Instruction index
 public:
     // == Constructor ==
     /**
@@ -38,7 +32,6 @@ public:
      * @param filename The name of the file that contains the program.
      */
     void ReadProgramFromFile(const string& filename);
-//    void ReadProgramFromString(char* program);
     /**
      * Evaluates the read character string line.
      * If the line number is positive, then the computer adds it to the instruction list,
@@ -64,53 +57,12 @@ public:
 
     // == Destructor ==
     ~Computer();
-    /**
-     * Converts the string to upper case letters
-     * @param str Input string
-     * @return Upper case lettered string
-     */
-    static string ToUpperCaseStr(const string &str);
-
 private:
     // == Private functions==
     /**
      * Executes the next instruction in the line based on the instrcutionIndex's value
      */
     void ExecuteNextInstruction();
-    /**
-     * Evaluates the inputed line. Seperates the input line to tokens (line number, instruction, argument),
-     * and adds the new instrcutin to the list.
-     * @param inputLine New instruction line: <id> <instruction> <parameter>
-     */
-    void ProcessProgramLine(const string& inputLine);
-    /**
-     * Splits a line of input into tokens representing different parts of a command.
-     * @param inputLine The input line to split.
-     * @param lineNumber Reference to an integer to store the line number.
-     * @param command Reference to a string to store the command token.
-     * @param expression Reference to a string to store the expression token.
-     */
-    static void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
-    /**
-     * Clears all instructions stored in the computer's memory.
-     */
-    void ClearInstructions();
-    /**
-     * Sorts the instructions stored in the computer's memory.
-     */
-    void SortInstructions();
-    /**
-     * Removes an instruction with the specified line number.
-     * @param lineNumber The line number of the instruction to remove.
-     */
-    void RemoveInstruction(int lineNumber);
-    /**
-     * Compares two instruction pointers for sorting purposes.
-     * @param a Pointer to the first instruction.
-     * @param b Pointer to the second instruction.
-     * @return True if instruction 'a' should precede instruction 'b' in sorting, false otherwise.
-     */
-    static bool CompareInstructions(const Instruction *a, const Instruction *b);
 };
 
 

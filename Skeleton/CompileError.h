@@ -22,8 +22,7 @@ public:
      * @param message The error message describing the issue encountered during compilation.
      * @param lineNumber The line number in the source code where the error occurred. Default is -1.
      */
-    explicit CompileError(const std::string& message, int lineNumber = -1)
-            : UniqueError(message, lineNumber, "Compile error") {}
+    explicit CompileError(const std::string& message, int lineNumber = -1);
 };
 
 #endif //NAGYHAZI_COMPILEERROR_H

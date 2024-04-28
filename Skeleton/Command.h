@@ -5,14 +5,6 @@
 #ifndef NAGYHAZI_COMMAND_H
 #define NAGYHAZI_COMMAND_H
 
-#define HELP_CMD "HELP"
-#define RUN_CMD "RUN"
-#define END_CMD "END"
-#define LIST_CMD "LIST"
-#define NEW_CMD "NEW"
-#define LOAD_CMD "LOAD"
-#define SAVE_CMD "SAVE"
-
 #include <string>
 #include "Computer.h"
 

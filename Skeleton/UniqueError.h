@@ -27,16 +27,13 @@ public:
      * @param lineNumber The line number in the source code where the error occurred. Default is -1.
      * @param type The type or category of the error. Default is "Error".
      */
-    explicit UniqueError(const std::string& message, int lineNumber = -1, const std::string& type = "Error") : errorType(type) {
-        errormessage = "[" + errorType + "]: " + message + (lineNumber > 0 ? string(" in line: ") + std::to_string(lineNumber) : "");
-    }
-
+    explicit UniqueError(const std::string& message, int lineNumber = -1, const std::string& type = "Error");
     /**
      * This function overrides the std::exception::what() method to provide a C-style character string
      * describing the error condition.
      * @return A character string describing the error.
      */
-    char const* what() const throw() override { return errormessage.c_str(); }
+    char const* what() const throw() override;
 };
 
 
