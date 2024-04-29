@@ -36,6 +36,9 @@ public:
     bool operator==(const string& commandStr);
 
     // == Destructor ==
+    /**
+     * Destroys the command object.
+     * */
     virtual ~Command() = default;
 };
 

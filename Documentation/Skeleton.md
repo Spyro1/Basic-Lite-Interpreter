@@ -9,13 +9,66 @@
 ## Osztályok interfészei
 
 ### IDE
-
+```cpp
+class IDE {
+public:
+    /** Constructs an IDE object, initializes the IDE with default commands. */
+    IDE();
+    /** This function runs the IDE on the terminal, allowing users to interact with it. */
+    void Run();
+    /** Destroys the IDE object, cleans up resources allocated by the IDE. */
+    ~IDE();
+};
+```
 ### Command
-
+```cpp
+class Command {
+public:
+    /** Creates a command that the user can use from the IDE */
+    Command(Computer& pc, const char* cmdStr = "");
+    /** Calls the Function dedicated to this command */
+    virtual void operator()(const string& filename, bool& active) = 0;
+    /** Checks if the given string is equal to the command */
+    bool operator==(const string& commandStr);
+    /** Destroys the command object. */
+    virtual ~Command() = default;
+};
+```
 ### Register
-
+```cpp
+class Register {
+public:
+    /** Creates a Register object that stores a register's name and float value */
+    explicit Register(const string& name = "", float defValue = 0);
+    /** Get the name of the register */
+    const string& getName() const { return name; }
+    /** Get the value of the register */
+    float getValue() const { return value; }
+    /** Set the value of the register */
+    void SetValue(float newValue) { value = newValue; }
+};
+```
 ### Instruction
-
+```cpp
+class Instruction {
+public:
+    /** Initialize the instruction with the given base values. */
+    Instruction(int lineNumber_, const string& expression_, InstructionType instructionType = NoType);
+    /** Get the line number of the instruction */
+    int getLineNumber() const;
+    /** Get the string representation of the instruction type. */
+    string getInstructionTypeStr() const;
+    /** Get the type of the instruction. */
+    InstructionType getInstructionType() const;
+    /** Get the expression argument of the instruction. */
+    string getExpression() const;
+    /** This function must be implemented by derived classes to execute the specific */
+    virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
+    /** Overloaded stream insertion operator for printing Instruction objects. */
+    friend std::ostream& operator<<(std::ostream& os, const Instruction& inst);
+    /**
+    virtual ~Instruction() = default;
+```
 ### Computer
 
 ### Kivételek

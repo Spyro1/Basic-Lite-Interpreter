@@ -20,16 +20,25 @@
 using std::string;
 
 class IDE {
-    bool active = true;
-    Computer pc;
-    std::vector<Command*> commands;
+    bool active = true;             /// Flag indicating whether the IDE is active or not.
+    Computer pc;                    /// Interpreter for the program.
+    std::vector<Command*> commands; /// Vector containing pointers to Command objects.
 
 public:
     // == Constructors ==
+    /**
+    * Constructs an IDE object, initializes the IDE with default commands.
+    */
     explicit IDE();
     // == Public Functions ==
+    /**
+     * This function runs the IDE on the terminal, allowing users to interact with it.
+     */
     void Run();
     // == Destructor ==
+    /**
+    * Destroys the IDE object, cleans up resources allocated by the IDE.
+    */
     ~IDE();
 };
 
