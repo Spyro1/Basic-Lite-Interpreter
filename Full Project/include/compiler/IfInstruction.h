@@ -7,6 +7,9 @@
 
 #include "Instruction.h"
 
+/**
+ * The IfInstruction class represents an instruction for conditional branching based on a specified expression. It inherits from the Instruction class.
+ */
 class IfInstruction : public Instruction{
 public:
 

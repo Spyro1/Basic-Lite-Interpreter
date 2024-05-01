@@ -7,6 +7,9 @@
 
 #include "Instruction.h"
 
+/**
+ * The GotoInstruction class represents an instruction to unconditionally jump to a specified line number in the code. It inherits from the Instruction class.
+ */
 class GotoInstruction : public Instruction{
 public:
 

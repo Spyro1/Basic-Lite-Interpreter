@@ -10,8 +10,11 @@
 
 using std::string;
 
+/**
+ * Represents a register with a name and a value.
+ */
 class Register {
-    string name; // Register name
+    string name;     // Register name
     float value = 0; // Register value
 public:
     // == Constructors ==

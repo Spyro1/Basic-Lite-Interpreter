@@ -17,9 +17,9 @@
 #include "../exceptions/CompileError.h"
 
 class Computer {
-    std::vector<Register> registers;       // List of registers
+    std::vector<Register> registers;        // List of registers
     std::vector<Instruction*> instructions; // List of instructions line by line
-    int instructionIndex = -1;      // Current Instruction index
+    int instructionIndex = -1;              // Current Instruction index
 public:
     // == Constructor ==
     /**

@@ -31,7 +31,6 @@ enum InstructionType { NoType, Print, Let, If, Goto, Read };
  * The base abstract instruction class for other specific instructions for the program interpreter.
  */
 class Instruction {
-
 protected:
     int lineNumber = -1;     /// The line number of the instruction.
     string expression;       /// The expression argument of the instruction.
@@ -94,7 +93,10 @@ public:
      * @return True if the string represents a number, false otherwise.
      */
     static bool isNumber(const string &str);
-
+    // == Destructor ==
+    /**
+    * Destroys the Instruction object.
+    */
     virtual ~Instruction() = default;
 protected:
     // == Protected functions ==

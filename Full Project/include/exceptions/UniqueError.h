@@ -9,8 +9,6 @@
 using std::string;
 
 /**
- * @brief Represents a unique error condition.
- *
  * The UniqueError class is derived from the std::exception class and serves as a base class for defining
  * unique error types. It encapsulates an error message, an error type, and optionally, a line number.
  *
@@ -18,8 +16,8 @@ using std::string;
  */
 class UniqueError : public std::exception {
 protected:
-    string errormessage; // < The error message describing the error condition.
-    string errorType;    // < The type or category of the error.
+    string errormessage; /// The error message describing the error condition.
+    string errorType;    /// The type or category of the error.
 public:
     /**
      * Constructs a UniqueError object with the given error message, optional line number, and error type.

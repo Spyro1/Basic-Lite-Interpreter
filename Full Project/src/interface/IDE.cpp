@@ -14,7 +14,7 @@ using std::cout;
 using std::endl;
 
 
-IDE::IDE(std::ostream& out_, std::istream& in_) : out(out_), in(in_) {
+IDE::IDE() {
     commands.push_back(new HelpCommand(pc));
     commands.push_back(new RunCommand(pc));
     commands.push_back(new EndCommand(pc));

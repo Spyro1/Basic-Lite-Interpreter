@@ -19,24 +19,35 @@
 
 using std::string;
 
+/**
+ * Represents an Integrated Development Environment (IDE) for the user to interact with.
+ */
 class IDE {
-    bool active = true;
-    Computer pc;
-    // Stream references
-    std::ostream& out;
-    std::istream& in;
-
-    std::vector<Command*> commands;
+    bool active = true;             // Flag indicating whether the IDE is active or not.
+    Computer pc;                    // Interpreter for the program.
+    std::vector<Command*> commands; // Vector containing pointers to Command objects.
 
 public:
     // == Constructors ==
-    explicit IDE(std::ostream& out = std::cout, std::istream& in = std::cin);
+    /**
+    * Constructs an IDE object, initializes the IDE with default commands.
+    */
+    IDE();
     // == Public Functions ==
+    /**
+     * This function runs the IDE on the terminal, allowing users to interact with it.
+     */
     void Run();
     // == Destructor ==
+    /**
+    * Destroys the IDE object, cleans up resources allocated by the IDE.
+    */
     ~IDE();
 private:
     // == Private Functions ==
+    /**
+     * Prints the title to console.
+     */
     static void PrintTitle();
 };
 

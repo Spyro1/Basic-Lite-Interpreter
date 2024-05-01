@@ -7,8 +7,6 @@
 #include "UniqueError.h"
 
 /**
- * @brief Represents an error that occurs during compilation.
- *
  * The CompileError class is derived from the UniqueError class and is used to represent errors
  * encountered during the compilation process.
  *

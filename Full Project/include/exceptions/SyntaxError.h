@@ -7,8 +7,6 @@
 #include "UniqueError.h"
 
 /**
- * @brief Represents an error related to syntax in code.
- *
  * The SyntaxError class is derived from the UniqueError class and is used to represent errors
  * caused by syntax issues in code.
  *

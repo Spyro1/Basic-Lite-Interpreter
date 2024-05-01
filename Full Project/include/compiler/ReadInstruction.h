@@ -7,6 +7,9 @@
 
 #include "Instruction.h"
 
+/**
+ * The ReadInstruction class represents an instruction to read a value from the user. It inherits from the Instruction class.
+ */
 class ReadInstruction : public Instruction{
 public:
 

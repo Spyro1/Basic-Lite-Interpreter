@@ -7,6 +7,9 @@
 
 #include "Instruction.h"
 
+/**
+ * The PrintInstruction class represents an instruction to print value to the output. It inherits from the Instruction class.
+ */
 class PrintInstruction : public Instruction {
 public:
 

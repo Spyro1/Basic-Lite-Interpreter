@@ -18,6 +18,9 @@
 
 using std::string;
 
+/**
+ * The Command class provides a base for creating various commands that the user can execute from the IDE.
+ */
 class Command {
 protected:
     Computer& pc;
@@ -44,6 +47,9 @@ public:
     bool operator==(const string& commandStr);
 
     // == Destructor ==
+    /**
+     * Destroys the command object.
+     * */
     virtual ~Command() = default;
 };
 
