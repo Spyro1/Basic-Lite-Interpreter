@@ -33,7 +33,7 @@ public:
      */
     void ReadProgramFromFile(const string& filename);
     /**
-     * Evaluates the read character string line.
+     * Evaluates the read string line.
      * If the line number is positive, then the computer adds it to the instruction list,
      * if the number is negative, then the computer removes the corresponding instrcution
      * with the absolute value of the given line number.
@@ -56,6 +56,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Computer& pc);
 
     // == Destructor ==
+    /**
+     * Destroys the Computer object, cleans up resources allocated by the Computer.
+     */
     ~Computer();
 private:
     // == Private functions==

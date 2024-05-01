@@ -39,10 +39,6 @@ protected:
 public:
     // == Constructors ==
     /**
-     * Default constructor for arrays
-     */
-    // Instruction();
-    /**
      * Initialize the instruction with the given base values.
      * @param lineNumber_ The line number of the instruction.
      * @param expression_ The expression argument of the instruction.
@@ -94,7 +90,10 @@ public:
      * @return True if the string represents a number, false otherwise.
      */
     static bool isNumber(const string &str);
-
+    // == Destructor ==
+    /**
+    * Destroys the Instruction object.
+    */
     virtual ~Instruction() = default;
 protected:
     // == Protected functions ==
