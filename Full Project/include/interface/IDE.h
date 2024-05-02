@@ -49,6 +49,13 @@ private:
      * Prints the title to console.
      */
     static void PrintTitle();
+    /**
+     * Reads a line from the console
+     * @param line Reference to a string representing the whole inputted line by the user.
+     * @param commandStr Reference to a string containing the command keyword extracted from the line.
+     * @param argumentStr Reference to a string containing the argument of the instruction.
+     */
+    void ReadInput(string &line, string &commandStr, string &argumentStr);
 };
 
 #endif //NAGYHAZI_IDE_H

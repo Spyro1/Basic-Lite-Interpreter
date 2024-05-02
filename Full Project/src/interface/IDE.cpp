@@ -15,6 +15,7 @@ using std::endl;
 
 
 IDE::IDE() {
+    // Add base commands to interface
     commands.push_back(new HelpCommand(pc));
     commands.push_back(new RunCommand(pc));
     commands.push_back(new EndCommand(pc));
@@ -26,35 +27,29 @@ IDE::IDE() {
 void IDE::Run() {
     using namespace std;
 
-    // Print Title
-    PrintTitle();
+    PrintTitle(); // Print Title to console
     // Run program loop
     while (active){
         cout << "> ";
         // Read line
         string line, commandStr, argumentStr; // Input line
-        cin.clear();
-        std::getline(cin, line);
-        // Split line to tokens
-        std::istringstream iss(line);
-        std::getline(iss >> commandStr >> std::ws, argumentStr);
-        // Convert command string to upper case for comparing
-        commandStr = Computer::ToUpperCaseStr(commandStr);
-
+        ReadInput(line, commandStr, argumentStr);
         try {
             // Iterate through commands
             size_t i = 0;
             while (i < commands.size()){
-                if (*commands[i] == commandStr) { // check if the command is the inputed one
-                    (*commands[i])(argumentStr, active); // Call command fucntion
+                if (*commands[i] == commandStr) { // check if the command is the inputted one
+                    (*commands[i])(argumentStr, active); // Call command function
                     break;
                 }
                 i++;
             }
+            // New instruction inputted
             if (i >= commands.size()){
                 if (Instruction::isNumber(commandStr)){
                     pc.NewInstruction(line); // Add new instruction to computer
                 }
+                // Not empty line inputted
                 else if (!commandStr.empty()){
                     cout << "[Computer]: Unrecognizable command!" << endl;
                 }
@@ -65,14 +60,25 @@ void IDE::Run() {
     }
 }
 
-// -- Private Functions --
+// == Private Functions ==
 
 void IDE::PrintTitle() {
     cout << "================================== BASIC-lite ====================================\n"
     <<      "\t\t\t     Made by: Marton Szenes\n"
-    <<      "==================================================================================" << endl;
+    <<      "==================================================================================\n"
+    <<      "[Computer]: Type HELP for commands." << endl;
+}
+void IDE::ReadInput(std::string& line, std::string& commandStr, std::string& argumentStr){
+    cin.clear();
+    std::getline(cin, line);
+    // Split line to tokens
+    std::istringstream iss(line);
+    std::getline(iss >> commandStr >> std::ws, argumentStr);
+    // Convert command string to upper case for comparing
+    commandStr = Computer::ToUpperCaseStr(commandStr);
 }
 
+// == Destructor ==
 IDE::~IDE() {
     for (size_t i = 0; i < commands.size(); ++i) {
         delete commands[i];

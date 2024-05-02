@@ -10,4 +10,3 @@ ListCommand::ListCommand(Computer &pc) : Command(pc, LIST_CMD) {}
 void ListCommand::operator()(const string &filename, bool &active) {
     std::cout << pc << "[Computer]: Instructions listed.\n" << std::endl;
 }
-

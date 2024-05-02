@@ -11,4 +11,3 @@ void NewCommand::operator()(const string &filename, bool &active) {
     pc.ClearProgram();
     std::cout << "[Computer]: New program created.\n" << std::endl;
 }
-

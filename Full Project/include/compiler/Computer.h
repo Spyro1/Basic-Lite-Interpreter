@@ -74,10 +74,6 @@ public:
 private:
     // == Private functions==
     /**
-     * Executes the next instruction in the line based on the instrcutionIndex's value
-     */
-    void ExecuteNextInstruction();
-    /**
      * Evaluates the inputed line. Seperates the input line to tokens (line number, instruction, argument),
      * and adds the new instrcutin to the list.
      * @param inputLine New instruction line: <id> <instruction> <parameter>

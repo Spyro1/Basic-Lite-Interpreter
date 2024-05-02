@@ -52,7 +52,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
            minusIndex = argument.rfind('-'),
            multiplyIndex = argument.rfind('*'),
            divideIndex = argument.rfind('/'),
-           modIndex = argument.rfind('%'), // Index of +, -, *, /, % characters in argument
+           modIndex = argument.rfind('%'),
            firstOpeningBracket = argument.find('('),
            firstClosingBracket = argument.rfind(')');
 
@@ -64,28 +64,22 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     #pragma region == 1. level: Assignment operator ==
     if (Exists(assignValueSignIndex) && assignValueSignIndex != equalsIndex && assignValueSignIndex-1 != notEqualsIndex && assignValueSignIndex-1 != biggerIndex && assignValueSignIndex-1 != smallerIndex){
-         string regName = argument.substr(0, assignValueSignIndex); // Get register name
+        string regName = argument.substr(0, assignValueSignIndex); // Get register name
         string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
 
-        size_t regIndex = FindRegisterIndex(registers, regName);
-        string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers);
-//        try {
-            auto newValue = std::stof(evaluatedValueToAssign);
-            if (Exists(regIndex)) {
-                // Assign value to existing register
-                registers[regIndex].SetValue(newValue);
-            } else {
-                // Create new register and initialize it
-                registers.emplace_back(regName, newValue);
-            }
-            return evaluatedValueToAssign;
-//        } catch (exception& e){
-//            throw std::runtime_error(string("[Syntax error]: Uninitialized register used in line: ") + to_string(lineNumber));
-//        }
+        size_t regIndex = FindRegisterIndex(registers, regName); // Get index
+        string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers); // Process right value
+        auto newValue = std::stof(evaluatedValueToAssign); // Convert to float
+        if (Exists(regIndex)) {
+            // Assign value to existing register
+            registers[regIndex].SetValue(newValue);
+        } else {
+            // Create new register and initialize it
+            registers.emplace_back(regName, newValue);
+        }
+        return evaluatedValueToAssign;
     }
-
     #pragma endregion
-
 
     #pragma region == 2. level: Brackets ==
 
@@ -102,15 +96,13 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
             return evaluated; // Exit
         }
     }
-    else if ((!Exists(firstOpeningBracket) && Exists(firstClosingBracket)) ||
-              (Exists(firstOpeningBracket) && !Exists(firstClosingBracket))) {
+    else if ((!Exists(firstOpeningBracket) && Exists(firstClosingBracket)) || (Exists(firstOpeningBracket) && !Exists(firstClosingBracket))) {
         throw SyntaxError(string("Syntax error: Missing brackets"), lineNumber);
     }
     else if (Exists(firstOpeningBracket) || Exists(firstClosingBracket)){
         throw SyntaxError(string("Syntax error: Missing brackets"), lineNumber);
     }
     #pragma endregion
-
 
     #pragma region == 3/a. level: Boolean ==
 
@@ -185,7 +177,6 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     }
     #pragma endregion
 
-
     #pragma region == 3/b. level: Integer ==
 
     // == 2/1/1 : PLUS / MINUS ==
@@ -250,6 +241,8 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     if (!isNumber(argument)){
         throw SyntaxError(string("Unrecognized register name \"" + argument + '\"'), lineNumber);
     }
+
+    // Return evaluated number value
     return argument;
 }
 

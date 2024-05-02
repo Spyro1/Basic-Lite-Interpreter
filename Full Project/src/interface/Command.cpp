@@ -4,10 +4,8 @@
 
 #include "../../include/interface/Command.h"
 
+Command::Command(Computer &pc, const char *cmdStr) : pc(pc), cmdStr(cmdStr) {}
+
 bool Command::operator==(const string &commandStr) {
     return cmdStr == commandStr;
-}
-
-Command::Command(Computer &pc, const char *cmdStr) : pc(pc), cmdStr(cmdStr) {
-
 }

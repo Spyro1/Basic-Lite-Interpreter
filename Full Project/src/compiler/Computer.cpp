@@ -7,7 +7,7 @@
 #include <algorithm>
 #include "../../include/compiler/Computer.h"
 
-// -- Constructor --
+// == Constructor ==
 Computer::Computer() {
     // Clear instructions array
     ClearInstructions();
@@ -15,12 +15,12 @@ Computer::Computer() {
     registers.clear();
 }
 
-// -- Getters --
+// == Getters ==
 size_t Computer::getInstructionCount() const {
     return instructions.size();
 }
 
-// -- Functions --
+// == Functions ==
 void Computer::ReadProgramFromFile(const string& filename) {
     using namespace std;
     // If this computer has read a program before, then free dynamic memory from registers and instructions
@@ -56,7 +56,7 @@ void Computer::RunProgram() {
     const int infiniteCycle = 10000;
     registers.clear();
     while ((size_t)instructionIndex < instructions.size() && counter <= infiniteCycle){
-        ExecuteNextInstruction();
+        instructions[instructionIndex]->Execute(registers,instructions,instructionIndex); // Execute next instruction
         counter++;
     }
     if (counter >= infiniteCycle) throw CompileError("Program shutdown due to infinite cycle!");
@@ -86,25 +86,12 @@ string Computer::ToUpperCaseStr(const string& str) {
     return result;
 }
 
-// -- Private functions--
-void Computer::ExecuteNextInstruction() {
-    instructions[instructionIndex]->Execute(registers,instructions,instructionIndex);
-//    try{
-//        // Execute the next line's instruction
-//    } catch (std::exception& e){
-//        // Throw error if something passed the error check, and it can't compile
-//        throw UniqueError(string("Unknown error (") + e.what() + string(")"),instructions[instructionIndex]->getLineNumber());
-//    }
-
-}
-
+// == Private functions ==
 void Computer::ProcessProgramLine(const string& line) {
     // Output vars
     int lineNumber = 0;
-    string expression;
-    string command;
+    string expression, command;
     // Split to tokens
-
     SplitLineToTokens(line, lineNumber, command, expression);
     // Test if line identifier already exists
     if (std::any_of(instructions.begin(), instructions.end(),[&lineNumber](Instruction* inst) { return inst->getLineNumber() == lineNumber; })){
@@ -114,25 +101,18 @@ void Computer::ProcessProgramLine(const string& line) {
     if (lineNumber < 0) RemoveInstruction(-lineNumber);
     else if (lineNumber != 0) { // If linenumber is 0, then it is a comment
         command = ToUpperCaseStr(command);
-        if (command == LET) {
+        if (command == LET)
             instructions.push_back(new LetInstruction(lineNumber, expression));
-        }
-        else if (command == PRINT) {
+        else if (command == PRINT)
             instructions.push_back(new PrintInstruction(lineNumber, expression));
-        }
-        else if (command == IF) {
+        else if (command == IF)
             instructions.push_back(new IfInstruction(lineNumber, expression));
-        }
-        else if(command == GOTO) {
+        else if(command == GOTO)
             instructions.push_back(new GotoInstruction(lineNumber, expression));
-        }
-        else if (command == READ) {
+        else if (command == READ)
             instructions.push_back(new ReadInstruction(lineNumber, expression));
-        }
-        else {
-            // Instruction not recognized
-            throw SyntaxError("Instruction not recognized", lineNumber );
-        }
+        else
+            throw SyntaxError("Instruction not recognized", lineNumber ); // Instruction not recognized
     }
 }
 
@@ -140,9 +120,6 @@ void Computer::SplitLineToTokens(const string& inputLine, int& lineNumber, strin
     std::istringstream iss(inputLine);
     iss >> lineNumber >> command;
     std::getline(iss >> std::ws, expression);
-    #ifdef DEBUG
-        std::cout << "Tokens: "<< lineNumber << "| " << command << " | " << expression << std::endl; // Debug
-    #endif
 }
 
 void Computer::ClearInstructions() {
@@ -172,7 +149,7 @@ bool Computer::CompareInstructions(const Instruction* a, const Instruction* b) {
     return a->getLineNumber() < b->getLineNumber();
 }
 
-// -- Destructor --
+// == Destructor ==
 Computer::~Computer() {
     ClearInstructions();
 }

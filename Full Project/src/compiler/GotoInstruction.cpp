@@ -11,22 +11,22 @@ GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Ins
 void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int &instructionIndex) {
     using namespace std;
     int jumpNumber;
-    //  Remove whitespace
-    string shortExpression = RemoveWhiteSpace(expression);
-    string evaluated = ProcessExpression(shortExpression, registers);
+
+    string shortExpression = RemoveWhiteSpace(expression); //  Remove whitespace
+    string evaluated = ProcessExpression(shortExpression, registers); // Process the expression
     try{
-        jumpNumber = stoi(evaluated);
+        jumpNumber = stoi(evaluated); // Convert to number if can
     } catch (std::exception& e){
         throw CompileError("Can not recognize \"" + expression + "\" as a goto argument", lineNumber);
     }
     size_t i = 0;
-    bool found = false;
-    while (i < instructions.size() && !found) {
+    // Search instruction index to jump to
+    while (i < instructions.size()) {
         if (instructions[i]->getLineNumber() == jumpNumber) {
             instructionIndex = (int)i;
-            found = true;
+            break;
         }
         i++;
     }
-    if (!found) throw SyntaxError("No line identifier found to jump to", lineNumber);
+    if (i >= instructions.size()) throw SyntaxError("No line identifier found to jump to", lineNumber);
 }
