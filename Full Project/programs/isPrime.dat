@@ -1,17 +1,16 @@
-10 print "Irjon be egy szamot: "
-15 let szam = 0
-20 read szam
-0 let szam = 11
-30 let p = 2
-40 if szam % p == 0
-50 goto 100
-60 let p = p + 1
-70 if szam - p
-80 goto 106
-90 goto 40
+10 print "Kerem a szamot: "
+20 read num
+30 if num <= 1
+40 goto 200
+50 let i = 2
+60 if num % i == 0
+70 goto 180
+80 let i = i + 1
+90 if i < num
+100 goto 60
+110 goto 200
 
-100 print "\nNem prim szam"
-101 goto 110
-
-106 print "\nPrim szam"
-110 print ""
+180 print "\nPrimszam!"
+190 goto 210
+200 print "\nNem primszam!"
+210 print

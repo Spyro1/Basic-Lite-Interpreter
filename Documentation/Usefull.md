@@ -20,3 +20,24 @@ That said, you can achieve a similar effect by turning cin and cout into strings
     cout.rdbuf(cout_buf);
     string test_output_text = test_output.str(); // Test result
 ```
+
+
+```cpp
+/**
+* Converts the string to upper case letters
+* @param str Input string
+* @return Upper case lettered string
+*/
+static string ToUpperCaseStr(const string &str);
+```
+### `static string ToUpperCaseStr(const string &str);`
+
+**Rövid leírás**
+
+Converts the string to upper case letters
+
+**Parameters**:
+ - `str` - Input string
+ - `input` - valami
+
+**Returns**: Upper case lettered string
