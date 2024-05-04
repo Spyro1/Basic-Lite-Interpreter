@@ -179,7 +179,7 @@ int main() {
         EXPECT_THROW(pc.ReadProgramFromFile("nincsilyenfajl"), UniqueError); // File not found
     } END
     TEST(Computer, ReadExistingFile){
-        EXPECT_NO_THROW(pc.ReadProgramFromFile("../programs/parosSzamok.dat")); // Found
+        EXPECT_NO_THROW(pc.ReadProgramFromFile("parosSzamok.dat")); // Found
     } END
     TEST(Computer, RunEvenNumberProgram){
             stringbuf test_output(ios_base::out); // Set up test output
@@ -217,19 +217,27 @@ int main() {
     }END
     TEST(Interface, RunIDE){
         IDE ide;
-            stringbuf test_input("10 LET a = 4 + 2\n20 PRINT a\nRUN\nEND", ios_base::in); // Set cin input stringbuffer
-            streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
-            stringbuf test_output(ios_base::out); // Redirect cout
-            streambuf * const cout_buf = cout.rdbuf(&test_output); // Save cout buffer
-        EXPECT_NO_THROW(ide.Run()) << "Error during ide test.";
-            cin.rdbuf(cin_buf); // Reset cin buffer
-            cout.rdbuf(cout_buf); // Reset cout buffer
+        stringbuf test_input("10 LET a = 4 + 2\n20 PRINT a\nRUN\nEND", ios_base::in); // Set cin input stringbuffer
+        streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
+        stringbuf test_output(ios_base::out); // Redirect cout
+        streambuf * const cout_buf = cout.rdbuf(&test_output); // Save cout buffer
+        EXPECT_NO_THROW(ide.Run()) << "Error during IDE test.";
+        cin.rdbuf(cin_buf); // Reset cin buffer
+        cout.rdbuf(cout_buf); // Reset cout buffer
+    }END
+    TEST(Interface, LoadFile){
+        IDE ide;
+        stringbuf test_input("LOAD factorial.dat\nRUN\n5\nEND", ios_base::in); // Set cin input stringbuffer
+        streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
+        stringbuf test_output(ios_base::out); // Redirect cout
+        streambuf * const cout_buf = cout.rdbuf(&test_output); // Save cout buffer
+        EXPECT_NO_THROW(ide.Run()) << "Error during IDE test.";
+        cin.rdbuf(cin_buf); // Reset cin buffer
+        cout.rdbuf(cout_buf); // Reset cout buffer
     }END
 
     if (!gtest_lite::test.fail())
       std::cout << "\nAll test have been called.\nThe application works!" << std::endl;
-//    string str;
-//    std::cin >> str;
 
 #endif
 

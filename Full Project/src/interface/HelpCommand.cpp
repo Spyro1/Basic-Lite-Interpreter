@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "../../memtrace.h"
 #include "../../include/interface/HelpCommand.h"
 
 HelpCommand::HelpCommand(Computer &pc) : Command(pc, HELP_CMD) { }

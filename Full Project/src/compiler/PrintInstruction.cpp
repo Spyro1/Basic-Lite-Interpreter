@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <cstring>
+#include "../../memtrace.h"
 #include "../../include/compiler/PrintInstruction.h"
 
 PrintInstruction::PrintInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Print) {}

@@ -3,6 +3,7 @@
 //
 
 #include <stdexcept>
+#include "../../memtrace.h"
 #include "../../include/compiler/IfInstruction.h"
 
 IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, If) {}

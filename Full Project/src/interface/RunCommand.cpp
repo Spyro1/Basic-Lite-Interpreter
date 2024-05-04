@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "../../memtrace.h"
 #include "../../include/interface/RunCommand.h"
 
 RunCommand::RunCommand(Computer &pc) : Command(pc, RUN_CMD) {}

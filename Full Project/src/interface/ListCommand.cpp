@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "../../memtrace.h"
 #include "../../include/interface/ListCommand.h"
 
 ListCommand::ListCommand(Computer &pc) : Command(pc, LIST_CMD) {}

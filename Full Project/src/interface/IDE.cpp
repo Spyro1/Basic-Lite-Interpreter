@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <regex>
-#include <fstream>
+#include "../../memtrace.h"
 #include "../../include/interface/IDE.h"
 
 

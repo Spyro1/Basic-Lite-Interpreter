@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include "../../memtrace.h"
 #include "../../include/interface/SaveCommand.h"
 
 SaveCommand::SaveCommand(Computer &pc) : Command(pc, SAVE_CMD) {}

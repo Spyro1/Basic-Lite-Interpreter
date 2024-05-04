@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "../../memtrace.h"
 #include "../../include/interface/LoadCommand.h"
 
 LoadCommand::LoadCommand(Computer &pc) : Command(pc, LOAD_CMD) {}

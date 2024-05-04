@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include "../../memtrace.h"
 #include "../../include/interface/NewCommand.h"
 
 NewCommand::NewCommand(Computer &pc) : Command(pc, NEW_CMD) {}

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include "../../memtrace.h"
 #include "../../include/compiler/Computer.h"
 
 // == Constructor ==

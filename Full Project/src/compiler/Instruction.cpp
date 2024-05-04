@@ -4,6 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
+#include "../../memtrace.h"
 #include "../../include/compiler/Instruction.h"
 
 //Instruction::Instruction() : lineNumber(0), instrTy(NoType) {}

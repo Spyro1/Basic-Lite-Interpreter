@@ -2,7 +2,7 @@
 // Created by marci on 2024. 03. 16..
 //
 #include <iostream>
-
+#include "../../memtrace.h"
 #include "../../include/compiler/ReadInstruction.h"
 
 ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Read) {}
