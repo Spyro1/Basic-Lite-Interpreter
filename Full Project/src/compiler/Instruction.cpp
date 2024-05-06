@@ -3,11 +3,8 @@
 //
 #include <string>
 #include <algorithm>
-#include <stdexcept>
 #include "../../memtrace.h"
 #include "../../include/compiler/Instruction.h"
-
-//Instruction::Instruction() : lineNumber(0), instrTy(NoType) {}
 
 Instruction::Instruction(int lineNumber_, const string &expression_, InstructionType instructionType) : lineNumber(lineNumber_), expression(expression_), instrTy(instructionType) {}
 
@@ -58,9 +55,9 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
            firstClosingBracket = argument.rfind(')');
 
     #pragma region == 0. level: Simplify +-
-    ReplaceCharacters(argument, "--", "+");
-    ReplaceCharacters(argument, "+-", "-");
-    ReplaceCharacters(argument, "-+", "-");
+    argument = regex_replace(argument, std::regex("--"), "+");
+    argument = regex_replace(argument, std::regex("+-"), "-");
+    argument = regex_replace(argument, std::regex("-+"), "-");
     #pragma endregion
 
     #pragma region == 1. level: Assignment operator ==
@@ -87,21 +84,22 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     if (Exists(firstOpeningBracket) && Exists(firstClosingBracket)) {
         size_t closeBracketPair = FindBracketPairIndex(argument, firstOpeningBracket);
         if (closeBracketPair == nopos) // Pair bracket not found
-            throw std::logic_error(string("Syntax error: Missing brackets in line: ")+std::to_string(lineNumber));
+            throw SyntaxError("Missing brackets", lineNumber);
         else {
             string betweenBrackets = argument.substr(firstOpeningBracket + 1,closeBracketPair-firstOpeningBracket - 1);
             string evaluatedBetweenBrackets = ProcessExpression(betweenBrackets, registers);
-            ReplaceCharacters(argument, '(' + betweenBrackets + ')', evaluatedBetweenBrackets);
+//            ReplaceCharacters(argument, '(' + betweenBrackets + ')', evaluatedBetweenBrackets);
+            argument = regex_replace(argument, std::regex('(' + betweenBrackets + ')'), evaluatedBetweenBrackets);
             // Call new evaluation
             evaluated = ProcessExpression(argument,registers);
             return evaluated; // Exit
         }
     }
     else if ((!Exists(firstOpeningBracket) && Exists(firstClosingBracket)) || (Exists(firstOpeningBracket) && !Exists(firstClosingBracket))) {
-        throw SyntaxError(string("Syntax error: Missing brackets"), lineNumber);
+        throw SyntaxError("Missing brackets", lineNumber);
     }
     else if (Exists(firstOpeningBracket) || Exists(firstClosingBracket)){
-        throw SyntaxError(string("Syntax error: Missing brackets"), lineNumber);
+        throw SyntaxError("Missing brackets", lineNumber);
     }
     #pragma endregion
 
@@ -247,13 +245,13 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     return argument;
 }
 
-void Instruction::ReplaceCharacters(string& inputStr, const string& searched, const string& replace){
-    size_t pos = 0;
-    while ((pos = inputStr.find(searched, pos)) != nopos) {
-        inputStr.replace(pos, searched.length(), replace);
-        pos += replace.length();
-    }
-}
+//void Instruction::ReplaceCharacters(string& inputStr, const string& searched, const string& replace){
+//    size_t pos = 0;
+//    while ((pos = inputStr.find(searched, pos)) != nopos) {
+//        inputStr.replace(pos, searched.length(), replace);
+//        pos += replace.length();
+//    }
+//}
 int Instruction::CountCharacter(const string& str, char ch) {
     int count = 0;
     for (size_t i = 0; i < str.length(); i++)
@@ -267,8 +265,7 @@ string Instruction::RemoveWhiteSpace(const string& str){
     shortened.erase(std::remove_if(shortened.begin(), shortened.end(), ::isspace), shortened.end());
     return shortened;
 }
-size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPair, char ClosePair)
-{
+size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPair, char ClosePair) {
     size_t closePos = openPos;
     int matching = 1;
     while (matching > 0 && closePos < str.length())
@@ -280,7 +277,7 @@ size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPa
             matching--;
     }
     if (closePos >= str.length())
-        return -1; // Couldn't find pair
+        return nopos; // Couldn't find pair
     else
         return closePos; // Pair found
 }

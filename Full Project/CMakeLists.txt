@@ -29,5 +29,5 @@ add_executable(Nagyhazi main.cpp
 
 )
 add_compile_definitions(MEMTRACE)
-add_compile_definitions(CPORTA)
+#add_compile_definitions(CPORTA)
 target_compile_options(Nagyhazi PRIVATE -Wall -Werror)

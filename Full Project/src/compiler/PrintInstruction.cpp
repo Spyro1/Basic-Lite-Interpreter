@@ -28,9 +28,9 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
             size_t begining = expression.find_first_of('"');
             size_t ending = expression.find_last_of('"');
             string cutted = expression.substr(begining+1,ending - begining - 1 );
-            ReplaceCharacters(cutted, "\\n", "\n");
-            ReplaceCharacters(cutted, "\\t", "\t");
-            ReplaceCharacters(cutted, "\\\"", "\"");
+            cutted = regex_replace(cutted, std::regex("\\n"), "\n");
+            cutted = regex_replace(cutted, std::regex("\\t"), "\t");
+            cutted = regex_replace(cutted, std::regex("\\\""), "\"");
             cout << cutted;
         }
         else
