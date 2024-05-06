@@ -55,9 +55,9 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
            firstClosingBracket = argument.rfind(')');
 
     #pragma region == 0. level: Simplify +-
-    argument = regex_replace(argument, std::regex("--"), "+");
-    argument = regex_replace(argument, std::regex("+-"), "-");
-    argument = regex_replace(argument, std::regex("-+"), "-");
+    ReplaceCharacters(argument, "--", "+");
+    ReplaceCharacters(argument, "+-", "-");
+    ReplaceCharacters(argument, "-+", "-");
     #pragma endregion
 
     #pragma region == 1. level: Assignment operator ==
@@ -88,8 +88,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         else {
             string betweenBrackets = argument.substr(firstOpeningBracket + 1,closeBracketPair-firstOpeningBracket - 1);
             string evaluatedBetweenBrackets = ProcessExpression(betweenBrackets, registers);
-//            ReplaceCharacters(argument, '(' + betweenBrackets + ')', evaluatedBetweenBrackets);
-            argument = regex_replace(argument, std::regex('(' + betweenBrackets + ')'), evaluatedBetweenBrackets);
+            ReplaceCharacters(argument, '(' + betweenBrackets + ')', evaluatedBetweenBrackets);
             // Call new evaluation
             evaluated = ProcessExpression(argument,registers);
             return evaluated; // Exit
@@ -245,13 +244,13 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     return argument;
 }
 
-//void Instruction::ReplaceCharacters(string& inputStr, const string& searched, const string& replace){
-//    size_t pos = 0;
-//    while ((pos = inputStr.find(searched, pos)) != nopos) {
-//        inputStr.replace(pos, searched.length(), replace);
-//        pos += replace.length();
-//    }
-//}
+void Instruction::ReplaceCharacters(string& inputStr, const string& searched, const string& replace){
+    size_t pos = 0;
+    while ((pos = inputStr.find(searched, pos)) != nopos) {
+        inputStr.replace(pos, searched.length(), replace);
+        pos += replace.length();
+    }
+}
 int Instruction::CountCharacter(const string& str, char ch) {
     int count = 0;
     for (size_t i = 0; i < str.length(); i++)
