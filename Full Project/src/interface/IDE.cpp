@@ -4,9 +4,9 @@
 
 #include <iostream>
 #include <sstream>
+#include <regex>
 #include "../../memtrace.h"
 #include "../../include/interface/IDE.h"
-#include "../../include/compiler/Expression.h"
 
 
 using std::cin;
@@ -46,7 +46,7 @@ void IDE::Run() {
             }
             // New instruction inputted
             if (i >= commands.size()){
-                if (Expression::isNumber(commandStr)){
+                if (Instruction::isNumber(commandStr)){
                     pc.NewInstruction(line); // Add new instruction to computer
                 }
                 // Not empty line inputted

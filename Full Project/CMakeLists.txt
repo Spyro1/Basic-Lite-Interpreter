@@ -12,7 +12,6 @@ add_executable(Nagyhazi main.cpp
         include/interface/IDE.h             src/interface/IDE.cpp
         include/interface/Command.h         src/interface/Command.cpp
         include/compiler/Computer.h         src/compiler/Computer.cpp
-        include/compiler/Expression.h       src/compiler/Expression.cpp
         include/compiler/Register.h         src/compiler/Register.cpp
         include/compiler/Instruction.h      src/compiler/Instruction.cpp
         include/compiler/PrintInstruction.h src/compiler/PrintInstruction.cpp
