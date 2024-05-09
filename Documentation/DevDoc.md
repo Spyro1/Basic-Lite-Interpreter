@@ -2,255 +2,322 @@
 
 > Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: [Dátum] Budapest
 
----
+## Tartalom
 
-# Tartalom
+## Feladatspecifikáció
+
+A program egy **BASIC**-szerű programozási nyelv butított, egyszerűsített változatát valósítja meg, továbbiakban **BASIC-lite**-nak nevezve. Biztosít a programkód írásához egy interfészt, alap parancsokat a kód szerkesztéséhez, mentéséhez, beolvasásához és futtatásához.
+
+Az értelmező képes regiszterekben számértékeket eltárolni és azokkal műveleteket végezni, feltételes utasításokat végrehajtani, és ugrani a programkódon belül, kiírni a standard kimenetre, és olvasni a standard bementről.
+
+# BASIC-lite interpreter használata (felhasználó szemmel)
+
+## Interfész és kódolás
+
+A program indulásakor egy CLI-s felület fogadja a felhasználót. 
+Itt az alábbi parancsok adhatóak ki:
+
+- `HELP`: Kiírja az interfész parancsait, és működésüket
+- `RUN`: Futtatja a betöltött programot.
+- `END`: Lezárja az aktuális interfészt (kód szerkesztő/alkalmazás).
+- `LIST`: Kiírja a betöltött programot sorszám szerint növekvő sorban.
+- `NEW`: Új programot hoz létre.
+- `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
+- `SAVE <fájlnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
+- `<sorszám> <utasítás> <paraméter>`: Hozzáad egy utasítást a program utasítássorozatához.
+- `-<sorszám>`: Törli a sorszámként azonosított utasítást a program utasítássorozatából ha létezik ilyen.
+
+(A program semelyik parancsa sem nagybetű/kisbetű érzékeny, kivéve ha sztring literált ad meg a felhasználó vagy elérési útvonalat.)
+
+Egy sor begépelésekor a sor végén `Enter`-t leütve a program kiértékeli a parancsot.
+
+- Ha interfész parancs(`HELP`/`RUN`/`END`/`LIST`/`SAVE`/`LOAD`), akkor végre hajtaja a parancs szerinti változtatásokat az interfészben. (például fájlt beolvas vagy kiír, vagy új projektet nyit, stb.)
+- Ha program utasítás, akkor eltárolja azt az értelmező a memóriájában.
+- Ha a program utasítás sorszáma negatív, akkor az annak a sorszámnak vett abszolút értékű utasítást törli az értelmező memóriájából, ha van ilyen.
+
+Az interfész utasítás abban különbözik a program kódsortól, hogy a kódsor első argumentuma egy sorszám, míg az interfészbeli parancsok első argumentuma nem tartalmazhat számot.
+
+### BASIC-lite szintaxis
+
+Egy program kódsornak 3 argumentuma van mindig: `sorszám`, `utasítás`, `paraméter`.
+Ezen paraméterek egymástól legalább egy szóközzel kell legyenek elválasztva.
+A paraméteren belül tetszőleges 'whitespace' lehet, mivel az értelmező törli majd ezeket.
+Ezért fontos, hogy ha két karaktersorozatot egymás mellé írunk egy szóközzel elválasztva, úgy azt az értelmező egy szóként fogja kezelni.
+Ezalól kivétel, ha sztringet írunk be a `print` utasításhoz, aminél természetesen nem törlődnek a 'whitespace' karakterek.
+
+Így például a `10 let a = 4 * ( b - c )` sort így bontja fel:
+
+| Sorszám   | Utasítás  | Paraméter   |
+|-----------|-----------|-------------|
+| `10`      | `let`     | `a=4*(b-c)` |
+
+Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, ahol `b` és `c` regiszterneveket jelölnek, és annak értékeire hivatkoznak.
+
+#### Sorszám
+
+Egy program kódsor sorszám egy 0-nál nagyobb pozitív egész szám mindig.
+Amennyiben a sorszám 0, úgy az a sor kommentnek tekintendő, és nem kerül kiértékelésre a futtatás során.
+Ha a sorszám negatív, úgy a fent említett módon törlődik az utasítás a program memóriából. Minden más esetben, ha az első argumentum nem egy egész szám, úgy a program hibát dob.
+
+#### Utasítás és paraméterek
+
+A második paraméter az utasítás kulcsszó. Ezután következik a harmadik paraméter, ami egészen a sor végéig tart.  
+A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színtaktikájuk:
+
+- `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket (`+`,`-`,`*`,`/`), maradékos osztást (`%`) és zárójeleket (`(`,`)`).
+- `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
+- `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
+- `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
+- `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
+
+## Hibakezelés
+
+Az interfész minden helytelenül bevitt parancsra hibát dob, és ki is írja mi a hiba oka.
+Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kivételt dob, mely tartalmazza a hiba részletes okát, és helyét a kódban.
+
+### Lehetséges hibaüzenetek
+
+
+
+# BASIC-lite interpreter felépítése (programozó szemmel)
+
+
+
+
+## UML osztálydiagram
+
+```mermaid
+classDiagram
+    direction LR
+    class IDE{
+        - active: bool
+        - commands[]: Command
+        + IDE()
+        + Run() void
+        - PrintTitle() void
+        - ReadInput(line: string, commandStr: string, argumentStr: string) void
+    }
+    class Computer {
+        - registers: Register[]
+        - instructions: Instruction[]
+        - instructionIndex: int
+        + Computer()
+        + getInstructionCount() int
+        + ReadProgramFromFile(filename: string) void
+        + NewInstruction(programLine: string) void
+        + RunProgram() void
+        + ClearProgram() void
+        + ToUpperCaseStr(str: string) string$
+%%        - ProcessProgramLine(inputLine: string) void
+%%        - ClearInstructions() void
+%%        - SortInstructions() void
+%%        - RemoveInstruction() void
+%%        - CompareInstructions(a: Instruction, b: Instruction) bool$
+%%        - SplitLineToTokens(inputLine: string,lineNumber: int,command: string, expression: string) void$
+    }    
+    class Register{
+        - name: string
+        - value: float
+        + Register(name: string, value: int)
+        + getName() string
+        + getValue() int
+        + setValue(newValue: float) void
+    }
+    class InstructionType { 
+        <<enumeration>>
+        NoType, Print, Let, If, Goto, Read 
+    }
+    class Instruction {
+        <<abstract>>
+        - lineNumber: int
+        - expression: string
+        - instrTy: InstructionType
+        + Instruction(lineNumber: int, expression: string, instrTy: InstructionType)
+        + getLineNumber() int
+        + getInstructionTypeStr() string
+        + getInstructionType() InstructionType
+        + getExpression() string
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void = 0*
+        + isNumber(str: string) bool$
+        # ProcessExpression(argument: string, registers: Register[]) string
+    }
+    class LetInstruction{
+        + LetInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class PrintInstruction{
+        + PrintInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class GotoInstruction{
+        + GotoInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class IfInstruction{
+        + IfInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    class ReadInstruction{
+        + ReadInstruction(lineNumber: int, expression: string)
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+    }
+    
+    class Command{
+        - cmdStr: string
+        - pc&: Computer
+        + Command(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void = 0*
+        + operator==(commandStr: string) bool
+    }
+    class HelpCommand{
+        + HelpCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void
+    }
+    class RunCommand{
+        + RunCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void
+    }
+    class EndCommand{
+        + EndCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void
+    }
+    class ListCommand{
+        + ListCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void
+    }
+    class NewCommand{
+        + NewCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void
+    }
+    class LoadCommand{
+        + LoadCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void
+    }
+    class SaveCommand{
+        + SaveCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string) void
+    }
+    class UniqueError{
+        - errormessage: string
+        - errorType: string
+        + UniqueError(messsage: string, lineNumber: int, type: string)
+        + what() string
+    }
+    class SyntaxError{
+        + SyntaxError(messsage: string, lineNumber: int)
+    }    
+    class CompileError{
+        + CompileError(messsage: string, lineNumber: int)
+    }
+
+%%    UniqueError <-- IDE : catches
+    
+%%    IDE "1" *-- "1" Computer : contains    
+    Computer "1" --* "1" IDE : contains    
+    IDE "1" *-- "0..*" Command : contains
+    IDE <-- UniqueError : catches
+%%    UniqueError --> IDE : catches 
+    
+    UniqueError <|-- CompileError
+    UniqueError <|-- SyntaxError
+    
+    Instruction --> UniqueError : throws
+    Instruction --> CompileError : throws
+    Instruction --> SyntaxError : throws
+    Computer --> CompileError : throws
+    Computer --> UniqueError : throws
+    Computer --> SyntaxError : throws
+    
+%%    CompileError --|> UniqueError
+%%    SyntaxError --|> UniqueError
+   
+    Computer "1" *-- "1..*" Register : contains
+    Computer "1" *-- "0..*" Instruction : contains
+    Register <-- Instruction : uses
+
+    Instruction <|-- LetInstruction
+    Instruction <|-- PrintInstruction
+    Instruction <|-- IfInstruction
+    Instruction <|-- GotoInstruction
+    Instruction <|-- ReadInstruction
+    Instruction "1" *-- "1" InstructionType : defines
+    %% ----
+%%    SyntaxError <-- Instruction : throws
+%%    UniqueError <-- Instruction : throws
+%%    CompileError <-- Instruction : throws
+%%    UniqueError <-- Computer : throws
+%%    SyntaxError <-- Computer : throws
+%%    CompileError <-- Computer : throws
+    %% ----
+    Command <|-- HelpCommand
+    Command <|-- RunCommand
+    Command <|-- EndCommand
+    Command <|-- ListCommand
+    Command <|-- NewCommand
+    Command <|-- LoadCommand
+    Command <|-- SaveCommand
+```
 
 ## Osztály- és függvény dokumentáció
 
-<!-- BEGIN DOC-COMMENT ../Full Project/include/compiler/Computer.h -->
+> A program angol nyelven íródott, ezért az osztályok, függvények, és változók nevei mind angolul szerepelnek, ebből kifolyólag a dokumentációjuk is angolul íródott.  
 
-### Computer.h
-
-#### `Computer()`
-
- Creates a computer object that can run a BASIC-lite program. 
-
-#### `size_t getInstructionCount() const`
-
- Gives the number of instructions in the program 
-
-**Returns**: Number of instructions
-
-#### `void ReadProgramFromFile(const string& filename)`
-
- Reads the program from the given file into the 'instructions' list. 
-
-**Parameters**:
-- `filename` - The name of the file that contains the program.
-
-#### `void NewInstruction(const string& programLine)`
-
- Evaluates the read character string line. If the line number is positive, then the computer adds it to the instruction list, if the number is negative, then the computer removes the corresponding instrcution with the absolute value of the given line number. 
-
-**Parameters**:
-- `programLine` - Inputted line containing the instruction: <lineNumber> <command> <argument>
-
-#### `void RunProgram()`
-
- Runs the program: Executes the instructions based on the instructionIndex value which is modified according to the previous instruction. 
-
-#### `void ClearProgram()`
-
- Clears the list of instructions from the program memory and resets the instruction count to 0. 
-
-#### `friend std::ostream& operator<<(std::ostream& os, const Computer& pc)`
-
- Lists the instructions stored in the memory of the computer. 
-
-**Returns**: Returns a string containing all the instructions displayed line by line.
-
-#### `static string ToUpperCaseStr(const string &str)`
-
- Converts the string to upper case letters 
-
-**Parameters**:
-- `str` - Input string
-
-**Returns**: Upper case lettered string
-
-#### `void ProcessProgramLine(const string& inputLine)`
-
- Evaluates the inputed line. Seperates the input line to tokens (line number, instruction, argument), and adds the new instrcutin to the list. 
-
-**Parameters**:
-- `inputLine` - New instruction line: <id> <instruction> <parameter>
-
-#### `static void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression)`
-
- Splits a line of input into tokens representing different parts of a command. 
-
-**Parameters**:
-- `inputLine` - The input line to split.
-- `lineNumber` - Reference to an integer to store the line number.
-- `command` - Reference to a string to store the command token.
-- `expression` - Reference to a string to store the expression token.
-
-#### `void ClearInstructions()`
-
- Clears all instructions stored in the computer's memory. 
-
-#### `void SortInstructions()`
-
- Sorts the instructions stored in the computer's memory. 
-
-#### `void RemoveInstruction(int lineNumber)`
-
- Removes an instruction with the specified line number. 
-
-**Parameters**:
-- `lineNumber` - The line number of the instruction to remove.
-
-#### `static bool CompareInstructions(const Instruction *a, const Instruction *b)`
-
- Compares two instruction pointers for sorting purposes. 
-
-**Parameters**:
-- `a` - Pointer to the first instruction.
-- `b` - Pointer to the second instruction.
-
-**Returns**: True if instruction 'a' should precede instruction 'b' in sorting, false otherwise.
-
+<!-- BEGIN DOC-COMMENT ../Project Jporta/IDE.h -->
 <!-- END DOC-COMMENT --> 
 
-<!-- BEGIN DOC-COMMENT ../Full Project/include/compiler/Instruction.h -->
+<!-- BEGIN DOC-COMMENT ../Project Jporta/Command.h -->
+<!-- END DOC-COMMENT --> 
 
-### Instruction.h
+<!-- BEGIN DOC-COMMENT ../Project Jporta/HelpCommand.h -->
+<!-- END DOC-COMMENT --> 
 
-#### `enum InstructionType`
+<!-- BEGIN DOC-COMMENT ../Project Jporta/RunCommand.h -->
+<!-- END DOC-COMMENT --> 
 
- Enum representing different types of instructions. 
+<!-- BEGIN DOC-COMMENT ../Project Jporta/EndCommand.h -->
+<!-- END DOC-COMMENT --> 
 
-#### `class Instruction`
+<!-- BEGIN DOC-COMMENT ../Project Jporta/ListCommand.h -->
+<!-- END DOC-COMMENT --> 
 
- The base abstract instruction class for other specific instructions for the program interpreter. 
+<!-- BEGIN DOC-COMMENT ../Project Jporta/NewCommand.h -->
+<!-- END DOC-COMMENT --> 
 
-#### `Instruction(int lineNumber_, const string& expression_, InstructionType instructionType = NoType)`
+<!-- BEGIN DOC-COMMENT ../Project Jporta/LoadCommand.h -->
+<!-- END DOC-COMMENT --> 
 
- Initialize the instruction with the given base values. 
+<!-- BEGIN DOC-COMMENT ../Project Jporta/SaveCommand.h -->
+<!-- END DOC-COMMENT --> 
 
-**Parameters**:
-- `lineNumber_` - The line number of the instruction.
-- `expression_` - The expression argument of the instruction.
-- `instructionType` - The type of the instruction.
+<!-- BEGIN DOC-COMMENT ../Project Jporta/Register.h -->
+<!-- END DOC-COMMENT --> 
 
-#### `int getLineNumber() const`
+<!-- BEGIN DOC-COMMENT ../Project Jporta/Instruction.h -->
+<!-- END DOC-COMMENT --> 
 
- Get the line number of the instruction 
+<!-- BEGIN DOC-COMMENT ../Project Jporta/PrintInstruction.h -->
+<!-- END DOC-COMMENT --> 
 
-**Returns**: The line number of the instruction.
+<!-- BEGIN DOC-COMMENT ../Project Jporta/LetInstruction.h -->
+<!-- END DOC-COMMENT --> 
 
-#### `string getInstructionTypeStr() const`
+<!-- BEGIN DOC-COMMENT ../Project Jporta/GotoInstruction.h -->
+<!-- END DOC-COMMENT --> 
 
- Get the string representation of the instruction type. 
+<!-- BEGIN DOC-COMMENT ../Project Jporta/IfInstruction.h -->
+<!-- END DOC-COMMENT --> 
 
-**Returns**: The string representation of the instruction type.
+<!-- BEGIN DOC-COMMENT ../Project Jporta/ReadInstruction.h -->
+<!-- END DOC-COMMENT --> 
 
-#### `InstructionType getInstructionType() const`
+<!-- BEGIN DOC-COMMENT ../Project Jporta/Computer.h -->
+<!-- END DOC-COMMENT --> 
 
- Get the type of the instruction. 
+<!-- BEGIN DOC-COMMENT ../Project Jporta/UniqueError.h -->
+<!-- END DOC-COMMENT --> 
 
-**Returns**: The type of the instruction.
+<!-- BEGIN DOC-COMMENT ../Project Jporta/SyntaxError.h -->
+<!-- END DOC-COMMENT --> 
 
-#### `string getExpression() const`
-
- Get the expression argument of the instruction. 
-
-**Returns**: The expression argument of the instruction.
-
-#### `virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0`
-
- This function must be implemented by derived classes to execute the specific behavior associated with the instruction. 
-
-**Parameters**:
-- `registers` - The array of registers.
-- `instructions` - The array of instructions.
-- `instructionIndex` - The current instruction index.
-
-#### `friend std::ostream& operator<<(std::ostream& os, const Instruction& inst)`
-
- Overloaded stream insertion operator for printing Instruction objects. 
-
-**Parameters**:
-- `os` - The output stream.
-- `inst` - The Instruction object to be printed.
-
-**Returns**: A reference to the output stream.
-
-#### `static bool isNumber(const string &str)`
-
- Check if a string represents a valid number. 
-
-**Parameters**:
-- `str` - The string to be checked.
-
-**Returns**: True if the string represents a number, false otherwise.
-
-#### `virtual ~Instruction() = default`
-
- Destroys the Instruction object. 
-
-#### `string ProcessExpression(string &argument, vector<Register> &registers)`
-
- Process the expression. Splits the expression into tokens based of the allowed operators. Assigns the value to the register if there is an assigning operator in the expression. Returns the registers value if needed, or just a decimal value after evaluation. 
-
-**Parameters**:
-- `argument` - The argument to be processed.
-- `registers` - The array of registers.
-
-**Returns**: The evaluated expression.
-
-#### `string RemoveWhiteSpace(const string& str)`
-
- Removes all whitespace characters from a string. 
-
-**Parameters**:
-- `str` - The input string to remove whitespace from.
-
-**Returns**: A new string with all whitespace characters removed.
-
-#### `static size_t FindRegisterIndex(const std::vector<Register> &registers, const string &name)`
-
-**Finds the index of a register in a vector of registers by name.**
-
-  
-
-**Parameters**:
-- `registers` - The vector of registers to search in.
-- `name` - The name of the register to find.
-
-**Returns**: The index of the register if found, otherwise returns nopos.
-
-#### `static inline bool Exists(size_t value)`
-
- Checks if a value exists (not equal to std::string::npos). 
-
-**Parameters**:
-- `value` - The value to check for existence.
-
-**Returns**: true if the value exists, false otherwise.
-
-#### `void ReplaceCharacters(string &inputStr, const string &searched, const string &replace)`
-
- Replaces all occurrences of characters in a string with specified replacements. 
-
-**Parameters**:
-- `inputStr` - The input string where replacements are performed.
-- `searched` - The characters to search for in the input string.
-- `replace` - The replacements for the searched characters.
-
-#### `void SplitAndProcessArguments(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1)`
-
- Splits an input argument string and processes the individual arguments. 
-
-**Parameters**:
-- `inputArg` - The input argument string to split and process.
-- `registers` - A vector of registers.
-- `operatorIndex` - The index of the operator in the input argument.
-- `evaluatedArg1` - The first evaluated argument after splitting.
-- `evaluatedArg2` - The second evaluated argument after splitting.
-- `operatorChars` - The number of characters representing the operator (default: 1).
-
-#### `size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')')`
-
- Finds the index of the closing bracket corresponding to an opening bracket in a string. 
-
-**Parameters**:
-- `str` - The input string where to search for the bracket pair.
-- `openPos` - The position of the opening bracket.
-- `OpenPair` - The opening bracket character (default: '(').
-- `ClosePair` - The closing bracket character (default: ')').
-
-**Returns**: The index of the closing bracket.
-
+<!-- BEGIN DOC-COMMENT ../Project Jporta/CompileError.h -->
 <!-- END DOC-COMMENT --> 

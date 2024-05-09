@@ -1,0 +1,9 @@
+10 print "Kerem a szamot: "
+20 read num
+30 let fact = 1
+40 let fact = fact * num
+50 let num = num - 1
+60 if num <= 1
+70 print "Faktorialis: "
+80 goto 40
+90 print fact
