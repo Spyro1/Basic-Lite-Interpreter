@@ -38,6 +38,15 @@ public:
      * execute after this function call.
      */
     void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) override;
+private:
+    /**
+     * Counts the occurrences of a specific character in a string.
+     * @param str The input string to search for occurrences.
+     * @param ch The character to count occurrences of.
+     * @return The count of occurrences of the specified character in the string.
+     */
+    int CountCharacter(const string &str, char ch);
+
 };
 
 

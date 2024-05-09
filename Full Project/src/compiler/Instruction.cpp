@@ -54,7 +54,7 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
            firstOpeningBracket = argument.find('('),
            firstClosingBracket = argument.rfind(')');
 
-    #pragma region == 0. level: Simplify +-
+    #pragma region == 0. level: Simplify +- ==
     ReplaceCharacters(argument, "--", "+");
     ReplaceCharacters(argument, "+-", "-");
     ReplaceCharacters(argument, "-+", "-");
@@ -251,13 +251,7 @@ void Instruction::ReplaceCharacters(string& inputStr, const string& searched, co
         pos += replace.length();
     }
 }
-int Instruction::CountCharacter(const string& str, char ch) {
-    int count = 0;
-    for (size_t i = 0; i < str.length(); i++)
-        if (str[i] == ch)
-            count++;
-    return count;
-}
+
 string Instruction::RemoveWhiteSpace(const string& str){
     string shortened = str;
     //  Remove spaces using erase and remove_if

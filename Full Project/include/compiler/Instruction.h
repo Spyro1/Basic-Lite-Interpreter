@@ -38,10 +38,6 @@ protected:
 public:
     // == Constructors ==
     /**
-     * Default constructor for arrays
-     */
-    // Instruction();
-    /**
      * Initialize the instruction with the given base values.
      * @param lineNumber_ The line number of the instruction.
      * @param expression_ The expression argument of the instruction.
@@ -99,7 +95,7 @@ public:
     */
     virtual ~Instruction() = default;
 protected:
-    // == Protected functions ==
+    // == Expression evaluating function ==
     /**
      * Process the expression. Splits the expression into tokens based of the allowed operators. Assigns the value
      * to the register if there is an assigning operator in the expression. Returns the registers value if needed, or
@@ -109,13 +105,61 @@ protected:
      * @return The evaluated expression.
      */
     string ProcessExpression(string &argument, vector<Register> &registers);
-    void ReplaceCharacters(string &inputStr, const string &searched, const string &replace);
-    int CountCharacter(const string &str, char ch);
+
+    // == Helper functions ==
+    /**
+     * Removes all whitespace characters from a string.
+     * @param str The input string to remove whitespace from.
+     * @return A new string with all whitespace characters removed.
+     */
     string RemoveWhiteSpace(const string& str);
-    void SplitAndProcessArguments(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1) ;
-    size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')');
+
+    /**
+     * @brief Finds the index of a register in a vector of registers by name.
+     *
+     * @param registers The vector of registers to search in.
+     * @param name The name of the register to find.
+     * @return The index of the register if found, otherwise returns nopos.
+     */
     static size_t FindRegisterIndex(const std::vector<Register> &registers, const string &name);
+
+    /**
+     * Checks if a value exists (not equal to std::string::npos).
+     * @param value The value to check for existence.
+     * @return true if the value exists, false otherwise.
+     */
     static inline bool Exists(size_t value) { return value != nopos; }
+private:
+
+    /**
+     * Replaces all occurrences of characters in a string with specified replacements.
+     * @param inputStr The input string where replacements are performed.
+     * @param searched The characters to search for in the input string.
+     * @param replace The replacements for the searched characters.
+     */
+    void ReplaceCharacters(string &inputStr, const string &searched, const string &replace);
+
+    /**
+     * Splits an input argument string and processes the individual arguments.
+     * @param inputArg The input argument string to split and process.
+     * @param registers A vector of registers.
+     * @param operatorIndex The index of the operator in the input argument.
+     * @param evaluatedArg1 The first evaluated argument after splitting.
+     * @param evaluatedArg2 The second evaluated argument after splitting.
+     * @param operatorChars The number of characters representing the operator (default: 1).
+     */
+    void SplitAndProcessArguments(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1);
+
+    /**
+     * Finds the index of the closing bracket corresponding to an opening bracket in a string.
+     * @param str The input string where to search for the bracket pair.
+     * @param openPos The position of the opening bracket.
+     * @param OpenPair The opening bracket character (default: '(').
+     * @param ClosePair The closing bracket character (default: ')').
+     * @return The index of the closing bracket.
+     */
+    size_t FindBracketPairIndex(string str, size_t openPos, char OpenPair = '(', char ClosePair = ')');
+
 };
 
 #endif //NAGYHAZI_INSTRUCTION_H

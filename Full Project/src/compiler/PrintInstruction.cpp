@@ -38,3 +38,11 @@ void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>
     }
     instructionIndex++;
 }
+
+int PrintInstruction::CountCharacter(const string& str, char ch) {
+    int count = 0;
+    for (size_t i = 0; i < str.length(); i++)
+        if (str[i] == ch)
+            count++;
+    return count;
+}
