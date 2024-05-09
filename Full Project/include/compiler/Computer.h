@@ -25,7 +25,7 @@ public:
     /**
      * Creates a computer object that can run a BASIC-lite program.
      */
-    explicit Computer();
+    Computer();
     // == Getters ==
     /**
      * Gives the number of instructions in the program

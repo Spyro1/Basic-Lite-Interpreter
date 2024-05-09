@@ -15,17 +15,19 @@ void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> 
 //    std::cin >> readValue;
 
     // Error handling if not empty string
-    if (!readValue.empty()){
-        if (isNumber(readValue))
-            newValue = stof(readValue); // Convert value to float
-        else
-            throw UniqueError("Invalid input were given!"); // Can not convert, throw error
-        // Assign inputted value to register
-        if (Exists(regIndex))
-            registers[regIndex].SetValue(newValue); // Assign value to existing register
-        else
-            registers.emplace_back(expression, newValue); // Create new register and initialize it
+    if (readValue.empty()){
+        readValue = "0";
     }
+    if (isNumber(readValue))
+        newValue = stof(readValue); // Convert value to float
+    else
+        throw UniqueError("Invalid input were given!"); // Can not convert, throw error
+    // Assign inputted value to register
+    if (Exists(regIndex))
+        registers[regIndex].SetValue(newValue); // Assign value to existing register
+    else
+        registers.emplace_back(expression, newValue); // Create new register and initialize it
+
     // Skip instruction if empty
     instructionIndex++;
 }
