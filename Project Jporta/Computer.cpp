@@ -60,7 +60,7 @@ void Computer::RunProgram() {
         instructions[instructionIndex]->Execute(registers,instructions,instructionIndex); // Execute next instruction
         counter++;
     }
-    if (counter >= infiniteCycle) throw CompileError("Program shutdown due to infinite cycle!");
+    if (counter >= infiniteCycle) throw UniqueError("Program shutdown due to infinite cycle!");
     #ifndef CPORTA
         std::cout << std::endl;
     #endif

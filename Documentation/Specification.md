@@ -14,14 +14,14 @@ Alapértelmezetten két regisztere van az értelmezőnek, melyek nevei: `a`, `i`
 Az alábbi **BASIC-lite** program például kiírja az első 5db páratlan számot.
 
 ```javascript
-10 let a=1
+10 let a=2
 20 let i=5
-25 print "Elso 5 paratlan szam: "
+25 print "Elso 5 paros szam: "
 30 print a
 35 print " "
 40 let a=a+2
 50 let i=i-1
-60 if i>0
+60 if i
 70 goto 30
 ```
 

@@ -4,6 +4,20 @@
 
 ## Tartalom
 
+- [BASIC-lite interpreter - Dokumentáció](#basic-lite-interpreter---dokumentáció)
+  - [Tartalom](#tartalom)
+  - [Feladatspecifikáció](#feladatspecifikáció)
+- [BASIC-lite interpreter használata (felhasználó szemmel)](#basic-lite-interpreter-használata-felhasználó-szemmel)
+  - [Interfész és kódolás](#interfész-és-kódolás)
+    - [BASIC-lite szintaxis](#basic-lite-szintaxis)
+    - [Sorszám](#sorszám)
+    - [Utasítás és paraméterek](#utasítás-és-paraméterek)
+  - [Hibakezelés](#hibakezelés)
+- [BASIC-lite interpreter felépítése (programozó szemmel)](#basic-lite-interpreter-felépítése-programozó-szemmel)
+  - [UML osztálydiagram](#uml-osztálydiagram)
+  - [Osztály- és függvény dokumentáció](#osztály--és-függvény-dokumentáció)
+
+
 ## Feladatspecifikáció
 
 A program egy **BASIC**-szerű programozási nyelv butított, egyszerűsített változatát valósítja meg, továbbiakban **BASIC-lite**-nak nevezve. Biztosít a programkód írásához egy interfészt, alap parancsokat a kód szerkesztéséhez, mentéséhez, beolvasásához és futtatásához.
@@ -37,6 +51,23 @@ Egy sor begépelésekor a sor végén `Enter`-t leütve a program kiértékeli a
 
 Az interfész utasítás abban különbözik a program kódsortól, hogy a kódsor első argumentuma egy sorszám, míg az interfészbeli parancsok első argumentuma nem tartalmazhat számot.
 
+### Példaprogram
+
+Az alábbi **BASIC-lite** program például kiírja az első 5db páratlan számot.
+
+```c
+10 let a=2
+20 let i=5
+25 print "Elso 5 paros szam: "
+30 print a
+35 print " "
+40 let a=a+2
+50 let i=i-1
+60 if i
+70 goto 30
+```
+**Kimenet:** `Elso 5 paros szam: 2 4 6 8 10`
+
 ### BASIC-lite szintaxis
 
 Egy program kódsornak 3 argumentuma van mindig: `sorszám`, `utasítás`, `paraméter`.
@@ -53,13 +84,13 @@ Ezalól kivétel, ha sztringet írunk be a `print` utasításhoz, aminél termé
 
 Ahol az `a` lesz a balérték, és a `4*(b-c)` az értékadás jobbértéke, ahol `b` és `c` regiszterneveket jelölnek, és annak értékeire hivatkoznak.
 
-#### Sorszám
+### Sorszám
 
 Egy program kódsor sorszám egy 0-nál nagyobb pozitív egész szám mindig.
 Amennyiben a sorszám 0, úgy az a sor kommentnek tekintendő, és nem kerül kiértékelésre a futtatás során.
 Ha a sorszám negatív, úgy a fent említett módon törlődik az utasítás a program memóriából. Minden más esetben, ha az első argumentum nem egy egész szám, úgy a program hibát dob.
 
-#### Utasítás és paraméterek
+### Utasítás és paraméterek
 
 A második paraméter az utasítás kulcsszó. Ezután következik a harmadik paraméter, ami egészen a sor végéig tart.  
 A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színtaktikájuk:
@@ -75,34 +106,73 @@ A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színt
 Az interfész minden helytelenül bevitt parancsra hibát dob, és ki is írja mi a hiba oka.  
 Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kivételt dob, mely tartalmazza a hiba részletes okát, és helyét a kódban.
 
-| Hibaüzenet / Interfész üzenet                                               | Magyarázat                                               |
-|-----------------------------------------------------------------------------|----------------------------------------------------------|
-| [Error]: Unknown error in line: #                                           | Ismeretlen eredetű hiba                                  |
-| [Error]: "filename" file not found!                                         | Nem található a kívánt fájl                              |
-| [Error]: Invalid input were given!                                          | Nem megfelelő bemenetet adott a felhasználó              |
-| [Computer]: Ready.                                                          | A program sikeresen lefutott                             |
-| [Computer]: Unrecognizable cmdStr                                           | Nem felismerhető parancs                                 |
-| [Computer]: Program loaded from file.                                       | Sikeres a program beolvasása fájlból                     |
-| [Computer]: Program saved to file.                                          | Sikeres a program kiírása fájlba                         |
-| [Computer]: Can not save to file.                                           | Nem sikerült fájlba írni a programot                     |
-| [Computer]: New program created.                                            | Új program lett létrehozva                               |
-| [Syntax error]: Line identifier already exists: #                           | Új utasítás felvétele már letező sorszámmal              |
-| [Syntax error]: Instruction not recognized in line: #                       | Nem létező utasítás                                      |
-| [Syntax error]: Can not recognize "argument" as a goto argument in line: #  | Goto nem megfelelő paraméterezése                        |
-| [Syntax error]: Can not recognize "argument" as a print argument in line: # | Print nem megfelelő paraméterezése                       |
-| [Syntax error]: Can not recognize "argument" as an if condition in line: #  | If nem megfelelő feltétel                                |
-| [Syntax error]: Wrong string literal in line: #                             | Nem megfelelő sztring szintaxis, hiányzó idézőjel        |
-| [Syntax error]: Unrecognized register name "argument" in line: #            | Nem deklarált regiszter használta                        ||
-| [Syntax error]: No line identifier found to jump to in line:                | Nem létező sor azonosító lett megadva goto paraméterként |
-| [Syntax error]: Program shutdown due to infinite cycle!                     | A program futás közben leállt végteln ciklus miatt       |
-| [Syntax error]: Missing brackets                                            | Rossz zárójelezés egy kifejezésben                       |
+| Hibaüzenet / Interfész üzenet                                                   | Magyarázat                                               |
+|---------------------------------------------------------------------------------|----------------------------------------------------------|
+| **[Error]:** Unknown error in line: #                                           | Ismeretlen eredetű hiba                                  |
+| **[Error]:** "filename" file not found!                                         | Nem található a kívánt fájl                              |
+| **[Error]:** Invalid input were given!                                          | Nem megfelelő bemenetet adott a felhasználó              |
+| **[Computer]:** Ready.                                                          | A program sikeresen lefutott                             |
+| **[Computer]:** Unrecognizable cmdStr                                           | Nem felismerhető parancs                                 |
+| **[Computer]:** Program loaded from file.                                       | Sikeres a program beolvasása fájlból                     |
+| **[Computer]:** Program saved to file.                                          | Sikeres a program kiírása fájlba                         |
+| **[Computer]:** Can not save to file.                                           | Nem sikerült fájlba írni a programot                     |
+| **[Computer]:** New program created.                                            | Új program lett létrehozva                               |
+| **[Syntax error]:** Line identifier already exists: #                           | Új utasítás felvétele már letező sorszámmal              |
+| **[Syntax error]:** Instruction not recognized in line: #                       | Nem létező utasítás                                      |
+| **[Syntax error]:** Can not recognize "argument" as a goto argument in line: #  | Goto nem megfelelő paraméterezése                        |
+| **[Syntax error]:** Can not recognize "argument" as a print argument in line: # | Print nem megfelelő paraméterezése                       |
+| **[Syntax error]:** Can not recognize "argument" as an if condition in line: #  | If nem megfelelő feltétel                                |
+| **[Syntax error]:** Wrong string literal in line: #                             | Nem megfelelő sztring szintaxis, hiányzó idézőjel        |
+| **[Syntax error]:** Unrecognized register name "argument" in line: #            | Nem deklarált regiszter használta                        ||
+| **[Syntax error]:** No line identifier found to jump to in line:                | Nem létező sor azonosító lett megadva goto paraméterként |
+| **[Syntax error]:** Program shutdown due to infinite cycle!                     | A program futás közben leállt végteln ciklus miatt       |
+| **[Syntax error]:** Missing brackets                                            | Rossz zárójelezés egy kifejezésben                       |
 
 # BASIC-lite interpreter felépítése (programozó szemmel)
 
+## Program működés
+
+A program fő funkcionalitását 5 osztály adja: `IDE`, `Command` és leszármazottai, `Computer`, `Instruction` és leszármazottai, illetve a `Register` osztály. 
+Ezekből a felhasználóval való kommunikációért az `IDE` és a `Command` osztályok, a belső működésért és a **BASIC-lite** program értelmezésért a `Computer`, `Instruction` és `Register` osztályok felelősek.
+A továbbiakban ezek részletes bemutatása olvasható.
 
 
+## Egyszerűsített UML osztálydiagram
 
-## UML osztálydiagram
+```mermaid
+classDiagram
+  direction LR
+
+  Computer "1" --* "1" IDE : contains
+  IDE "1" *-- "0..*" Command : contains
+  IDE <-- UniqueError : catches
+  
+  Instruction --> SyntaxError : throws
+  UniqueError <|-- SyntaxError
+  Computer --> UniqueError : throws
+  Computer --> SyntaxError : throws
+
+  Computer "1" *-- "1..*" Register : contains
+  Computer "1" *-- "0..*" Instruction : contains
+  Register <-- Instruction : uses
+
+  Instruction "1" *-- "1" InstructionType : defines
+  Instruction <|-- LetInstruction
+  Instruction <|-- PrintInstruction
+  Instruction <|-- IfInstruction
+  Instruction <|-- GotoInstruction
+  Instruction <|-- ReadInstruction
+
+  Command <|-- HelpCommand
+  Command <|-- RunCommand
+  Command <|-- EndCommand
+  Command <|-- ListCommand
+  Command <|-- NewCommand
+  Command <|-- LoadCommand
+  Command <|-- SaveCommand
+```
+
+## Teljes UML osztálydiagram
 
 ```mermaid
 classDiagram
@@ -233,12 +303,12 @@ classDiagram
     IDE <-- UniqueError : catches
 %%    UniqueError --> IDE : catches 
     
-    UniqueError <|-- SyntaxError
     
-    Instruction --> UniqueError : throws
+%%    Instruction --> UniqueError : throws
     Instruction --> SyntaxError : throws
-    Computer --> SyntaxError : throws
+    UniqueError <|-- SyntaxError
     Computer --> UniqueError : throws
+    Computer --> SyntaxError : throws
     
 %%    SyntaxError --|> UniqueError
    
@@ -246,12 +316,12 @@ classDiagram
     Computer "1" *-- "0..*" Instruction : contains
     Register <-- Instruction : uses
 
+    Instruction "1" *-- "1" InstructionType : defines
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
     Instruction <|-- IfInstruction
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
-    Instruction "1" *-- "1" InstructionType : defines
     %% ----
 %%    SyntaxError <-- Instruction : throws
 %%    UniqueError <-- Instruction : throws
