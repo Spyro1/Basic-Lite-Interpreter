@@ -14,7 +14,7 @@
 #include "IfInstruction.h"
 #include "GotoInstruction.h"
 #include "ReadInstruction.h"
-#include "CompileError.h"
+
 /**
  * Represents a computer object for running a BASIC-lite program and interpreting it.
  */

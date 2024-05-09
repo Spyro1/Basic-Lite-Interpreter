@@ -8,7 +8,6 @@ add_executable(Nagyhazi main.cpp
         memtrace.h
         memtrace.cpp
         SyntaxError.h
-        CompileError.h
         UniqueError.h
         IDE.h IDE.cpp
         Command.h Command.cpp

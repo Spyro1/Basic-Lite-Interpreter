@@ -18,7 +18,7 @@ void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>&
     try{
         jumpNumber = stoi(evaluated); // Convert to number if can
     } catch (std::exception& e){
-        throw CompileError("Can not recognize \"" + expression + "\" as a goto argument", lineNumber);
+        throw SyntaxError("Can not recognize \"" + expression + "\" as a goto argument", lineNumber);
     }
     size_t i = 0;
     // Search instruction index to jump to
