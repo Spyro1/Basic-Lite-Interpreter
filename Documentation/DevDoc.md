@@ -7,14 +7,17 @@
 - [BASIC-lite interpreter - Dokumentáció](#basic-lite-interpreter---dokumentáció)
   - [Tartalom](#tartalom)
   - [Feladatspecifikáció](#feladatspecifikáció)
-- [BASIC-lite interpreter használata (felhasználó szemmel)](#basic-lite-interpreter-használata-felhasználó-szemmel)
+- [BASIC-lite interpreter használata - Felhasználói szemmel](#basic-lite-interpreter-használata---felhasználói-szemmel)
   - [Interfész és kódolás](#interfész-és-kódolás)
+    - [Példaprogram](#példaprogram)
     - [BASIC-lite szintaxis](#basic-lite-szintaxis)
     - [Sorszám](#sorszám)
     - [Utasítás és paraméterek](#utasítás-és-paraméterek)
   - [Hibakezelés](#hibakezelés)
-- [BASIC-lite interpreter felépítése (programozó szemmel)](#basic-lite-interpreter-felépítése-programozó-szemmel)
-  - [UML osztálydiagram](#uml-osztálydiagram)
+- [BASIC-lite interpreter felépítése  - Programozói szemmel](#basic-lite-interpreter-felépítése----programozói-szemmel)
+  - [Program működés](#program-működés)
+  - [Egyszerűsített UML osztálydiagram](#egyszerűsített-uml-osztálydiagram)
+  - [Teljes UML osztálydiagram](#teljes-uml-osztálydiagram)
   - [Osztály- és függvény dokumentáció](#osztály--és-függvény-dokumentáció)
 
 
@@ -24,7 +27,7 @@ A program egy **BASIC**-szerű programozási nyelv butított, egyszerűsített v
 
 Az értelmező képes regiszterekben számértékeket eltárolni és azokkal műveleteket végezni, feltételes utasításokat végrehajtani, és ugrani a programkódon belül, kiírni a standard kimenetre, és olvasni a standard bementről.
 
-# BASIC-lite interpreter használata (felhasználó szemmel)
+# BASIC-lite interpreter használata - Felhasználói szemmel
 
 ## Interfész és kódolás
 
@@ -128,14 +131,91 @@ Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kiv�
 | **[Syntax error]:** Program shutdown due to infinite cycle!                     | A program futás közben leállt végteln ciklus miatt       |
 | **[Syntax error]:** Missing brackets                                            | Rossz zárójelezés egy kifejezésben                       |
 
-# BASIC-lite interpreter felépítése (programozó szemmel)
+# BASIC-lite interpreter felépítése  - Programozói szemmel
 
 ## Program működés
 
-A program fő funkcionalitását 5 osztály adja: `IDE`, `Command` és leszármazottai, `Computer`, `Instruction` és leszármazottai, illetve a `Register` osztály. 
-Ezekből a felhasználóval való kommunikációért az `IDE` és a `Command` osztályok, a belső működésért és a **BASIC-lite** program értelmezésért a `Computer`, `Instruction` és `Register` osztályok felelősek.
+A program fő funkcionalitását 5 nagyobb osztály adja. 
+A felhasználóval való kommunikációért az `IDE` és a `Command` osztályok és leszármazottai, a belső működésért és a 
+**BASIC-lite** program értelmezésért a `Computer`, `Register`, `Instruction` és leszármazott osztályai felelősek.
 A továbbiakban ezek részletes bemutatása olvasható.
 
+## Felhasználóval kommunikáció - Az interfész: `IDE`
+
+A program indulásakor egy CLI-s felület fogadja a felhasználót.
+Ezt a felületet és a be- és kimeneteket az `IDE` osztály kezeli. 
+Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról]()) tartja nyilván egy heterogén kollekcióban, ahol az
+`IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottaiból egy-egy példányt. ([Bővebben a Command leszármazottairól]()) 
+
+```mermaid
+classDiagram
+  class IDE{
+    - active: bool
+    - commands: vector~Command*~
+    + IDE()
+    + Run() void
+    - PrintTitle() void
+    - ReadInput(line: string, commandStr: string, argumentStr: string) void
+  }
+  class Command{
+    - cmdStr: string
+    - pc&: Computer
+    + Command(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string) void = 0*
+    + operator==(commandStr: string) bool
+  }
+  IDE "1" *-- "0..*" Command : contains
+```
+
+Interfész állapot: `active`
+: Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
+
+Interfész parancsok: `commands`
+: A `commands` heterogén kollekció tárolja a felhasználó által végrehajtható parancsokat, ami minden egyes `Command` 
+leszármazott osztályból egy-egy példányt tartalmaz. Így egy ciklussal ellenőrizhető mely parancsot vitte be a felhasználó,
+és melyik hajtódjon végre.
+
+Interfész futtatása: `Run()`
+: Ezt a függvényt hívja meg a `main` az `IDE` futtatásához. Bekér a felhasználótól egy sort minden egyes ciklus elején, 
+majd feldolgozza azt.
+A függvény leírása pszeudókóddal:
+
+```
+Eljárás Run():
+  Ciklus amíg active igaz
+    Egy sor beolvasása a bemenetről
+    commands-on végigfutva keres, melyik parancsot vitte be a felhasználó
+    Ha nem parancs volt, akkor
+      program kódsor hozzáadása a utasítássorozathoz.
+  Ciklus vége
+Eljárás vége
+```
+
+
+
+### Használata
+
+Az `IDE` osztályt egyszer kell példányosítani a `main()`-ben, és meghívni a `Run()` függvényét az interfész elindításához.
+Az `IDE` osztály minden további dolgot elintéz ami a program működéséhez és a felhasználóval való kommunikációhoz, illetve
+a hibakezeléshez  szükséges.
+
+```cpp
+int main(){
+    IDE ide;
+    ide.Run();
+    reutrn 0;
+}
+```
+
+
+
+### Parancsfedolgozás: `Command`
+
+### Fájlkezelés
+
+###
+
+## Tesztelés
 
 ## Egyszerűsített UML osztálydiagram
 
