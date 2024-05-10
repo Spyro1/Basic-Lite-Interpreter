@@ -2,6 +2,8 @@
 
 > Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: [Dátum] Budapest
 
+[//]: # (<div class="page"></div>)
+
 ## Tartalom
 
 - [BASIC-lite interpreter - Dokumentáció](#basic-lite-interpreter---dokumentáció)
@@ -19,7 +21,6 @@
   - [Egyszerűsített UML osztálydiagram](#egyszerűsített-uml-osztálydiagram)
   - [Teljes UML osztálydiagram](#teljes-uml-osztálydiagram)
   - [Osztály- és függvény dokumentáció](#osztály--és-függvény-dokumentáció)
-
 
 ## Feladatspecifikáció
 
@@ -144,13 +145,16 @@ A továbbiakban ezek részletes bemutatása olvasható.
 
 A program indulásakor egy CLI-s felület fogadja a felhasználót.
 Ezt a felületet és a be- és kimeneteket az `IDE` osztály kezeli. 
-Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról]()) tartja nyilván egy heterogén kollekcióban, ahol az
+Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról]()) tartja nyilván egy heterogén kollekcióban, ahova az
 `IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottaiból egy-egy példányt. ([Bővebben a Command leszármazottairól]()) 
 
+#### IDE és Command kapcsolata - UML osztálydiagram
 ```mermaid
 classDiagram
+    direction LR
   class IDE{
     - active: bool
+    - pc: Computer
     - commands: vector~Command*~
     + IDE()
     + Run() void
@@ -161,7 +165,7 @@ classDiagram
     - cmdStr: string
     - pc&: Computer
     + Command(cmdStr: string, pc: Computer)
-    + operator()(commandExpression: string) void = 0*
+    + operator()(commandExpression: string, active&: bool) void = 0*
     + operator==(commandStr: string) bool
   }
   IDE "1" *-- "0..*" Command : contains
@@ -170,10 +174,19 @@ classDiagram
 Interfész állapot: `active`
 : Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
 
+Értelmező: `pc`
+: Az `Computer` osztály egy példánya, ami az értelmezi a BASIC-lite kódot amit az interfésztől kap. Ebben tárolódnak el az program utasítások.
+
 Interfész parancsok: `commands`
 : A `commands` heterogén kollekció tárolja a felhasználó által végrehajtható parancsokat, ami minden egyes `Command` 
 leszármazott osztályból egy-egy példányt tartalmaz. Így egy ciklussal ellenőrizhető mely parancsot vitte be a felhasználó,
 és melyik hajtódjon végre.
+
+Sor beolvasása: `ReadInput(...)`
+: Beolvas egy sort a standard bemenetről, és szétbontja azt elemekre (teljes sor, parancs név, argumentum). 
+
+Cím kiíró: `PrintTitle()`
+: Kiírja a standard kiemenetre a program nevét, készítőjét, és egy javaslatot az új felhasználók számára.  
 
 Interfész futtatása: `Run()`
 : Ezt a függvényt hívja meg a `main` az `IDE` futtatásához. Bekér a felhasználótól egy sort minden egyes ciklus elején, 
@@ -182,16 +195,18 @@ A függvény leírása pszeudókóddal:
 
 ```
 Eljárás Run():
+  Cím kiírása a képernyőre
   Ciklus amíg active igaz
-    Egy sor beolvasása a bemenetről
+    Sor beolvasása a bemenetről
     commands-on végigfutva keres, melyik parancsot vitte be a felhasználó
+      parancs végrehajtása, ha talált
     Ha nem parancs volt, akkor
-      program kódsor hozzáadása a utasítássorozathoz.
+      program kódsor hozzáadása a utasítássorozathoz
+    Különben, ha nem ismert parancs jött, akkor
+      Hiba kiírása 
   Ciklus vége
 Eljárás vége
 ```
-
-
 
 ### Használata
 
@@ -207,9 +222,101 @@ int main(){
 }
 ```
 
+## Interfész parancsok: `Command`
 
+Az `IDE`-vel való kommunikáció során a felhasználó különböző parancsokat adhat meg a bemeneten, amik végrehajtásáért a
+`Command`, és a leszármazott osztályai felelősek.
+Minden specifikus parancstípus saját eljárást hajt végre a meghívásakor. Erre a célra szolgál a teljesen virtuális 
+`operator()` operátor a `Command` absztrakt osztályból, melyet minden leszármazottnak implementálnia kell.
 
-### Parancsfedolgozás: `Command`
+```mermaid
+classDiagram
+  direction LR
+  class Command{
+    - cmdStr: string
+    - pc&: Computer
+    + Command(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void = 0*
+    + operator==(commandStr: string) bool
+  }
+  class HelpCommand{
+    + HelpCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void
+  }
+  class RunCommand{
+    + RunCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void
+  }
+  class EndCommand{
+    + EndCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void
+  }
+  class ListCommand{
+    + ListCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void
+  }
+  class NewCommand{
+    + NewCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void
+  }
+  class LoadCommand{
+    + LoadCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void
+  }
+  class SaveCommand{
+    + SaveCommand(cmdStr: string, pc: Computer)
+    + operator()(commandExpression: string, active&: bool) void
+  }
+  Command <|-- HelpCommand
+  Command <|-- RunCommand
+  Command <|-- EndCommand
+  Command <|-- ListCommand
+  Command <|-- NewCommand
+  Command <|-- LoadCommand
+  Command <|-- SaveCommand
+```
+
+Parancs kulcsó: `cmdStr`
+: A parancs kulcsszavát tartalmazó string.
+
+Értelmező referencia: `pc&`
+: A parancs végrehajtásakor az interfésztől kapott `Computer` osztály referenciával tud műveletet végezni az `operator()` operátor, hogy azok a módosítások kifelé is hassanak.
+
+Prancs operátor: `operator()`
+: Teljesen virtuális operátor, amit minden leszármazottnak implementálnia kell. Ez adja a funkcionalitását a parancsnak. 
+
+Összehasonlító operátor: `operator==`
+: Összehasonlító operátor, ami megvizsgálja, hogy a jobbértékként kapott string megeggyezik-e a parancs kulcsszavával.
+
+### Specifikus parancsok: `Command` leszármazottai
+
+#### Segítség: `HelpCommand`
+
+Az osztály `operator()` operátorának meghívásakor kiír a standard kimenetre egy rövid leírást minden beírható parancsról és használatukról.
+
+#### Program futtatása: `RunCommand`
+
+Az osztály `operator()` operátorának meghívásakor meghívja az értelmező (`Computer`) `RunProgram()` függvényét, ami futtatja a memóriájában lévő programot.
+
+#### Alkalmazás bezárása: `EndCommand`
+
+Az osztály `operator()` operátorának meghívásakor az interfész és a program futásáért felelős változó, az `active` értékét `false`-ra állítja, ezzel bezárva a programot.
+
+#### Program kilistázása: `ListCommand`
+
+Az osztály `operator()` operátorának meghívásakor kilistázza az értelmező (`Computer`) memóriájában tárolt program kódsort.
+
+#### Új program létrehozása: `NewCommand`
+
+Az osztály `operator()` operátorának meghívásakor törli az értelmező (`Computer`) memóriájában tárolt programot, ezáltal egy új programot hoz létre a felhasználónak.
+
+#### Program beolvasása fájlból: `LoadCommand`
+
+Az osztály `operator()` operátorának meghívásakor a pramaéterként kapott elérési útvonal alapján megpróbálja betölteni a keresett fájlt, ha létezik. Ha nem létezik vagy a fájl betöltése során hibába ütközik, hibát dob. 
+
+#### Program mentése fájlba: `SaveCommand`
+
+Az osztály `operator()` operátorának meghívásakor a paraméterként kapott fájlnéven elmenti az értelmező (`Computer`) memóriájában tárolt program kódsort. Ha sikertelen a fájlba írás, hibát dob.
 
 ### Fájlkezelés
 
@@ -334,36 +441,36 @@ classDiagram
         - cmdStr: string
         - pc&: Computer
         + Command(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void = 0*
+        + operator()(commandExpression: string, active&: bool) void = 0*
         + operator==(commandStr: string) bool
     }
     class HelpCommand{
         + HelpCommand(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void
+        + operator()(commandExpression: string, active&: bool) void
     }
     class RunCommand{
         + RunCommand(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void
+        + operator()(commandExpression: string, active&: bool) void
     }
     class EndCommand{
         + EndCommand(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void
+        + operator()(commandExpression: string, active&: bool) void
     }
     class ListCommand{
         + ListCommand(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void
+        + operator()(commandExpression: string, active&: bool) void
     }
     class NewCommand{
         + NewCommand(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void
+        + operator()(commandExpression: string, active&: bool) void
     }
     class LoadCommand{
         + LoadCommand(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void
+        + operator()(commandExpression: string, active&: bool) void
     }
     class SaveCommand{
         + SaveCommand(cmdStr: string, pc: Computer)
-        + operator()(commandExpression: string) void
+        + operator()(commandExpression: string, active&: bool) void
     }
     class UniqueError{
         - errormessage: string
