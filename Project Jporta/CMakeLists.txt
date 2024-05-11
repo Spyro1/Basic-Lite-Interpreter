@@ -10,22 +10,22 @@ add_executable(Nagyhazi main.cpp
         SyntaxError.h
         UniqueError.h
         IDE.h IDE.cpp
-        Command.h Command.cpp
-        Computer.h Computer.cpp
-        Register.h Register.cpp
-        Instruction.h Instruction.cpp
-        PrintInstruction.h PrintInstruction.cpp
-        LetInstruction.h LetInstruction.cpp
-        IfInstruction.h IfInstruction.cpp
-        GotoInstruction.h GotoInstruction.cpp
-        ReadInstruction.h ReadInstruction.cpp
-        HelpCommand.h HelpCommand.cpp
-        RunCommand.h RunCommand.cpp
-        EndCommand.h EndCommand.cpp
-        ListCommand.h ListCommand.cpp
-        NewCommand.h NewCommand.cpp
-        LoadCommand.h LoadCommand.cpp
-        SaveCommand.h SaveCommand.cpp
+        Command.h   Command.cpp
+        Computer.h  Computer.cpp
+        Register.h   Register.cpp
+        Instruction.h   Instruction.cpp
+        PrintInstruction.h  PrintInstruction.cpp
+        LetInstruction.h    LetInstruction.cpp
+        IfInstruction.h     IfInstruction.cpp
+        GotoInstruction.h   GotoInstruction.cpp
+        ReadInstruction.h   ReadInstruction.cpp
+        HelpCommand.h   HelpCommand.cpp
+        RunCommand.h    RunCommand.cpp
+        EndCommand.h    EndCommand.cpp
+        ListCommand.h   ListCommand.cpp
+        NewCommand.h    NewCommand.cpp
+        LoadCommand.h   LoadCommand.cpp
+        SaveCommand.h   SaveCommand.cpp
 
 )
 add_compile_definitions(MEMTRACE)

@@ -18,6 +18,21 @@
   - [Hibakezelés](#hibakezelés)
 - [BASIC-lite interpreter felépítése  - Programozói szemmel](#basic-lite-interpreter-felépítése----programozói-szemmel)
   - [Program működés](#program-működés)
+  - [Felhasználóval kommunikáció - Az interfész: IDE](#felhasználóval-kommunikáció---az-interfész-ide)
+      - [IDE és Command kapcsolata - UML osztálydiagram](#ide-és-command-kapcsolata---uml-osztálydiagram)
+    - [Használata](#használata)
+  - [Interfész parancsok: Command](#interfész-parancsok-command)
+    - [Specifikus parancsok: Command leszármazottai](#specifikus-parancsok-command-leszármazottai)
+      - [Segítség: HelpCommand](#segítség-helpcommand)
+      - [Program futtatása: RunCommand](#program-futtatása-runcommand)
+      - [Alkalmazás bezárása: EndCommand](#alkalmazás-bezárása-endcommand)
+      - [Program kilistázása: ListCommand](#program-kilistázása-listcommand)
+      - [Új program létrehozása: NewCommand](#új-program-létrehozása-newcommand)
+      - [Program beolvasása fájlból: LoadCommand](#program-beolvasása-fájlból-loadcommand)
+      - [Program mentése fájlba: SaveCommand](#program-mentése-fájlba-savecommand)
+    - [](#)
+    - [Fájlkezelés](#fájlkezelés)
+  - [Tesztelés](#tesztelés)
   - [Egyszerűsített UML osztálydiagram](#egyszerűsített-uml-osztálydiagram)
   - [Teljes UML osztálydiagram](#teljes-uml-osztálydiagram)
   - [Osztály- és függvény dokumentáció](#osztály--és-függvény-dokumentáció)
@@ -141,12 +156,12 @@ A felhasználóval való kommunikációért az `IDE` és a `Command` osztályok 
 **BASIC-lite** program értelmezésért a `Computer`, `Register`, `Instruction` és leszármazott osztályai felelősek.
 A továbbiakban ezek részletes bemutatása olvasható.
 
-## Felhasználóval kommunikáció - Az interfész: `IDE`
+## Felhasználóval való kommunikáció - Az interfész: IDE 
 
 A program indulásakor egy CLI-s felület fogadja a felhasználót.
 Ezt a felületet és a be- és kimeneteket az `IDE` osztály kezeli. 
-Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról]()) tartja nyilván egy heterogén kollekcióban, ahova az
-`IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottaiból egy-egy példányt. ([Bővebben a Command leszármazottairól]()) 
+Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról](#interfész-parancsok-command)) tartja nyilván egy heterogén kollekcióban, ahova az
+`IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottaiból egy-egy példányt. ([Bővebben a Command leszármazottairól](#specifikus-parancsok-command-leszármazottai)) 
 
 #### IDE és Command kapcsolata - UML osztálydiagram
 ```mermaid
@@ -222,7 +237,7 @@ int main(){
 }
 ```
 
-## Interfész parancsok: `Command`
+## Interfész parancsok: Command
 
 Az `IDE`-vel való kommunikáció során a felhasználó különböző parancsokat adhat meg a bemeneten, amik végrehajtásáért a
 `Command`, és a leszármazott osztályai felelősek.
@@ -231,7 +246,7 @@ Minden specifikus parancstípus saját eljárást hajt végre a meghívásakor. 
 
 ```mermaid
 classDiagram
-  direction LR
+  direction TB
   class Command{
     - cmdStr: string
     - pc&: Computer
@@ -267,9 +282,12 @@ classDiagram
     + SaveCommand(cmdStr: string, pc: Computer)
     + operator()(commandExpression: string, active&: bool) void
   }
-  Command <|-- HelpCommand
-  Command <|-- RunCommand
-  Command <|-- EndCommand
+%%  Command <|-- HelpCommand
+%%  Command <|-- RunCommand
+%%  Command <|-- EndCommand
+  HelpCommand --|> Command
+  RunCommand --|> Command
+  EndCommand --|> Command
   Command <|-- ListCommand
   Command <|-- NewCommand
   Command <|-- LoadCommand
@@ -288,39 +306,92 @@ Prancs operátor: `operator()`
 Összehasonlító operátor: `operator==`
 : Összehasonlító operátor, ami megvizsgálja, hogy a jobbértékként kapott string megeggyezik-e a parancs kulcsszavával.
 
-### Specifikus parancsok: `Command` leszármazottai
+### Specifikus parancsok: Command leszármazottai
 
-#### Segítség: `HelpCommand`
+#### Segítség: HelpCommand
 
 Az osztály `operator()` operátorának meghívásakor kiír a standard kimenetre egy rövid leírást minden beírható parancsról és használatukról.
 
-#### Program futtatása: `RunCommand`
+#### Program futtatása: RunCommand
 
 Az osztály `operator()` operátorának meghívásakor meghívja az értelmező (`Computer`) `RunProgram()` függvényét, ami futtatja a memóriájában lévő programot.
 
-#### Alkalmazás bezárása: `EndCommand`
+#### Alkalmazás bezárása: EndCommand
 
 Az osztály `operator()` operátorának meghívásakor az interfész és a program futásáért felelős változó, az `active` értékét `false`-ra állítja, ezzel bezárva a programot.
 
-#### Program kilistázása: `ListCommand`
+#### Program kilistázása: ListCommand
 
 Az osztály `operator()` operátorának meghívásakor kilistázza az értelmező (`Computer`) memóriájában tárolt program kódsort.
 
-#### Új program létrehozása: `NewCommand`
+#### Új program létrehozása: NewCommand
 
 Az osztály `operator()` operátorának meghívásakor törli az értelmező (`Computer`) memóriájában tárolt programot, ezáltal egy új programot hoz létre a felhasználónak.
 
-#### Program beolvasása fájlból: `LoadCommand`
+#### Program beolvasása fájlból: LoadCommand
 
 Az osztály `operator()` operátorának meghívásakor a pramaéterként kapott elérési útvonal alapján megpróbálja betölteni a keresett fájlt, ha létezik. Ha nem létezik vagy a fájl betöltése során hibába ütközik, hibát dob. 
 
-#### Program mentése fájlba: `SaveCommand`
+#### Program mentése fájlba: SaveCommand
 
 Az osztály `operator()` operátorának meghívásakor a paraméterként kapott fájlnéven elmenti az értelmező (`Computer`) memóriájában tárolt program kódsort. Ha sikertelen a fájlba írás, hibát dob.
 
+
+## Az értelmező: Computer
+
+A BASIC-lite programot értelmező fő osztály a `Computer`. Ez tárolja a program utasításokat (`Instruction`) ([Bővebben az utasításokról]())
+soronként, a regisztereket (`Register`) ([Bővebben a regiszterekről]()), és ez futtatja a memóriájában tárolt programot, illetve beolvassa fájlból vagy kiírja fájlba a memóriába töltött programot.
+
+```mermaid
+classDiagram
+  class Computer {
+    - registers: vector~Register~
+    - instructions: vector~Instruction*~
+    - instructionIndex: int
+    + Computer()
+    + getInstructionCount() int
+    + ReadProgramFromFile(filename: string) void
+    + NewInstruction(programLine: string) void
+    + RunProgram() void
+    + ClearProgram() void
+    + ToUpperCaseStr(str: string) string$
+    - ProcessProgramLine(inputLine: string) void
+    - ClearInstructions() void
+    - SortInstructions() void
+    - RemoveInstruction() void
+    - CompareInstructions(a: Instruction, b: Instruction) bool$
+    - SplitLineToTokens(inputLine: string,...) void$
+  %%        - SplitLineToTokens(inputLine: string, lineNumber: int, command: string, expression: string) void$
+  }    
+```
+
+Regiszter tároló: `registers`
+: 
+
+Program kódsor tároló: `instructions`
+: 
+
+Utasítás mutató: `instructionIndex`
+: 
+
+
 ### Fájlkezelés
 
-###
+## Regiszterek: Register
+
+Az értelmező dinamikusan létrehoz regisztereket (más néven változókat), ha az értékadás bal oldalán új regiszter név szerepel.  
+Ezeket a program `Register` osztályban tárolja. 
+```mermaid
+classDiagram
+    class Register{
+        - name: string
+        - value: float
+        + Register(name: string, value: int)
+        + getName() string
+        + getValue() int
+        + setValue(newValue: float) void
+    }
+```
 
 ## Tesztelés
 
@@ -366,15 +437,15 @@ classDiagram
     direction LR
     class IDE{
         - active: bool
-        - commands[]: Command
+        - commands: vector~Command*~
         + IDE()
         + Run() void
         - PrintTitle() void
         - ReadInput(line: string, commandStr: string, argumentStr: string) void
     }
     class Computer {
-        - registers: Register[]
-        - instructions: Instruction[]
+        - registers: vector~Register~
+        - instructions: vector~Instruction*~
         - instructionIndex: int
         + Computer()
         + getInstructionCount() int
@@ -383,12 +454,13 @@ classDiagram
         + RunProgram() void
         + ClearProgram() void
         + ToUpperCaseStr(str: string) string$
-%%        - ProcessProgramLine(inputLine: string) void
-%%        - ClearInstructions() void
-%%        - SortInstructions() void
-%%        - RemoveInstruction() void
-%%        - CompareInstructions(a: Instruction, b: Instruction) bool$
-%%        - SplitLineToTokens(inputLine: string,lineNumber: int,command: string, expression: string) void$
+        - ProcessProgramLine(inputLine: string) void
+        - ClearInstructions() void
+        - SortInstructions() void
+        - RemoveInstruction() void
+        - CompareInstructions(a: Instruction, b: Instruction) bool$
+        - SplitLineToTokens(inputLine: string,...) void$
+%%        - SplitLineToTokens(inputLine: string, lineNumber: int, command: string, expression: string) void$
     }    
     class Register{
         - name: string
@@ -412,29 +484,36 @@ classDiagram
         + getInstructionTypeStr() string
         + getInstructionType() InstructionType
         + getExpression() string
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void = 0*
+        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void = 0*
         + isNumber(str: string) bool$
-        # ProcessExpression(argument: string, registers: Register[]) string
+        # ProcessExpression(argument: string, registers: vector~Register~) string
+        # RemoveWhiteSpace(str: string) string
+        # FindRegisterIndex(registers: vector~Register~, name: string) int$
+        # Exists(value: int) bool
+        - ReplaceCharacters(inputStr: string, searched: string, replace: string) void
+        - SplitAndProcessArguments(inputArg: string, registers: vector~Register~, ...) void
+%%        - SplitAndProcessArguments(inputArg: string, registers: vector~Register~, operatorIndex: int, evaluatedArg1: float, evaluatedArg2: float, operatorChars: int) void
+        - FindBracketPairIndex(str: string, openPos: int, openPair: char, ClosePair: char) int
     }
     class LetInstruction{
         + LetInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class PrintInstruction{
         + PrintInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class GotoInstruction{
         + GotoInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class IfInstruction{
         + IfInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class ReadInstruction{
         + ReadInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
+        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     
     class Command{
