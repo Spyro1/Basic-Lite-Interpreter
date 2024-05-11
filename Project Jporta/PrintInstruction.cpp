@@ -2,7 +2,6 @@
 // Created by Szenes Márton on 2024. 03. 14..
 //
 #include <iostream>
-#include <cstring>
 #include "memtrace.h"
 #include "PrintInstruction.h"
 

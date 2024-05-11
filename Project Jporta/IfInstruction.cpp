@@ -2,7 +2,6 @@
 // Created by marci on 2024. 03. 16..
 //
 
-#include <stdexcept>
 #include "IfInstruction.h"
 #include "memtrace.h"
 

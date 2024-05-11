@@ -6,7 +6,7 @@
 #define NAGYHAZI_INSTRUCTION_H
 #include <vector>
 #include "Register.h"
-#include "SyntaxError.h"s
+#include "SyntaxError.h"
 #include "UniqueError.h"
 
 

@@ -2,8 +2,8 @@
 // Created by marci on 2024. 03. 16..
 //
 #include <iostream>
-#include "memtrace.h"
 #include "ReadInstruction.h"
+#include "memtrace.h"
 
 ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Read) {}
 
@@ -12,7 +12,6 @@ void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> 
     string readValue;
     size_t regIndex = FindRegisterIndex(registers, expression);
     std::getline(std::cin, readValue);
-//    std::cin >> readValue;
 
     // Error handling if not empty string
     if (readValue.empty()){

@@ -17,13 +17,15 @@ class Register {
     string name;     // Register name
     float value = 0; // Register value
 public:
+
     // == Constructors ==
     /**
      * Creates a Register object that stores a register's name and float value
      * @param name Name of the register
      * @param defValue Value of the register
      */
-    explicit Register(const string& name = "", float defValue = 0);
+    explicit Register(const string& name = "", float defValue = 0) : name(name), value(defValue) { }
+
     // == Getters ==
     /**
      * Get the name of the register
@@ -35,6 +37,7 @@ public:
      * @return Value of the register
      */
     float getValue() const { return value; }
+
     // == Setters ==
     /**
      * Set the value of the register

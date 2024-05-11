@@ -34,7 +34,7 @@ public:
      * describing the error condition.
      * @return A character string describing the error.
      */
-    char const* what() const throw() override { return errormessage.c_str(); }
+    char const* what() const noexcept override { return errormessage.c_str(); }
 };
 
 

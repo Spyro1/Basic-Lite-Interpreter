@@ -11,14 +11,16 @@
  * The EndCommand class represents a command that closes the interface upon executed.
  * Inherits from the Command class.
  */
-class EndCommand : public Command{
+class EndCommand : public Command {
 public:
+
     // == Constructor ==
     /**
      * Constructs a EndCommand object.
      * @param pc A reference to the Computer object.
      */
     explicit EndCommand(Computer& pc);
+
     // == Operator ==
     /**
     * Executes the End command.

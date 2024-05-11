@@ -8,13 +8,7 @@
 #include <string>
 #include "Computer.h"
 #include "Command.h"
-#include "HelpCommand.h"
-#include "RunCommand.h"
-#include "EndCommand.h"
-#include "ListCommand.h"
-#include "NewCommand.h"
-#include "LoadCommand.h"
-#include "SaveCommand.h"
+
 
 using std::string;
 
@@ -27,16 +21,19 @@ class IDE {
     std::vector<Command*> commands; // Vector containing pointers to Command objects.
 
 public:
+
     // == Constructors ==
     /**
     * Constructs an IDE object, initializes the IDE with default commands.
     */
     IDE();
+
     // == Public Functions ==
     /**
      * This function runs the IDE on the terminal, allowing users to interact with it.
      */
     void Run();
+
     // == Destructor ==
     /**
     * Destroys the IDE object, cleans up resources allocated by the IDE.

@@ -10,7 +10,7 @@
 /**
  * The LetInstruction class represents an instruction to assign a value to a register. It inherits from the Instruction class.
  */
-class LetInstruction : public Instruction{
+class LetInstruction : public Instruction {
 public:
 
     // == Constructors ==

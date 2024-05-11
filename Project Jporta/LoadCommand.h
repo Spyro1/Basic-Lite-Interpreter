@@ -11,14 +11,16 @@
  * The LoadCommand class represents a command to load the program from a file.
  * Inherits from the Command class.
  */
-class LoadCommand : public Command{
+class LoadCommand : public Command {
 public:
+
     // == Constructor ==
     /**
      * Constructs a LoadCommand object.
      * @param pc A reference to the Computer object.
      */
     explicit LoadCommand(Computer& pc);
+    
     // == Operator ==
     /**
      * Executes the Load command.
