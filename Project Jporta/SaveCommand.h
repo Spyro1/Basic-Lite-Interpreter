@@ -13,12 +13,14 @@
  */
 class SaveCommand : public Command {
 public:
+
     // == Constructor ==
     /**
      * Constructs a SaveCommand object.
      * @param pc A reference to the Computer object.
      */
     explicit SaveCommand(Computer& pc);
+
     // == Operator ==
     /**
      * Executes the Save command.

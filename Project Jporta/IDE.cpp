@@ -5,6 +5,13 @@
 #include <iostream>
 #include <sstream>
 #include "IDE.h"
+#include "HelpCommand.h"
+#include "RunCommand.h"
+#include "EndCommand.h"
+#include "ListCommand.h"
+#include "NewCommand.h"
+#include "LoadCommand.h"
+#include "SaveCommand.h"
 #include "memtrace.h"
 
 
@@ -60,7 +67,6 @@ void IDE::Run() {
 }
 
 // == Private Functions ==
-
 void IDE::PrintTitle() {
     cout << "================================== BASIC-lite ====================================\n"
     <<      "\t\t\t     Made by: Marton Szenes\n"

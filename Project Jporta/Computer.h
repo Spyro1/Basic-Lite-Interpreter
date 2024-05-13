@@ -23,6 +23,7 @@ class Computer {
     std::vector<Instruction*> instructions; // List of instructions line by line
     int instructionIndex = -1;              // Current Instruction index
 public:
+
     // == Constructor ==
     /**
      * Creates a computer object that can run a BASIC-lite program.
@@ -34,13 +35,13 @@ public:
      * @return Number of instructions
      */
     size_t getInstructionCount() const;
+
     // == Functions ==
     /**
      * Reads the program from the given file into the 'instructions' list.
      * @param filename The name of the file that contains the program.
      */
     void ReadProgramFromFile(const string& filename);
-//    void ReadProgramFromString(char* program);
     /**
      * Evaluates the read character string line.
      * If the line number is positive, then the computer adds it to the instruction list,
@@ -74,6 +75,7 @@ public:
     static string ToUpperCaseStr(const string &str);
 
 private:
+
     // == Private functions==
     /**
      * Evaluates the inputed line. Seperates the input line to tokens (line number, instruction, argument),

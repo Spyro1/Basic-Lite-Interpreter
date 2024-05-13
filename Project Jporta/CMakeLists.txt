@@ -12,7 +12,7 @@ add_executable(Nagyhazi main.cpp
         IDE.h IDE.cpp
         Command.h   Command.cpp
         Computer.h  Computer.cpp
-        Register.h   Register.cpp
+        Register.h
         Instruction.h   Instruction.cpp
         PrintInstruction.h  PrintInstruction.cpp
         LetInstruction.h    LetInstruction.cpp

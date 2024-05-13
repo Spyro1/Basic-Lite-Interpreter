@@ -11,14 +11,16 @@
  * The RunCommand class represents a command to run the program on the interpreter.
  * Inherits from the Command class.
  */
-class RunCommand : public Command{
+class RunCommand : public Command {
 public:
+
     // == Constructor ==
     /**
      * Constructs a RunCommand object.
      * @param pc A reference to the Computer object.
      */
     explicit RunCommand(Computer& pc);
+
     // == Operator ==
     /**
      * Executes the Run command.

@@ -11,14 +11,16 @@
  * The NewCommand represents a command to create a new project.
  * Inherits from the Command class.
  */
-class NewCommand : public Command{
+class NewCommand : public Command {
 public:
+
     // == Constructor ==
     /**
      * Constructs a NewCommand object.
      * @param pc A reference to the Computer object.
      */
     explicit NewCommand(Computer& pc);
+
     // == Operator ==
     /**
      * Executes the New command.

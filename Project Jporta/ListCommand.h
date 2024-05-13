@@ -11,14 +11,16 @@
  * The ListCommand class represents a command that lists the instructions of the loaded program.
  * Inherits from the Command class.
  */
-class ListCommand : public Command{
+class ListCommand : public Command {
 public:
+
     // == Constructor ==
     /**
      * Constructs a ListCommand object.
      * @param pc A reference to the Computer object.
      */
     explicit ListCommand(Computer& pc);
+
     // == Operator ==
     /**
     * Executes the List command.
