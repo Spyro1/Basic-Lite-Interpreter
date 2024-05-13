@@ -366,7 +366,7 @@ classDiagram
 ```
 
 Regiszter tároló: `registers`
-: 
+: Az értelmező futása során használt regiszterek értékeit
 
 Program kódsor tároló: `instructions`
 : 

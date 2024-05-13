@@ -8,7 +8,7 @@
 
 PrintInstruction::PrintInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Print) {}
 
-void PrintInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int& instructionIndex) {
+void PrintInstruction::Execute(std::map<string, float>& registers, vector<Instruction*>& instructions, int& instructionIndex) {
     using namespace std;
     if (!expression.empty()){
         // If expression is a string

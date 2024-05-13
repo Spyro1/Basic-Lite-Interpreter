@@ -5,8 +5,8 @@
 #ifndef NAGYHAZI_INSTRUCTION_H
 #define NAGYHAZI_INSTRUCTION_H
 #include <vector>
-#include "Register.h"
-#include "SyntaxError.h"s
+#include <map>
+#include "SyntaxError.h"
 #include "UniqueError.h"
 
 
@@ -72,7 +72,7 @@ public:
      * @param instructions The array of instructions.
      * @param instructionIndex The current instruction index.
      */
-    virtual void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
+    virtual void Execute(std::map<string, float>& registers, vector<Instruction*>& instructions, int& instructionIndex) = 0;
     // == Operators ==
     /**
      * Overloaded stream insertion operator for printing Instruction objects.
@@ -103,7 +103,7 @@ protected:
      * @param registers The array of registers.
      * @return The evaluated expression.
      */
-    string ProcessExpression(string &argument, vector<Register> &registers);
+    string ProcessExpression(string &argument, std::map<string, float>& registers);
 
     // == Helper functions ==
     /**
@@ -120,7 +120,7 @@ protected:
      * @param name The name of the register to find.
      * @return The index of the register if found, otherwise returns nopos.
      */
-    static size_t FindRegisterIndex(const std::vector<Register> &registers, const string &name);
+//    static size_t FindRegisterIndex(const std::map<string, float>& registers, const string &name);
 
     /**
      * Checks if a value exists (not equal to std::string::npos).
@@ -147,7 +147,7 @@ private:
      * @param evaluatedArg2 The second evaluated argument after splitting.
      * @param operatorChars The number of characters representing the operator (default: 1).
      */
-    void SplitAndProcessArguments(const string& inputArg, vector<Register>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1);
+    void SplitAndProcessArguments(const string& inputArg, std::map<string, float>& registers, size_t operatorIndex, float& evaluatedArg1, float& evaluatedArg2, size_t operatorChars = 1);
 
     /**
      * Finds the index of the closing bracket corresponding to an opening bracket in a string.

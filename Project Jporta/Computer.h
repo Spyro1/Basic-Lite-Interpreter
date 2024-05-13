@@ -6,8 +6,8 @@
 #define NAGYHAZI_COMPUTER_H
 
 #include <vector>
+#include <map>
 
-#include "Register.h"
 #include "Instruction.h"
 #include "LetInstruction.h"
 #include "PrintInstruction.h"
@@ -19,7 +19,7 @@
  * Represents a computer object for running a BASIC-lite program and interpreting it.
  */
 class Computer {
-    std::vector<Register> registers;        // List of registers
+    std::map<std::string, float> registers; // Map of registers
     std::vector<Instruction*> instructions; // List of instructions line by line
     int instructionIndex = -1;              // Current Instruction index
 public:

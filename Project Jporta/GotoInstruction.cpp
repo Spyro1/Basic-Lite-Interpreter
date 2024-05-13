@@ -9,7 +9,7 @@
 
 GotoInstruction::GotoInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Goto) {}
 
-void GotoInstruction::Execute(vector<Register> &registers, vector<Instruction*>& instructions, int &instructionIndex) {
+void GotoInstruction::Execute(std::map<string, float>& registers, vector<Instruction*>& instructions, int &instructionIndex) {
     using namespace std;
     int jumpNumber;
 

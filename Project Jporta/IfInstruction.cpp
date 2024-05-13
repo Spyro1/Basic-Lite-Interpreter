@@ -8,7 +8,7 @@
 
 IfInstruction::IfInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, If) {}
 
-void IfInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
+void IfInstruction::Execute(std::map<string, float>& registers, vector<Instruction*> &instructions, int &instructionIndex) {
     //  Remove whitespace
     string argument = RemoveWhiteSpace(expression);
     // Process expression as a boolean return value

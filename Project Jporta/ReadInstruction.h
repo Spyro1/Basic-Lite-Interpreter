@@ -28,7 +28,7 @@ public:
      * This function is a virtual method intended to execute a specific instruction within a sequence of instructions.
      * It operates on a set of registers and a list of instruction objects, moving through the instructions based on
      * the provided instruction index.
-     * @param registers A reference to a vector of Register objects representing the computer's registers.
+     * @param registers A reference to a map representing register names and values of the computer.
      * These registers hold data that the instructions may operate on or modify.
      * @param instructions A reference to a vector of pointers to Instruction objects.
      * These represent the sequence of instructions to be executed.
@@ -36,7 +36,7 @@ public:
      * executed within the instructions vector. This index will be updated to point to the next instruction to
      * execute after this function call.
      */
-    void Execute(vector<Register>& registers, vector<Instruction*>& instructions, int& instructionIndex) override;
+    void Execute(std::map<string, float>& registers, vector<Instruction*>& instructions, int& instructionIndex) override;
 };
 
 #endif //NAGYHAZI_READINSTRUCTION_H

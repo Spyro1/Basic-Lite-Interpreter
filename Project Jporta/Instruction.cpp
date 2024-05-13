@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
     return os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") << inst.getExpression();
 }
 
-string Instruction::ProcessExpression(string &argument, vector<Register> &registers) {
+string Instruction::ProcessExpression(string &argument, std::map<string, float>& registers) {
     using namespace std;
     // = Declare testing values =
     string evaluated; // Result string
@@ -65,16 +65,18 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         string regName = argument.substr(0, assignValueSignIndex); // Get register name
         string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
 
-        size_t regIndex = FindRegisterIndex(registers, regName); // Get index
+//        size_t regIndex = FindRegisterIndex(registers, regName); // Get index
         string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers); // Process right value
         auto newValue = std::stof(evaluatedValueToAssign); // Convert to float
-        if (Exists(regIndex)) {
-            // Assign value to existing register
-            registers[regIndex].SetValue(newValue);
-        } else {
-            // Create new register and initialize it
-            registers.emplace_back(regName, newValue);
-        }
+        registers[regName] = newValue; // Assign value to register
+//        if (Exists(regIndex)) {
+//            // Assign value to existing register
+//            registers.find(regName) != registers.end()
+//            registers[regIndex].SetValue(newValue);
+//        } else {
+//            // Create new register and initialize it
+//            registers.emplace_back(regName, newValue);
+//        }
         return evaluatedValueToAssign;
     }
     #pragma endregion
@@ -227,11 +229,8 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
 
     #pragma region == 4. level: Register Value ==
     // Test if register name exists. if yes, then return value
-    size_t regIndex = FindRegisterIndex(registers, argument);
-    if (Exists(regIndex)) {
-        // Return value from existing register
-        evaluated = std::to_string(registers[regIndex].getValue());
-        return evaluated;
+    if (registers.find(argument) != registers.end()) {
+        return std::to_string(registers[argument]);
     }
     #pragma endregion
 
@@ -274,19 +273,19 @@ size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPa
     else
         return closePos; // Pair found
 }
-size_t Instruction::FindRegisterIndex(const std::vector<Register>& registers, const string& name) {
-    // Iterate through the vector array
-    auto it = std::find_if(registers.begin(), registers.end(), [&name](const Register& reg) {
-        return reg.getName() == name;
-    });
-
-    if (it != registers.end()) {
-        return std::distance(registers.begin(), it); // Return the index of register in array if found
-    } else {
-        return std::string::npos; // Return -1 to indicate register name is not found
-    }
-}
-void Instruction::SplitAndProcessArguments(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
+//size_t Instruction::FindRegisterIndex(const std::std::map<string, float>& registers, const string& name) {
+//    // Iterate through the vector array
+//    auto it = std::find_if(registers.begin(), registers.end(), [&name](const Register& reg) {
+//        return reg.getName() == name;
+//    });
+//
+//    if (it != registers.end()) {
+//        return std::distance(registers.begin(), it); // Return the index of register in array if found
+//    } else {
+//        return std::string::npos; // Return -1 to indicate register name is not found
+//    }
+//}
+void Instruction::SplitAndProcessArguments(const string &inputArg, std::map<string, float>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
     string leftSide = inputArg.substr(0, operatorIndex);
     string rightSide = inputArg.substr(operatorIndex + operatorChars, inputArg.length() - operatorIndex);
     if (leftSide.empty()) leftSide = "0";

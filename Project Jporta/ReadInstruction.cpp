@@ -7,12 +7,10 @@
 
 ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Read) {}
 
-void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> &instructions, int &instructionIndex) {
+void ReadInstruction::Execute(std::map<string, float>& registers, vector<Instruction*> &instructions, int &instructionIndex) {
     float newValue;
     string readValue;
-    size_t regIndex = FindRegisterIndex(registers, expression);
     std::getline(std::cin, readValue);
-//    std::cin >> readValue;
 
     // Error handling if not empty string
     if (readValue.empty()){
@@ -23,11 +21,7 @@ void ReadInstruction::Execute(vector<Register> &registers, vector<Instruction*> 
     else
         throw UniqueError("Invalid input were given!"); // Can not convert, throw error
     // Assign inputted value to register
-    if (Exists(regIndex))
-        registers[regIndex].SetValue(newValue); // Assign value to existing register
-    else
-        registers.emplace_back(expression, newValue); // Create new register and initialize it
-
+    registers[expression] = newValue;
     // Skip instruction if empty
     instructionIndex++;
 }
