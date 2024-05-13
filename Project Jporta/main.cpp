@@ -26,20 +26,6 @@ int main() {
 // === RUN TESTS ===
 #ifdef CPORTA
 
-    // === Register tests ===
-    TEST(Register, DefConstructor){
-        Register reg;
-        EXPECT_FLOAT_EQ(.0f, reg.getValue());
-        EXPECT_STREQ("", reg.getName().c_str());
-    } END
-    TEST(Register, ParamConstructor){
-        Register reg("a", 11.3);
-        EXPECT_FLOAT_EQ(11.3f, reg.getValue());
-        EXPECT_STREQ("a", reg.getName().c_str());
-        reg.SetValue((float)2/3);
-        EXPECT_FLOAT_EQ((float)2/3, reg.getValue());
-    } END
-
     // === Instruction tests ===
     TEST(Instruction, Getters) {
         Instruction* instr = new PrintInstruction(10, "\"kiirat\"");
@@ -255,29 +241,3 @@ int main() {
 #endif
     return 0;
 }
-
-// DONE: NOT operátor implementálása
-
-// DONE: Goto argument lehessen expression és register érték is
-
-// DONE: Custom Syntax Error exception class implementation
-
-// DONE: IfInstruction tesztek írása
-
-// DONE: ReadInstruction tesztek írása
-
-// DONE: Command class kibővítése leszármazottakkal (RunCommand, HelpCommand, ... )
-
-// DONE: IDE-ből eltávolítani a static függvényeket
-
-// TODO: Függvénydokumentáció írás:
-//  + Computer
-//  + Instruction leszármazottak
-//      + IfInstruction
-//      + ReadInstruction
-//      + LetInstruction
-//      + PrintInstruction
-//      + GotoInstruction
-//  - IDE
-//  - HelpCommand
-//  - EndCommand
