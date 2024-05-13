@@ -114,15 +114,6 @@ protected:
     string RemoveWhiteSpace(const string& str);
 
     /**
-     * @brief Finds the index of a register in a vector of registers by name.
-     *
-     * @param registers The vector of registers to search in.
-     * @param name The name of the register to find.
-     * @return The index of the register if found, otherwise returns nopos.
-     */
-//    static size_t FindRegisterIndex(const std::map<string, float>& registers, const string &name);
-
-    /**
      * Checks if a value exists (not equal to std::string::npos).
      * @param value The value to check for existence.
      * @return true if the value exists, false otherwise.

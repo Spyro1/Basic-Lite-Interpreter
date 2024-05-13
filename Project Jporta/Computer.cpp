@@ -45,6 +45,19 @@ void Computer::ReadProgramFromFile(const string& filename) {
     SortInstructions();
 }
 
+void Computer::SaveProgramToFile(const string &filename) {
+    std::fstream fileWriter;
+    fileWriter.open(filename, std::ios::out);
+    if (fileWriter.is_open()){
+        fileWriter << *this << std::endl;
+        fileWriter.close();
+    }
+    else{
+        fileWriter.close();
+        throw UniqueError("Can not save to file");
+    }
+}
+
 void Computer::NewInstruction(const string& programLine) {
     instructionIndex = 0; // Set instruction index to the beginning
     ProcessProgramLine(programLine); // Processing the new instruction
@@ -132,7 +145,7 @@ void Computer::ClearInstructions() {
 }
 
 void Computer::SortInstructions() {
-    std::sort(instructions.begin(), instructions.end(), CompareInstructions);
+    std::sort(instructions.begin(), instructions.end(), [](Instruction* a, Instruction* b){ return a->getLineNumber() < b->getLineNumber();});
 }
 
 void Computer::RemoveInstruction(int lineNumber){
@@ -146,11 +159,10 @@ void Computer::RemoveInstruction(int lineNumber){
     }
 }
 
-bool Computer::CompareInstructions(const Instruction* a, const Instruction* b) {
-    return a->getLineNumber() < b->getLineNumber();
-}
 
 // == Destructor ==
 Computer::~Computer() {
     ClearInstructions();
 }
+
+

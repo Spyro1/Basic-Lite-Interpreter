@@ -345,12 +345,13 @@ soronként, a regisztereket (`Register`) ([Bővebben a regiszterekről]()), és 
 ```mermaid
 classDiagram
   class Computer {
-    - registers: vector~Register~
+    - registers: map~string, float~
     - instructions: vector~Instruction*~
     - instructionIndex: int
     + Computer()
     + getInstructionCount() int
     + ReadProgramFromFile(filename: string) void
+    + SaveProgramToFile(filename: string) void
     + NewInstruction(programLine: string) void
     + RunProgram() void
     + ClearProgram() void
@@ -359,39 +360,31 @@ classDiagram
     - ClearInstructions() void
     - SortInstructions() void
     - RemoveInstruction() void
-    - CompareInstructions(a: Instruction, b: Instruction) bool$
-    - SplitLineToTokens(inputLine: string,...) void$
+    - SplitLineToTokens(inputLine: string,...) void
   %%        - SplitLineToTokens(inputLine: string, lineNumber: int, command: string, expression: string) void$
   }    
 ```
 
 Regiszter tároló: `registers`
-: Az értelmező futása során használt regiszterek értékeit
+: Az értelmező futása során használt regiszterek értékeit egy `map<string, float>`-ben tárolja. Ezáltal könnyen elérhetőek
+a regiszeterek értékei a nevük alapján.
 
 Program kódsor tároló: `instructions`
-: 
+: Az értelmező a programutasításokat soronként egy vektorban tárolja, amit a végrehajtáskor egymás után hajt végre. 
 
 Utasítás mutató: `instructionIndex`
-: 
+: Az értelmező futása során az aktuálisan futtandó kódsort az `instructionIndex` határozza meg, és ennek az átállításával lehetséges ugrás a kódban is. 
 
+Fájlkezelés: `SaveProgramToFile` és `ReadProgramFromFile`
+: Az értelmező az interfészből kiadott paranccsal el tudja menteni fájlba és visszaolvasni fájlból a programutasításokat. 
+Ezeket egyszerűen úgy valósítja meg, hogy soronként egy utasítást ír/olvas fájlba/fájlból, úgy ahogy értelmezné is az uitasítást. 
 
-### Fájlkezelés
+Utasíáts hozzáadása/törlése: `NewInstruction`
+: Ezene eljárás meghívásakor a stringként kapott kódsort kiértkeli az értelmező, és hozzáadja a programhoz, illetve törlhet a programbór egy utasíts amennyiben a sorszám negatív.
 
-## Regiszterek: Register
+Értelmező futtatása: `RunProgram`
+: Értelemszerűen ez az eljárás indítja el az értelmezésést a programutasításokank. Bármely értelmezési hiba esetén hibát dob.
 
-Az értelmező dinamikusan létrehoz regisztereket (más néven változókat), ha az értékadás bal oldalán új regiszter név szerepel.  
-Ezeket a program `Register` osztályban tárolja. 
-```mermaid
-classDiagram
-    class Register{
-        - name: string
-        - value: float
-        + Register(name: string, value: int)
-        + getName() string
-        + getValue() int
-        + setValue(newValue: float) void
-    }
-```
 
 ## Tesztelés
 
@@ -410,9 +403,7 @@ classDiagram
   Computer --> UniqueError : throws
   Computer --> SyntaxError : throws
 
-  Computer "1" *-- "1..*" Register : contains
   Computer "1" *-- "0..*" Instruction : contains
-  Register <-- Instruction : uses
 
   Instruction "1" *-- "1" InstructionType : defines
   Instruction <|-- LetInstruction
@@ -444,7 +435,7 @@ classDiagram
         - ReadInput(line: string, commandStr: string, argumentStr: string) void
     }
     class Computer {
-        - registers: vector~Register~
+        - registers: map~string, float~
         - instructions: vector~Instruction*~
         - instructionIndex: int
         + Computer()
@@ -458,19 +449,10 @@ classDiagram
         - ClearInstructions() void
         - SortInstructions() void
         - RemoveInstruction() void
-        - CompareInstructions(a: Instruction, b: Instruction) bool$
-        - SplitLineToTokens(inputLine: string,...) void$
-%%        - SplitLineToTokens(inputLine: string, lineNumber: int, command: string, expression: string) void$
-    }    
-    class Register{
-        - name: string
-        - value: float
-        + Register(name: string, value: int)
-        + getName() string
-        + getValue() int
-        + setValue(newValue: float) void
+        - SplitLineToTokens(inputLine: string,...) void
+      %%        - SplitLineToTokens(inputLine: string, lineNumber: int, command: string, expression: string) void$
     }
-    class InstructionType { 
+  class InstructionType { 
         <<enumeration>>
         NoType, Print, Let, If, Goto, Read 
     }
@@ -484,36 +466,35 @@ classDiagram
         + getInstructionTypeStr() string
         + getInstructionType() InstructionType
         + getExpression() string
-        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void = 0*
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void = 0*
         + isNumber(str: string) bool$
-        # ProcessExpression(argument: string, registers: vector~Register~) string
+        # ProcessExpression(argument: string, registers: map~string, float~) string
         # RemoveWhiteSpace(str: string) string
-        # FindRegisterIndex(registers: vector~Register~, name: string) int$
         # Exists(value: int) bool
         - ReplaceCharacters(inputStr: string, searched: string, replace: string) void
-        - SplitAndProcessArguments(inputArg: string, registers: vector~Register~, ...) void
+        - SplitAndProcessArguments(inputArg: string, registers: map~string, float~, ...) void
 %%        - SplitAndProcessArguments(inputArg: string, registers: vector~Register~, operatorIndex: int, evaluatedArg1: float, evaluatedArg2: float, operatorChars: int) void
         - FindBracketPairIndex(str: string, openPos: int, openPair: char, ClosePair: char) int
     }
     class LetInstruction{
         + LetInstruction(lineNumber: int, expression: string)
-        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class PrintInstruction{
         + PrintInstruction(lineNumber: int, expression: string)
-        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class GotoInstruction{
         + GotoInstruction(lineNumber: int, expression: string)
-        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class IfInstruction{
         + IfInstruction(lineNumber: int, expression: string)
-        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     class ReadInstruction{
         + ReadInstruction(lineNumber: int, expression: string)
-        + Execute(registers: vector~Register~, instructions: vector~Instruction~, instructionIndex: int) void
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
     }
     
     class Command{
@@ -561,6 +542,7 @@ classDiagram
         + SyntaxError(messsage: string, lineNumber: int)
     }    
 
+
 %%    UniqueError <-- IDE : catches
     
 %%    IDE "1" *-- "1" Computer : contains    
@@ -578,9 +560,9 @@ classDiagram
     
 %%    SyntaxError --|> UniqueError
    
-    Computer "1" *-- "1..*" Register : contains
+%%    Computer "1" *-- "1..*" Register : contains
     Computer "1" *-- "0..*" Instruction : contains
-    Register <-- Instruction : uses
+%%    Register <-- Instruction : uses
 
     Instruction "1" *-- "1" InstructionType : defines
     Instruction <|-- LetInstruction
@@ -634,8 +616,6 @@ classDiagram
 <!-- BEGIN DOC-COMMENT ../Project Jporta/SaveCommand.h -->
 <!-- END DOC-COMMENT --> 
 
-<!-- BEGIN DOC-COMMENT ../Project Jporta/Register.h -->
-<!-- END DOC-COMMENT --> 
 
 <!-- BEGIN DOC-COMMENT ../Project Jporta/Instruction.h -->
 <!-- END DOC-COMMENT --> 

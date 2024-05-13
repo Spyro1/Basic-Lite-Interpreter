@@ -29,6 +29,13 @@ public:
      * Creates a computer object that can run a BASIC-lite program.
      */
     Computer();
+
+    // == Destructor ==
+    /**
+     * Destroys the computer object.
+     */
+    ~Computer();
+
     // == Getters ==
     /**
      * Gives the number of instructions in the program
@@ -38,10 +45,15 @@ public:
 
     // == Functions ==
     /**
-     * Reads the program from the given file into the 'instructions' list.
+     * Reads the program from the given file into the 'instructions' vector.
      * @param filename The name of the file that contains the program.
      */
     void ReadProgramFromFile(const string& filename);
+    /**
+     * Saves the program from the 'instructions' vector into a file.
+     * @param filename The name of the file to save the program into.
+     */
+    void SaveProgramToFile(const string& filename);
     /**
      * Evaluates the read character string line.
      * If the line number is positive, then the computer adds it to the instruction list,
@@ -64,16 +76,12 @@ public:
      * @return Returns a string containing all the instructions displayed line by line.
      */
     friend std::ostream& operator<<(std::ostream& os, const Computer& pc);
-
-    // == Destructor ==
-    ~Computer();
     /**
      * Converts the string to upper case letters
      * @param str Input string
      * @return Upper case lettered string
      */
     static string ToUpperCaseStr(const string &str);
-
 private:
 
     // == Private functions==
@@ -90,7 +98,7 @@ private:
      * @param command Reference to a string to store the command token.
      * @param expression Reference to a string to store the expression token.
      */
-    static void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
+    void SplitLineToTokens(const string& inputLine, int& lineNumber, string& command, string& expression);
     /**
      * Clears all instructions stored in the computer's memory.
      */
@@ -104,13 +112,7 @@ private:
      * @param lineNumber The line number of the instruction to remove.
      */
     void RemoveInstruction(int lineNumber);
-    /**
-     * Compares two instruction pointers for sorting purposes.
-     * @param a Pointer to the first instruction.
-     * @param b Pointer to the second instruction.
-     * @return True if instruction 'a' should precede instruction 'b' in sorting, false otherwise.
-     */
-    static bool CompareInstructions(const Instruction *a, const Instruction *b);
+
 };
 
 
