@@ -164,6 +164,7 @@ Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról](#interfés
 `IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottaiból egy-egy példányt. ([Bővebben a Command leszármazottairól](#specifikus-parancsok-command-leszármazottai)) 
 
 #### IDE és Command kapcsolata - UML osztálydiagram
+
 ```mermaid
 classDiagram
     direction LR
@@ -340,7 +341,7 @@ Az osztály `operator()` operátorának meghívásakor a paraméterként kapott 
 ## Az értelmező: Computer
 
 A BASIC-lite programot értelmező fő osztály a `Computer`. Ez tárolja a program utasításokat (`Instruction`) ([Bővebben az utasításokról]())
-soronként, a regisztereket (`Register`) ([Bővebben a regiszterekről]()), és ez futtatja a memóriájában tárolt programot, illetve beolvassa fájlból vagy kiírja fájlba a memóriába töltött programot.
+soronként, a regisztereket, és ez futtatja a memóriájában tárolt programot, illetve beolvassa fájlból vagy kiírja fájlba a memóriába töltött programot.
 
 ```mermaid
 classDiagram
@@ -384,6 +385,139 @@ Utasíáts hozzáadása/törlése: `NewInstruction`
 
 Értelmező futtatása: `RunProgram`
 : Értelemszerűen ez az eljárás indítja el az értelmezésést a programutasításokank. Bármely értelmezési hiba esetén hibát dob.
+
+Beadott utasítás kiértékelése: `ProcessProgramLine`
+: Ez az eljátás a kapott utasítás string sort kiértékeli. Tokenekre bontja, majd az utasítássorozathoz hozzáadja a bemenetnek megfelelő típusú utasítást.
+
+A többi eljárás / függvény nevéből adódóan egyértelmű a működése, illetve nincs jelentős szerepe, csak segédfüggvény.
+
+## Program utasítás: Instruction
+
+A program az egyes kódsorokat az `Instruction` absztrakt osztályból származtatott alosztályokban tárolja.
+
+```mermaid
+classDiagram
+    direction TB
+    class Instruction {
+        <<abstract>>
+        - lineNumber: int
+        - expression: string
+        - instrTy: InstructionType
+        + Instruction(lineNumber: int, expression: string)
+        + getLineNumber() int
+        + getInstructionTypeStr() string
+        + getInstructionType() InstructionType
+        + getExpression() string
+        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void*
+        - ProcessExpression(argument: string, registers: Register[]) string
+    }
+    Instruction <|-- LetInstruction
+    Instruction <|-- PrintInstruction
+    Instruction <|-- IfInstruction
+    Instruction <|-- GotoInstruction
+    Instruction <|-- ReadInstruction
+```
+
+Sorszám: `lineNumber`
+: Egy program kódsor sorszám egy 0-nál nagyobb pozitív egész szám mindig.
+
+Utasítás típus: `instrTy`
+: Az utasítás specifikus típusa. Ezt egy enumerátorként tárolja el az osztály, hogy a kiiratásnál sztringgé alakítható legyen az utasítás neve, és könnyen lekérdezhető legyen.
+
+```mermaid
+classDiagram
+   class InstructionType {
+      <<enumeration>>
+      NoType, Print, Let, If, Goto, Read
+   }
+```
+
+Paraméter: `expression`
+: Az utasítás fő argumentuma. Ezt értékeli ki az értelmező a parancs végrehajtása során.
+
+
+Értelmezés: `Execute(...)`
+: Az egyes utasítások egyedi értelmezését az `Execute(...)` tisztán virtuális függvény kezeli, amely abszrtaktá teszi az `Instruction` osztályt. 
+
+Kiértékelés: `ProcessExpression(...)`
+: A kifejezések (pl: `a = 4*(b-c)`) kiértékelésért a `ProcessExpression(...)` függvény felel, ami a kapott bemeneti sztringet
+tokenekre bontja, kiértékeli, visszahelyettesíti a kiértékelt rész-kifejezésket az értékeire egész addig, míg egy értelmes
+szám nem marad, vagy hiba nem keletkezik. Ez végzi el a műveleteket és az értékadást, illetve, ha színtaktikai hibát talál,
+akkor kivételt dob a hiba leírásával. Így tehát ez gyakorlatilag a legfontosabb függvény az értelmezés során.
+<p>**A kifejezés kiértékelése:** <p/>
+Mivel a matematikai műveleti sorrendben a műveleteket balról jobbra, és nagyobb prioritásútól a kisebbek felé haladva oldja 
+meg az ember, ezért a program ennek a fordítottját kell alkalamzz.
+Hiszen a program csak azt tudja megmondani, hogy van egy operátor a sztringebn, és mi jön utána vagy mi van előtte,
+így a két részre bontásnál fontos, hogy a kisebb priorítású oprendusok feldolgozását vegyük előre,
+amik aztán meghívják a jobb és baloldali tagukra szintén ezt a függvényt, a kifejezés kiértékelésére. Így valósítja meg tehát az
+értelmező a műveletek felbontását kisebb műveletekre és azok kiértékelését. Az alábbi táblázat a prioritásokat, ahogy feldolgozásra kerülnek (4. oszlop):
+
+| Matematikai</br>Prioritás |        Operátor        | Magyarázat                | Kiertékelési</br>sorrend |
+|:-------------------------:|:----------------------:|---------------------------|:------------------------:|
+|            1.             |        `(`,`)`         | Zárójelezés               |            2.            |
+|            2.             |        `!`, `-`        | Egytagú operátorok        |            9.            |
+|            3.             |        `*`, `/`        | Szorzás, osztás           |            8.            |
+|            4.             |        `+`, `-`        | Összeadás, kivonás        |            7.            |
+|            5.             |  `<`, `<=`, `>`, `>=`  | Összehasonlítók           |            6.            |
+|            6.             |       `==`, `!=`       | Ekvivalencia operátorok   |            5.            |
+|            7.             |          `&&`          | Logikai ÉS                |            4.            |
+|            8.             |         `\|\|`         | Logikai VAGY              |            3.            |
+|            9.             |          `=`           | Értékadás (jobbról balra) |            1.            |
+
+## Specifikus utasítások
+
+### Értékadás: LetInstruction
+
+**Megvalósított parancs**: 
+
+`let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`,`%`)
+
+**Működése**:
+
+Mivel a regisztereknek az értékadásáért az `Instruction::ProcessExpression(...)` függvény felelős, ezért az értelmező
+ezen osztály `Execute(...)` függvényének meghívásakor a konstruktorában kapott kifejezését (`expression`) kiértékeli az említett függvény segítségével.
+
+### Kiiratás: PrintInstruction
+
+**Megvalósított parancs**:
+
+`print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
+
+**Működése**:
+
+Az értelmező ezen osztály `Execute(...)` függvényének hívásakor megnézi, hogy a konstruktorában kapott kifejezés tartalmaz-e
+sztring literált, vagyis idézőjelek között lévő szöveget. Amennyiben igen, úgy azt kiírja a standard kimenetre. Ha nem tartalmaz,
+akkor a kifejezésre ráhívja a `Instruction::ProcessExpression(...)` függvényt, és kiértékeli azzal, majd a visszakapott értéket
+írja ki a standard kimenetre.
+
+### Feltételes utasítás: IfInstruciton
+
+**Megvalósított parancs**:
+
+`if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
+
+**Működése**:
+
+Az értelmező ezen osztály `Execute(...)` függvényének hívásakor a konstruktorában kapott kifejezésre ráhívja a 
+`Instruction::ProcessExpression(...)` függvényt, és kiértékeli azzal a kapott feltételt. A visszakapott érték (`0` vagy `1`) 
+alapján ha `1`, azaz `Igaz` lett a feltétel, akkor a rákövetkező sort végrehajtaja, majd két sort ugrik az utasítás mutató. 
+Amennyiben `0` vagyis `Hamis` lett a feltétel, akkor két sort ugrik, és a különben ágat hajtja végre az értelmező, majd egyel léptetve
+az utasítás mutatát megy a következő utasításra, és visszaadja a kezelést az értelmezőnek.
+
+### Ugrás: GotoInstruction
+
+**Megvalósított parancs**:
+
+`goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
+
+**Működése**:
+
+
+### Beolvasás: ReadInstrucion
+
+**Megvalósított parancs**:
+
+`read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
 
 
 ## Tesztelés
