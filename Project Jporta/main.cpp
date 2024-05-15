@@ -38,7 +38,7 @@ int main() {
 
     // === Instruction types tests ===
     vector<Instruction*> instructions; // Instruction list
-    vector<Register> registers; // Register list
+    map<string, float> registers; // Register list
     int index; // Index of the instruction
 
     TEST (PrintInstruction, Correct){
@@ -73,12 +73,12 @@ int main() {
         // Set value with all existing operations
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-1)/2 % 4")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
-        EXPECT_EQ(2.f, registers[0].getValue());
+        EXPECT_EQ(2.f, registers["a"]);
         // Chained assigning
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = b = 1")));
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
-        EXPECT_EQ(1.f, registers[0].getValue());
-        EXPECT_EQ(1.f, registers[1].getValue());
+        EXPECT_EQ(1.f, registers["a"]);
+        EXPECT_EQ(1.f, registers["b"]);
         delete instructions[0];
         delete instructions[1];
         instructions.clear(); // Clear array
@@ -120,7 +120,7 @@ int main() {
             streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
             cin.rdbuf(cin_buf); // Reset cin buffer
-        EXPECT_EQ(3.f, registers[0].getValue());
+        EXPECT_EQ(3.f, registers["a"]);
         delete instructions[0];
         instructions.pop_back();
     } END
@@ -157,6 +157,27 @@ int main() {
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
         delete instructions[0];
         instructions.clear();
+    } END
+
+    // === UniqueError tests ===
+
+    TEST(UniqueError, Constructor){
+        UniqueError ue = UniqueError("Problem1");
+        EXPECT_STREQ("[Error]: Problem1", ue.what());
+    } END
+
+    TEST(UniqueError, LineNumber){
+        UniqueError ue = UniqueError("Problem2", 10);
+        EXPECT_STREQ("[Error]: Problem2 in line: 10", ue.what());
+    } END
+
+    TEST(UniqueError, CostomType){
+        UniqueError ue = UniqueError("Problem3", 20, "Jporta");
+        EXPECT_STREQ("[Jporta]: Problem3 in line: 20", ue.what());
+    } END
+    TEST(SyntaxError, Constructor){
+        SyntaxError se = SyntaxError("Syntax problem");
+        EXPECT_STREQ("[Syntax error]: Syntax problem", se.what());
     } END
 
     // === Computer tests ===

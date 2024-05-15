@@ -4,17 +4,19 @@
 
 ## Tartalom
 
-- [Osztályok interfészei](#osztályok-interfészei)
-  - [Interfész: `IDE`](#interfész-ide)
-  - [Interfész parancsok: `Command`](#interfész-parancsok-command)
-    - [Interfész parancstípusok: `HelpCommand`, `RunCommand`, `EndCommand`, `ListCommand`, `NewCommand`, `LoadCommand`, `SaveCommand`](#interfész-parancstípusok-helpcommand-runcommand-endcommand-listcommand-newcommand-loadcommand-savecommand)
-  - [Regiszterek: `Register`](#regiszterek-register)
-  - [Program utasítás: `Instruction`](#program-utasítás-instruction)
-    - [Utasítás altípusok: `PrintInstruction`, `LetInstruction`, `GotoInstruction`, `IfInstruction`, `ReadInstruction`](#utasítás-altípusok-printinstruction-letinstruction-gotoinstruction-ifinstruction-readinstruction)
-  - [Program értelmező: `Computer`](#program-értelmező-computer)
-  - [Kivétel: `UniqueError`](#kivétel-uniqueerror)
-    - [Kivétel altípusok: `SyntaxError`, `CompileError`](#kivétel-altípusok-syntaxerror-compileerror)
-- [UML osztálydiagram](#uml-osztálydiagram)
+- [BASIC-lite interpreter - Skeleton](#basic-lite-interpreter---skeleton)
+  - [Tartalom](#tartalom)
+  - [Osztályok interfészei](#osztályok-interfészei)
+    - [Interfész: `IDE`](#interfész-ide)
+    - [Interfész parancsok: `Command`](#interfész-parancsok-command)
+      - [Interfész parancstípusok: `HelpCommand`, `RunCommand`, `EndCommand`, `ListCommand`, `NewCommand`, `LoadCommand`, `SaveCommand`](#interfész-parancstípusok-helpcommand-runcommand-endcommand-listcommand-newcommand-loadcommand-savecommand)
+    - [Regiszterek: `Register`](#regiszterek-register)
+    - [Program utasítás: `Instruction`](#program-utasítás-instruction)
+      - [Utasítás altípusok: `PrintInstruction`, `LetInstruction`, `GotoInstruction`, `IfInstruction`, `ReadInstruction`](#utasítás-altípusok-printinstruction-letinstruction-gotoinstruction-ifinstruction-readinstruction)
+    - [Program értelmező: `Computer`](#program-értelmező-computer)
+    - [Kivétel: `UniqueError`](#kivétel-uniqueerror)
+      - [Kivétel altípusok: `SyntaxError`, `CompileError`](#kivétel-altípusok-syntaxerror-compileerror)
+  - [UML osztálydiagram](#uml-osztálydiagram)
 
 ## Osztályok interfészei
 
