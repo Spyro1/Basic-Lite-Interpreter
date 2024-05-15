@@ -1,9 +1,0 @@
-10 let a=2
-20 let i=5
-25 print "Elso 5 paros szam: "
-30 print a
-35 print " "
-40 let a=a+2
-50 let i=i-1
-60 if i
-70 goto 30

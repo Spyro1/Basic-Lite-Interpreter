@@ -3,8 +3,8 @@
 //
 #include <string>
 #include <algorithm>
-#include "../../memtrace.h"
-#include "../../include/compiler/Instruction.h"
+#include "Instruction.h"
+#include "memtrace.h"
 
 Instruction::Instruction(int lineNumber_, const string &expression_, InstructionType instructionType) : lineNumber(lineNumber_), expression(expression_), instrTy(instructionType) {}
 
@@ -32,11 +32,17 @@ std::ostream& operator<<(std::ostream &os, const Instruction& inst) {
     return os << std::to_string(inst.getLineNumber()) << std::string(" ") << inst.getInstructionTypeStr() << string(" ") << inst.getExpression();
 }
 
-string Instruction::ProcessExpression(string &argument, vector<Register> &registers) {
+string Instruction::ProcessExpression(string &argument, std::map<string, float>& registers) {
     using namespace std;
     // = Declare testing values =
     string evaluated; // Result string
     float leftValue, rightValue; // Evaluated left or right side of operation
+    // region == 0. level: Simplify +- ==
+    ReplaceCharacters(argument, "--", "+");
+    ReplaceCharacters(argument, "+-", "-");
+    ReplaceCharacters(argument, "-+", "-");
+    // endregion
+
     // = Find operator indexes =
     size_t assignValueSignIndex = argument.find('='),
            orIndex = argument.rfind("||"),
@@ -54,32 +60,19 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
            firstOpeningBracket = argument.find('('),
            firstClosingBracket = argument.rfind(')');
 
-    #pragma region == 0. level: Simplify +- ==
-    ReplaceCharacters(argument, "--", "+");
-    ReplaceCharacters(argument, "+-", "-");
-    ReplaceCharacters(argument, "-+", "-");
-    #pragma endregion
 
-    #pragma region == 1. level: Assignment operator ==
+    // region == 1. level: Assignment operator ==
     if (Exists(assignValueSignIndex) && assignValueSignIndex != equalsIndex && assignValueSignIndex-1 != notEqualsIndex && assignValueSignIndex-1 != biggerIndex && assignValueSignIndex-1 != smallerIndex){
         string regName = argument.substr(0, assignValueSignIndex); // Get register name
         string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
-
-        size_t regIndex = FindRegisterIndex(registers, regName); // Get index
         string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers); // Process right value
         auto newValue = std::stof(evaluatedValueToAssign); // Convert to float
-        if (Exists(regIndex)) {
-            // Assign value to existing register
-            registers[regIndex].SetValue(newValue);
-        } else {
-            // Create new register and initialize it
-            registers.emplace_back(regName, newValue);
-        }
+        registers[regName] = newValue; // Assign value to register
         return evaluatedValueToAssign;
     }
-    #pragma endregion
+    // endregion
 
-    #pragma region == 2. level: Brackets ==
+    // region == 2. level: Brackets ==
 
     if (Exists(firstOpeningBracket) && Exists(firstClosingBracket)) {
         size_t closeBracketPair = FindBracketPairIndex(argument, firstOpeningBracket);
@@ -100,9 +93,9 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
     else if (Exists(firstOpeningBracket) || Exists(firstClosingBracket)){
         throw SyntaxError("Missing brackets", lineNumber);
     }
-    #pragma endregion
+    // endregion
 
-    #pragma region == 3/a. level: Boolean ==
+    // region == 3/a. level: Boolean ==
 
     // == 2/1/1 : OR ==
     if (Exists(orIndex)){
@@ -173,9 +166,9 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         evaluated = rightValue == 0 ? '1' : '0';
         return evaluated;
     }
-    #pragma endregion
+    // endregion
 
-    #pragma region == 3/b. level: Integer ==
+    // region == 3/b. level: Integer ==
 
     // == 2/1/1 : PLUS / MINUS ==
     if (Exists(plusIndex) || Exists(minusIndex)) {
@@ -223,17 +216,14 @@ string Instruction::ProcessExpression(string &argument, vector<Register> &regist
         }
         return evaluated;
     }
-    #pragma endregion
+    // endregion
 
-    #pragma region == 4. level: Register Value ==
+    // region == 4. level: Register Value ==
     // Test if register name exists. if yes, then return value
-    size_t regIndex = FindRegisterIndex(registers, argument);
-    if (Exists(regIndex)) {
-        // Return value from existing register
-        evaluated = std::to_string(registers[regIndex].getValue());
-        return evaluated;
+    if (registers.find(argument) != registers.end()) {
+        return std::to_string(registers[argument]);
     }
-    #pragma endregion
+    // endregion
 
     // Test if argument is still a register name that is not defined, throw error
     if (!isNumber(argument)){
@@ -274,19 +264,8 @@ size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPa
     else
         return closePos; // Pair found
 }
-size_t Instruction::FindRegisterIndex(const std::vector<Register>& registers, const string& name) {
-    // Iterate through the vector array
-    auto it = std::find_if(registers.begin(), registers.end(), [&name](const Register& reg) {
-        return reg.getName() == name;
-    });
 
-    if (it != registers.end()) {
-        return std::distance(registers.begin(), it); // Return the index of register in array if found
-    } else {
-        return std::string::npos; // Return -1 to indicate register name is not found
-    }
-}
-void Instruction::SplitAndProcessArguments(const string &inputArg, vector<Register>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
+void Instruction::SplitAndProcessArguments(const string &inputArg, std::map<string, float>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
     string leftSide = inputArg.substr(0, operatorIndex);
     string rightSide = inputArg.substr(operatorIndex + operatorChars, inputArg.length() - operatorIndex);
     if (leftSide.empty()) leftSide = "0";
@@ -309,8 +288,3 @@ bool Instruction::isNumber(const std::string& str) {
     }
     return i == str.length() && hasDigits;
 }
-
-
-
-
-

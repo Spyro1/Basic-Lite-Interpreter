@@ -1,7 +1,0 @@
-10 print "test"
-20 read reg
-30 print reg
-40 let reg = reg - 1
-50 if reg <= 0
-60 print " vege"
-70 goto 30

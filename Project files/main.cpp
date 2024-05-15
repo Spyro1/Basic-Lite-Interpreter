@@ -57,6 +57,9 @@ int main() {
         EXPECT_EQ(10, instr->getLineNumber());
         EXPECT_EQ(InstructionType::Print, instr->getInstructionType());
         EXPECT_STREQ(PRINT, instr->getInstructionTypeStr().c_str());
+        std::stringstream ss;
+        ss << *instr;
+        EXPECT_STREQ("10 PRINT \"kiirat\"", ss.str().c_str());
         delete instr;
     } END
 
@@ -69,6 +72,7 @@ int main() {
         index = 0; // Set to first
         // Print string literal
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"output success\"")));
+        EXPECT_STREQ(PRINT, instructions[0]->getInstructionTypeStr().c_str());
             stringbuf test_output(ios_base::out);
             streambuf * const cout_buf = cout.rdbuf(&test_output);
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
@@ -83,7 +87,7 @@ int main() {
         // [Syntax error]: Wrong string literal in line: #
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "\"wrong")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
-
+        index = 1;
         // [Syntax error]: Can not recognize "argument" as a print argument in line: #
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(10, "something")));
         EXPECT_THROW(instructions[index]->Execute(registers, instructions, index), SyntaxError);
@@ -96,6 +100,7 @@ int main() {
         index = 0;
         // Set value with all existing operations
         EXPECT_NO_THROW(instructions.push_back(new LetInstruction(20, "a = 4*(4-1)/2 % 4")));
+        EXPECT_STREQ(LET, instructions[0]->getInstructionTypeStr().c_str());
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         EXPECT_EQ(2.f, registers["a"]);
         // Chained assigning
@@ -121,6 +126,7 @@ int main() {
     TEST(GotoInstruction, Correct){
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new GotoInstruction(30, "30")));
+        EXPECT_STREQ(GOTO, instructions[0]->getInstructionTypeStr().c_str());
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
         delete instructions[0];
         instructions.pop_back();
@@ -140,6 +146,7 @@ int main() {
     TEST(ReadInstruction, Correct){
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new ReadInstruction(50, "a")));
+        EXPECT_STREQ(READ, instructions[0]->getInstructionTypeStr().c_str());
             stringbuf test_input("3", ios_base::in); // Set cin input stringbuffer
             streambuf * const cin_buf = cin.rdbuf(&test_input); // Save cin buffer
         EXPECT_NO_THROW(instructions[index]->Execute(registers, instructions, index));
@@ -163,6 +170,7 @@ int main() {
     TEST(IfInstruction, Correct){
         index = 0;
         EXPECT_NO_THROW(instructions.push_back(new IfInstruction(10, "a > 1 && a <= 3")));
+        EXPECT_STREQ(IF, instructions[0]->getInstructionTypeStr().c_str());
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(20, "\"true\"")));
         EXPECT_NO_THROW(instructions.push_back(new PrintInstruction(30, "\"false\"")));
             stringbuf test_output(ios_base::out);
@@ -224,7 +232,8 @@ int main() {
     }END
 
     // === Command tests ===
-    TEST(Command, Comparators){
+    TEST(Command, All){
+        bool active = true;
         Command* helpCmd = new HelpCommand(pc);
         Command* runCmd = new RunCommand(pc);
         Command* endCmd = new EndCommand(pc);
@@ -239,6 +248,10 @@ int main() {
         EXPECT_TRUE(*newCmd == NEW_CMD);
         EXPECT_TRUE(*loadCmd == LOAD_CMD);
         EXPECT_TRUE(*saveCmd == SAVE_CMD);
+        EXPECT_NO_THROW((*loadCmd)("factorial.dat", active));
+        EXPECT_NO_THROW((*saveCmd)("factorial.dat", active));
+        EXPECT_NO_THROW((*newCmd)("", active));
+        EXPECT_NO_THROW((*helpCmd)("", active));
         delete helpCmd;
         delete runCmd;
         delete endCmd;
@@ -280,15 +293,8 @@ int main() {
 
 // === RUN PROGRAM INTERFACE ===
 #ifndef CPORTA
-    try{
-        IDE ide;
-        ide.Run();
-    }
-    catch (std::exception& e){
-        cout << "\n[Error]: Undetected error in interface: " << e.what() << endl;
-        string a;
-        getline(cin,a);
-    }
+    IDE ide; // Create IDE
+    ide.Run(); // Run IDE
 #endif
     return 0;
 }

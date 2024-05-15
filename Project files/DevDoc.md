@@ -2,7 +2,7 @@
 
 > Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.05.15. Budapest
 
-[//]: # (<div class="page"></div>)
+[//]: # (<div style="page-break-after: always;"></div>)
 
 ## Tartalom
 
@@ -22,8 +22,8 @@
     - [IDE és Command kapcsolata - osztálydiagram](#ide-és-command-kapcsolata---osztálydiagram)
     - [Használata](#használata)
   - [Interfész parancsok: Command](#interfész-parancsok-command)
-    - [Command és leszármazottjainak kapcsolata - osztálydiagram](#command-és-leszármazottainak-kapcsolata---osztálydiagram)
-    - [Specifikus parancsok: Command leszármazottjai](#specifikus-parancsok-command-leszármazottai)
+    - [Command és leszármazottjainak kapcsolata - osztálydiagram](#command-és-leszármazottjainak-kapcsolata---osztálydiagram)
+    - [Specifikus parancsok: Command leszármazottjai](#specifikus-parancsok-command-leszármazottjai)
       - [Segítség: HelpCommand](#segítség-helpcommand)
       - [Program futtatása: RunCommand](#program-futtatása-runcommand)
       - [Alkalmazás bezárása: EndCommand](#alkalmazás-bezárása-endcommand)
@@ -33,6 +33,7 @@
       - [Program mentése fájlba: SaveCommand](#program-mentése-fájlba-savecommand)
   - [Az értelmező: Computer](#az-értelmező-computer)
   - [Program utasítás: Instruction](#program-utasítás-instruction)
+    - [Kifejezés kiértékelése](#kifejezés-kiértékelése)
     - [Kifejezés feldolgozás pszeudókóddal](#kifejezés-feldolgozás-pszeudókóddal)
   - [Specifikus utasítások](#specifikus-utasítások)
     - [Értékadás: LetInstruction](#értékadás-letinstruction)
@@ -40,7 +41,8 @@
     - [Feltételes utasítás: IfInstruciton](#feltételes-utasítás-ifinstruciton)
     - [Ugrás: GotoInstruction](#ugrás-gotoinstruction)
     - [Beolvasás: ReadInstrucion](#beolvasás-readinstrucion)
-  - [Tesztelés](#tesztelés)
+  - [Hibakezelés - UniqueError és SyntaxError](#hibakezelés---uniqueerror-és-syntaxerror)
+  - [Tesztelés és memóriaszivárgás ellenőrzése](#tesztelés-és-memóriaszivárgás-ellenőrzése)
   - [Egyszerűsített UML osztálydiagram](#egyszerűsített-uml-osztálydiagram)
   - [Teljes UML osztálydiagram](#teljes-uml-osztálydiagram)
   - [Osztály- és függvény dokumentáció](#osztály--és-függvény-dokumentáció)
@@ -50,6 +52,8 @@
 A program egy **BASIC**-szerű programozási nyelv butított, egyszerűsített változatát valósítja meg, továbbiakban **BASIC-lite**-nak nevezve. Biztosít a programkód írásához egy interfészt, alap parancsokat a kód szerkesztéséhez, mentéséhez, beolvasásához és futtatásához.
 
 Az értelmező képes regiszterekben számértékeket eltárolni és azokkal műveleteket végezni, feltételes utasításokat végrehajtani, és ugrani a programkódon belül, kiírni a standard kimenetre, és olvasni a standard bementről.
+
+<div style="page-break-after: always;"></div>
 
 # BASIC-lite interpreter használata - Felhasználói szemmel
 
@@ -77,6 +81,8 @@ Egy sor begépelésekor a sor végén `Enter`-t leütve a program kiértékeli a
 - Ha a program utasítás sorszáma negatív, akkor az annak a sorszámnak vett abszolút értékű utasítást törli az értelmező memóriájából, ha van ilyen.
 
 Az interfész utasítás abban különbözik a program kódsortól, hogy a kódsor első argumentuma egy sorszám, míg az interfészbeli parancsok első argumentuma nem tartalmazhat számot.
+
+<div style="page-break-after: always;"></div>
 
 ### Példaprogram
 
@@ -200,6 +206,8 @@ classDiagram
 Interfész állapot: `active`
 : Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
 
+<div style="page-break-after: always;"></div>
+
 Értelmező: `pc`
 : Az `Computer` osztály egy példánya, ami az értelmezi a BASIC-lite kódot, amit az interfésztől kap. Ebben tárolódnak el az program utasítások.
 
@@ -248,12 +256,15 @@ int main(){
 }
 ```
 
+<div style="page-break-after: always;"></div>
+
 ## Interfész parancsok: Command
 
 Az `IDE`-vel való kommunikáció során a felhasználó különböző parancsokat adhat meg a bemeneten, amik végrehajtásáért a
 `Command`, és a leszármazott osztályai felelősek.
 Minden specifikus parancstípus saját eljárást hajt végre a meghívásakor. Erre a célra szolgál a teljesen virtuális
 `operator()` operátor a `Command` absztrakt osztályból, melyet minden leszármazottnak implementálnia kell.
+
 
 ### Command és leszármazottjainak kapcsolata - osztálydiagram
 ```mermaid
@@ -347,6 +358,7 @@ Az osztály `operator()` operátorának meghívásakor a paraméterként kapott 
 
 Az osztály `operator()` operátorának meghívásakor a paraméterként kapott fájlnéven elmenti az értelmező (`Computer`) memóriájában tárolt program kódsort. Ha sikertelen a fájlba írás, hibát dob.
 
+<div style="page-break-after: always;"></div>
 
 ## Az értelmező: Computer
 
@@ -402,6 +414,8 @@ Beadott utasítás kiértékelése: `ProcessProgramLine`
 : Ez az eljárás a kapott utasítás string sort kiértékeli. Tokenekre bontja, majd az utasítássorozathoz hozzáadja a bemenetnek megfelelő típusú utasítást.
 
 A többi eljárás / függvény nevéből adódóan egyértelmű a működése, illetve nincs jelentős szerepe, csak segédfüggvény.
+
+<div style="page-break-after: always;"></div>
 
 ## Program utasítás: Instruction
 
@@ -464,8 +478,10 @@ Kiértékelés: `ProcessExpression(...)`
 : A kifejezések (pl: `a = 4*(b-c)`) kiértékelésért a `ProcessExpression(...)` függvény felel, ami a kapott bemeneti sztringet
 tokenekre bontja, kiértékeli, visszahelyettesíti a kiértékelt rész-kifejezéseket az értékeire egész addig, míg egy értelmes
 szám nem marad, vagy hiba nem keletkezik. Ez végzi el a műveleteket és az értékadást, illetve, ha színtaktikai hibát talál,
-akkor kivételt dob a hiba leírásával. Így tehát ez gyakorlatilag a legfontosabb függvény az értelmezés során.
-<p>**A kifejezés kiértékelése:** <p/>
+akkor kivételt dob a hiba leírásával. Így tehát ez gyakorlatilag a legfontosabb függvény az értelmezés során.<br>
+
+### Kifejezés kiértékelése
+
 Mivel a matematikai műveleti sorrendben a műveleteket balról jobbra, és nagyobb prioritásútól a kisebbek felé haladva oldja
 meg az ember, ezért a program ennek a fordítottját kell alkalmazza.
 Hiszen a program csak azt tudja megmondani, hogy van egy operátor a sztringben, és mi jön utána vagy mi van előtte,
@@ -473,21 +489,71 @@ Hiszen a program csak azt tudja megmondani, hogy van egy operátor a sztringben,
 amik aztán meghívják a jobb és baloldali tagukra szintén ezt a függvényt, a kifejezés kiértékelésére. Így valósítja meg tehát az
 értelmező a műveletek felbontását kisebb műveletekre és azok kiértékelését. Az alábbi táblázat a prioritásokat, ahogy feldolgozásra kerülnek (4. oszlop):
 
-| Matematikai</br>Prioritás |        Operátor        | Magyarázat                | Kiertékelési</br>sorrend |
-|:-------------------------:|:----------------------:|---------------------------|:------------------------:|
-|            1.             |        `(`,`)`         | Zárójelezés               |            2.            |
-|            2.             |        `!`, `-`        | Egytagú operátorok        |            9.            |
-|            3.             |        `*`, `/`        | Szorzás, osztás           |            8.            |
-|            4.             |        `+`, `-`        | Összeadás, kivonás        |            7.            |
-|            5.             |  `<`, `<=`, `>`, `>=`  | Összehasonlítók           |            6.            |
-|            6.             |       `==`, `!=`       | Ekvivalencia operátorok   |            5.            |
-|            7.             |          `&&`          | Logikai ÉS                |            4.            |
-|            8.             |         `\|\|`         | Logikai VAGY              |            3.            |
-|            9.             |          `=`           | Értékadás (jobbról balra) |            1.            |
+| Matematikai</br>Prioritás |       Operátor       | Magyarázat                | Kiertékelési</br>sorrend |
+|:-------------------------:|:--------------------:|---------------------------|:------------------------:|
+|            1.             |       `(`,`)`        | Zárójelezés               |            2.            |
+|            2.             |         `!`          | Egytagú operátorok        |            9.            |
+|            3.             |    `*`, `/`, `%`     | Szorzás, osztás           |            8.            |
+|            4.             |       `+`, `-`       | Összeadás, kivonás        |            7.            |
+|            5.             | `<`, `<=`, `>`, `>=` | Összehasonlítók           |            6.            |
+|            6.             |      `==`, `!=`      | Ekvivalencia operátorok   |            5.            |
+|            7.             |         `&&`         | Logikai ÉS                |            4.            |
+|            8.             |        `\|\|`        | Logikai VAGY              |            3.            |
+|            9.             |         `=`          | Értékadás (jobbról balra) |            1.            |
 
 ### Kifejezés feldolgozás pszeudókóddal
 
-...
+```
+Függvény ProcessExpression(kifejezés, regiszterek[]) : sztring
+  Plusz-minusz operátorok redukálása ("--" --> "+")
+  Minden operátor indexének megkeresése a kifejezésben (+,-,*,/,%,=,<,>,...)
+  (1) Ha van értékadás (=) operátor, akkor
+    ProcessExpression(az értékadás jobb oldala, regiszterek)
+    regiszternek értéke legyen a kiértékelt kifejezés
+  (2) Ha van zárójelezés, akkor
+    Zárójeleken belüli rész kiemelése
+    ProcessExpression(kiemelt rész, regiszterek) meghívása
+    kiértékelt rész visszaillesztése a zárójelek helyére
+  (3) Ha van VAGY operátor, akkor
+    kifejezés felbontása
+    ProcessExpression(jobb oldal, regiszterek)
+    ProcessExpression(bal oldal, regiszterek)
+    vissza: bal VAGY jobb
+  (4) Ha van ÉS operátor, akkor
+    kifejezés felbontása
+    ProcessExpression(jobb oldal, regiszterek)
+    ProcessExpression(bal oldal, regiszterek)
+    vissza: bal ÉS jobb
+  (5) Ha van (==) vagy (!=) operátor, akkor
+    Amelyik később jön, aszerint felbontjuk
+    ProcessExpression(jobb oldal, regiszterek)
+    ProcessExpression(bal oldal, regiszterek)
+    vissza: Nagyobb indexű operátort alkalmazzuk a bal és jobb kifejezésre 
+  (6) Ha van (<) vagy (>) vagy (<=) vagy (>=) operátor, akkor
+    Amelyik később jön, aszerint felbontjuk
+    ProcessExpression(jobb oldal, regiszterek)
+    ProcessExpression(bal oldal, regiszterek)
+    vissza: Nagyobb indexű operátort alkalmazzuk a bal és jobb kifejezésre 
+  (7) Ha van (+) vagy (-) operátor, akkor
+    Amelyik később jön, aszerint felbontjuk
+    ProcessExpression(jobb oldal, regiszterek)
+    ProcessExpression(bal oldal, regiszterek)
+    vissza: Nagyobb indexű operátort alkalmazzuk a bal és jobb kifejezésre 
+  (8) Ha van (*) vagy (/) vagy (%) operátor, akkor
+    Amelyik később jön, aszerint felbontjuk
+    ProcessExpression(jobb oldal, regiszterek)
+    ProcessExpression(bal oldal, regiszterek)
+    vissza: Nagyobb indexű operátort alkalmazzuk a bal és jobb kifejezésre   
+  (9) Ha van (!) operátor, akkor
+    ProcessExpression(jobb oldal, regiszterek)
+    vissza: jobb oldal értékének ellentétje.
+  (10) Ha regiszter név, akkor
+    vissza: regiszter értke
+  (11) Különben
+    vissza: maga a kifejezés
+  Elágazás vége
+Függvény vége
+```
 
 ## Specifikus utasítások
 
@@ -595,12 +661,12 @@ Kivétel lekérdezése: `what()`
 ## Tesztelés és memóriaszivárgás ellenőrzése
 
 A program tesztelést valósít meg a `gtest_lite.h` header fájl segítségével.
-A teszteltés futtatását a `CPORTA` makró definiálásval lehet elérni. Így amikor az említett makró definiálva van, akkor 
+A tesztelés futtatását a `CPORTA` makró definiálásával lehet elérni. Így amikor az említett makró definiálva van, akkor
 a tesztek futnak, egyéb esetben az interfészt futtatja a program.
 
 A tesztelő blokkok minden osztály minden publikus függvényét letesztelik a legkisebb egységtől haladva egyre kifele.
-Így tehát először a kivétel osztályokat teszteli, a `UniqueError`-t és a `SyntaxError`-t, majd az `Instruction` osztályt, 
-és leszármazottait. Ezután a az értelmezőt, a `Computer` osztályt teszteli, majd peig az interfész
+Így tehát először a kivétel osztályokat teszteli, a `UniqueError`-t és a `SyntaxError`-t, majd az `Instruction` osztályt,
+és leszármazottjait. Ezután az értelmezőt, a `Computer` osztályt teszteli, majd pedig az interfész
 parancsait (`HelpCommand`, `RunCommand`, ...), és legvégül magát az interfész (`IDE`) publikus tagfüggvényeit, és helyes működését.
 
 A memóriaszivárgás ellenőrzésére a `memtrace.h` és `memtrace.cpp` fájlokat használja a program.
@@ -614,7 +680,7 @@ A program alábbi osztálydiagramja tagváltozók és tagfüggvények nélkül a
 
 ```mermaid
 classDiagram
-  direction LR
+  direction TB
 
   Computer "1" --* "1" IDE : contains
   IDE "1" *-- "0..*" Command : contains
