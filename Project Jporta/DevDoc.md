@@ -22,8 +22,8 @@
     - [IDE és Command kapcsolata - osztálydiagram](#ide-és-command-kapcsolata---osztálydiagram)
     - [Használata](#használata)
   - [Interfész parancsok: Command](#interfész-parancsok-command)
-    - [Command és leszármazottainak kapcsolata - osztálydiagram](#command-és-leszármazottainak-kapcsolata---osztálydiagram)
-    - [Specifikus parancsok: Command leszármazottai](#specifikus-parancsok-command-leszármazottai)
+    - [Command és leszármazottjainak kapcsolata - osztálydiagram](#command-és-leszármazottainak-kapcsolata---osztálydiagram)
+    - [Specifikus parancsok: Command leszármazottjai](#specifikus-parancsok-command-leszármazottai)
       - [Segítség: HelpCommand](#segítség-helpcommand)
       - [Program futtatása: RunCommand](#program-futtatása-runcommand)
       - [Alkalmazás bezárása: EndCommand](#alkalmazás-bezárása-endcommand)
@@ -55,7 +55,7 @@ Az értelmező képes regiszterekben számértékeket eltárolni és azokkal mű
 
 ## Interfész és kódolás
 
-A program indulásakor egy CLI-s felület fogadja a felhasználót. 
+A program indulásakor egy CLI-s felület fogadja a felhasználót.
 Itt az alábbi parancsok adhatóak ki:
 
 - `HELP`: Kiírja az interfész parancsait, és működésüket
@@ -66,13 +66,13 @@ Itt az alábbi parancsok adhatóak ki:
 - `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
 - `SAVE <fájlnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
 - `<sorszám> <utasítás> <paraméter>`: Hozzáad egy utasítást a program utasítássorozatához.
-- `-<sorszám>`: Törli a sorszámként azonosított utasítást a program utasítássorozatából ha létezik ilyen.
+- `-<sorszám>`: Törli a sorszámként azonosított utasítást a program utasítássorozatából, ha létezik ilyen.
 
-(A program semelyik parancsa sem nagybetű/kisbetű érzékeny, kivéve ha sztring literált ad meg a felhasználó vagy elérési útvonalat.)
+(A program semelyik parancsa sem nagybetű/kisbetű érzékeny, kivéve, ha sztring literált ad meg a felhasználó vagy elérési útvonalat.)
 
 Egy sor begépelésekor a sor végén `Enter`-t leütve a program kiértékeli a parancsot.
 
-- Ha interfész parancs(`HELP`/`RUN`/`END`/`LIST`/`SAVE`/`LOAD`), akkor végre hajtaja a parancs szerinti változtatásokat az interfészben. (például fájlt beolvas vagy kiír, vagy új projektet nyit, stb.)
+- Ha interfész parancs(`HELP`/`RUN`/`END`/`LIST`/`SAVE`/`LOAD`), akkor végre hajtaja a parancs szerinti változtatásokat az interfészben. (például fájlt beolvas vagy kiír, vagy új projektet nyit stb.)
 - Ha program utasítás, akkor eltárolja azt az értelmező a memóriájában.
 - Ha a program utasítás sorszáma negatív, akkor az annak a sorszámnak vett abszolút értékű utasítást törli az értelmező memóriájából, ha van ilyen.
 
@@ -101,7 +101,7 @@ Egy program kódsornak 3 argumentuma van mindig: `sorszám`, `utasítás`, `para
 Ezen paraméterek egymástól legalább egy szóközzel kell legyenek elválasztva.
 A paraméteren belül tetszőleges 'whitespace' lehet, mivel az értelmező törli majd ezeket.
 Ezért fontos, hogy ha két karaktersorozatot egymás mellé írunk egy szóközzel elválasztva, úgy azt az értelmező egy szóként fogja kezelni.
-Ezalól kivétel, ha sztringet írunk be a `print` utasításhoz, aminél természetesen nem törlődnek a 'whitespace' karakterek.
+Ez alól kivétel, ha sztringet írunk be a `print` utasításhoz, aminél természetesen nem törlődnek a 'whitespace' karakterek.
 
 Így például a `10 let a = 4 * ( b - c )` sort így bontja fel:
 
@@ -123,9 +123,9 @@ A második paraméter az utasítás kulcsszó. Ezután következik a harmadik pa
 A program 5 féle utasítást tud értelmezni. Ezek a következők, és a színtaktikájuk:
 
 - `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket (`+`,`-`,`*`,`/`), maradékos osztást (`%`) és zárójeleket (`(`,`)`).
-- `print <regiszter>/<string>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
+- `print <regiszter>/<sztring>`: Kiírja a regiszter vagy a kapott idézőjelek közé tett sztring értékét a szabványos kimenetre. A sztring tartalma kizárólag az angol abc nagy- és kisbetűit tartalmazhatja, illetve `\n`(sortörés), `\t`(tab), `\"`(idézőjel) speciális karaktereket.
 - `if <feltétel>`: Feltételes elágazás. Ha a feltétel igaz, akkor végrehajtja a következő utasítást a sorban, ellenkező esetben az következő utáni utasításra ugrik a program. A feltétel tartalmazhat számokat, regisztereket, összehasonlító operátorokat, és/vagy/nem logikai kapukat és zárójeleket. (`>`,`>=`,`<`,`<=`,`==`,`!=`,`&&`,`||`,`!`)
-- `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjlelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
+- `goto <sorazonosító>`: Ha létezik a sorazonosító, akkor a megjelölt sorazonosítóhoz ugrik a program. Ha nincs ilyen, akkor hibát dob az értelmező.
 - `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
 
 ## Hibakezelés
@@ -144,7 +144,7 @@ Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kiv�
 | **[Computer]:** Program saved to file.                                          | Sikeres a program kiírása fájlba                         |
 | **[Computer]:** Can not save to file.                                           | Nem sikerült fájlba írni a programot                     |
 | **[Computer]:** New program created.                                            | Új program lett létrehozva                               |
-| **[Syntax error]:** Line identifier already exists: #                           | Új utasítás felvétele már letező sorszámmal              |
+| **[Syntax error]:** Line identifier already exists: #                           | Új utasítás felvétele már létező sorszámmal              |
 | **[Syntax error]:** Instruction not recognized in line: #                       | Nem létező utasítás                                      |
 | **[Syntax error]:** Can not recognize "argument" as a goto argument in line: #  | Goto nem megfelelő paraméterezése                        |
 | **[Syntax error]:** Can not recognize "argument" as a print argument in line: # | Print nem megfelelő paraméterezése                       |
@@ -152,24 +152,24 @@ Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kiv�
 | **[Syntax error]:** Wrong string literal in line: #                             | Nem megfelelő sztring szintaxis, hiányzó idézőjel        |
 | **[Syntax error]:** Unrecognized register name "argument" in line: #            | Nem deklarált regiszter használta                        ||
 | **[Syntax error]:** No line identifier found to jump to in line:                | Nem létező sor azonosító lett megadva goto paraméterként |
-| **[Syntax error]:** Program shutdown due to infinite cycle!                     | A program futás közben leállt végteln ciklus miatt       |
+| **[Syntax error]:** Program shutdown due to infinite cycle!                     | A program futás közben leállt végtelen ciklus miatt       |
 | **[Syntax error]:** Missing brackets                                            | Rossz zárójelezés egy kifejezésben                       |
 
 # BASIC-lite interpreter felépítése - Programozói szemmel
 
 ## Program működés
 
-A program fő funkcionalitását 5 nagyobb osztály adja. 
-A felhasználóval való kommunikációért az `IDE` és a `Command` osztályok és leszármazottai, a belső működésért és a 
-**BASIC-lite** program értelmezésért a `Computer`, `Register`, `Instruction` és leszármazott osztályai felelősek.
+A program fő funkcionalitását 5 nagyobb osztály adja.
+A felhasználóval való kommunikációért az `IDE` és a `Command` osztályok és leszármazottjai, a belső működésért és a
+**BASIC-lite** program értelmezésért a `Computer`, `Instruction` és leszármazott osztályai felelősek.
 A továbbiakban ezek részletes bemutatása olvasható.
 
 ## Felhasználóval való kommunikáció - Az interfész: IDE
 
 A program indulásakor egy CLI-s felület fogadja a felhasználót.
-Ezt a felületet és a be- és kimeneteket az `IDE` osztály kezeli. 
-Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról](#interfész-parancsok-command)) tartja nyilván egy heterogén kollekcióban, ahova az
-`IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottaiból egy-egy példányt. ([Bővebben a Command leszármazottairól](#specifikus-parancsok-command-leszármazottai)) 
+Ezt a felületet és a be- és kimeneteket az `IDE` osztály kezeli.
+Az itt kiadható parancsokat `Command`-ként ([Bővebben a Commandról](#interfész-parancsok-command)) tartja nyilván egy heterogén kollekcióban, ahova az
+`IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottjaiból egy-egy példányt. ([Bővebben a Command leszármazottairól](#specifikus-parancsok-command-leszármazottai))
 
 ### IDE és Command kapcsolata - osztálydiagram
 
@@ -199,21 +199,21 @@ Interfész állapot: `active`
 : Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
 
 Értelmező: `pc`
-: Az `Computer` osztály egy példánya, ami az értelmezi a BASIC-lite kódot amit az interfésztől kap. Ebben tárolódnak el az program utasítások.
+: Az `Computer` osztály egy példánya, ami az értelmezi a BASIC-lite kódot, amit az interfésztől kap. Ebben tárolódnak el az program utasítások.
 
 Interfész parancsok: `commands`
-: A `commands` heterogén kollekció tárolja a felhasználó által végrehajtható parancsokat, ami minden egyes `Command` 
+: A `commands` heterogén kollekció tárolja a felhasználó által végrehajtható parancsokat, ami minden egyes `Command`
 leszármazott osztályból egy-egy példányt tartalmaz. Így egy ciklussal ellenőrizhető mely parancsot vitte be a felhasználó,
 és melyik hajtódjon végre.
 
 Sor beolvasása: `ReadInput(...)`
-: Beolvas egy sort a standard bemenetről, és szétbontja azt elemekre (teljes sor, parancs név, argumentum). 
+: Beolvas egy sort a standard bemenetről, és szétbontja azt elemekre (teljes sor, parancs név, argumentum).
 
 Cím kiíró: `PrintTitle()`
-: Kiírja a standard kiemenetre a program nevét, készítőjét, és egy javaslatot az új felhasználók számára.  
+: Kiírja a standard kimenetre a program nevét, készítőjét, és egy javaslatot az új felhasználók számára.
 
 Interfész futtatása: `Run()`
-: Ezt a függvényt hívja meg a `main` az `IDE` futtatásához. Bekér a felhasználótól egy sort minden egyes ciklus elején, 
+: Ezt a függvényt hívja meg a `main` az `IDE` futtatásához. Bekér a felhasználótól egy sort minden egyes ciklus elején,
 majd feldolgozza azt.
 A függvény leírása pszeudókóddal:
 
@@ -222,10 +222,10 @@ Eljárás Run():
   Cím kiírása a képernyőre
   Ciklus amíg active igaz
     Sor beolvasása a bemenetről
-    commands-on végigfutva keres, melyik parancsot vitte be a felhasználó
+    commands-on végig futva keres, melyik parancsot vitte be a felhasználó
       parancs végrehajtása, ha talált
     Ha nem parancs volt, akkor
-      program kódsor hozzáadása a utasítássorozathoz
+      program kódsor hozzáadása az utasítássorozathoz
     Különben, ha nem ismert parancs jött, akkor
       Hiba kiírása 
   Ciklus vége
@@ -235,14 +235,14 @@ Eljárás vége
 ### Használata
 
 Az `IDE` osztályt egyszer kell példányosítani a `main()`-ben, és meghívni a `Run()` függvényét az interfész elindításához.
-Az `IDE` osztály minden további dolgot elintéz ami a program működéséhez és a felhasználóval való kommunikációhoz, illetve
+Az `IDE` osztály minden további dolgot elintéz, ami a program működéséhez és a felhasználóval való kommunikációhoz, illetve
 a hibakezeléshez  szükséges.
 
 ```cpp
 int main(){
     IDE ide;
     ide.Run();
-    reutrn 0;
+    return 0;
 }
 ```
 
@@ -250,10 +250,10 @@ int main(){
 
 Az `IDE`-vel való kommunikáció során a felhasználó különböző parancsokat adhat meg a bemeneten, amik végrehajtásáért a
 `Command`, és a leszármazott osztályai felelősek.
-Minden specifikus parancstípus saját eljárást hajt végre a meghívásakor. Erre a célra szolgál a teljesen virtuális 
+Minden specifikus parancstípus saját eljárást hajt végre a meghívásakor. Erre a célra szolgál a teljesen virtuális
 `operator()` operátor a `Command` absztrakt osztályból, melyet minden leszármazottnak implementálnia kell.
 
-### Command és leszármazottainak kapcsolata - osztálydiagram
+### Command és leszármazottjainak kapcsolata - osztálydiagram
 ```mermaid
 classDiagram
   direction TB
@@ -301,19 +301,19 @@ classDiagram
   Command <|-- SaveCommand
 ```
 
-Parancs kulcsó: `cmdStr`
+Parancs kulcsszó: `cmdStr`
 : A parancs kulcsszavát tartalmazó string.
 
 Értelmező referencia: `pc&`
 : A parancs végrehajtásakor az interfésztől kapott `Computer` osztály referenciával tud műveletet végezni az `operator()` operátor, hogy azok a módosítások kifelé is hassanak.
 
-Prancs operátor: `operator()`
-: Teljesen virtuális operátor, amit minden leszármazottnak implementálnia kell. Ez adja a funkcionalitását a parancsnak. 
+Parancs operátor: `operator()`
+: Teljesen virtuális operátor, amit minden leszármazottnak implementálnia kell. Ez adja a funkcionalitását a parancsnak.
 
 Összehasonlító operátor: `operator==`
-: Összehasonlító operátor, ami megvizsgálja, hogy a jobbértékként kapott string megeggyezik-e a parancs kulcsszavával.
+: Összehasonlító operátor, ami megvizsgálja, hogy a jobbértékként kapott string megegyezik-e a parancs kulcsszavával.
 
-### Specifikus parancsok: Command leszármazottai
+### Specifikus parancsok: Command leszármazottjai
 
 #### Segítség: HelpCommand
 
@@ -337,7 +337,7 @@ Az osztály `operator()` operátorának meghívásakor törli az értelmező (`C
 
 #### Program beolvasása fájlból: LoadCommand
 
-Az osztály `operator()` operátorának meghívásakor a pramaéterként kapott elérési útvonal alapján megpróbálja betölteni a keresett fájlt, ha létezik. Ha nem létezik vagy a fájl betöltése során hibába ütközik, hibát dob. 
+Az osztály `operator()` operátorának meghívásakor a paraméterként kapott elérési útvonal alapján megpróbálja betölteni a keresett fájlt, ha létezik. Ha nem létezik vagy a fájl betöltése során hibába ütközik, hibát dob.
 
 #### Program mentése fájlba: SaveCommand
 
@@ -377,23 +377,23 @@ Regiszter tároló: `registers`
 a regiszeterek értékei a nevük alapján.
 
 Program kódsor tároló: `instructions`
-: Az értelmező a programutasításokat soronként egy vektorban tárolja, amit a végrehajtáskor egymás után hajt végre. 
+: Az értelmező a programutasításokat soronként egy vektorban tárolja, amit a végrehajtáskor egymás után hajt végre.
 
 Utasítás mutató: `instructionIndex`
-: Az értelmező futása során az aktuálisan futtandó kódsort az `instructionIndex` határozza meg, és ennek az átállításával lehetséges ugrás a kódban is. 
+: Az értelmező futása során az aktuálisan futtandó kódsort az `instructionIndex` határozza meg, és ennek az átállításával lehetséges ugrás a kódban is.
 
 Fájlkezelés: `SaveProgramToFile` és `ReadProgramFromFile`
-: Az értelmező az interfészből kiadott paranccsal el tudja menteni fájlba és visszaolvasni fájlból a programutasításokat. 
-Ezeket egyszerűen úgy valósítja meg, hogy soronként egy utasítást ír/olvas fájlba/fájlból, úgy ahogy értelmezné is az uitasítást. 
+: Az értelmező az interfészből kiadott paranccsal el tudja menteni fájlba és visszaolvasni fájlból a programutasításokat.
+Ezeket egyszerűen úgy valósítja meg, hogy soronként egy utasítást ír/olvas fájlba/fájlból, úgy ahogy értelmezné is az utasítást.
 
-Utasíáts hozzáadása/törlése: `NewInstruction`
-: Ezene eljárás meghívásakor a stringként kapott kódsort kiértkeli az értelmező, és hozzáadja a programhoz, illetve törlhet a programbór egy utasíts amennyiben a sorszám negatív.
+Utasítás hozzáadása/törlése: `NewInstruction`
+: Ezene eljárás meghívásakor a sztringként kapott kódsort kiértékeli az értelmező, és hozzáadja a programhoz, illetve törlhet a programbór egy utasíts amennyiben a sorszám negatív.
 
 Értelmező futtatása: `RunProgram`
-: Értelemszerűen ez az eljárás indítja el az értelmezésést a programutasításokank. Bármely értelmezési hiba esetén hibát dob.
+: Értelemszerűen ez az eljárás indítja el az értelmezését a programutasításoknak. Bármely értelmezési hiba esetén hibát dob.
 
 Beadott utasítás kiértékelése: `ProcessProgramLine`
-: Ez az eljátás a kapott utasítás string sort kiértékeli. Tokenekre bontja, majd az utasítássorozathoz hozzáadja a bemenetnek megfelelő típusú utasítást.
+: Ez az eljárás a kapott utasítás string sort kiértékeli. Tokenekre bontja, majd az utasítássorozathoz hozzáadja a bemenetnek megfelelő típusú utasítást.
 
 A többi eljárás / függvény nevéből adódóan egyértelmű a működése, illetve nincs jelentős szerepe, csak segédfüggvény.
 
@@ -450,18 +450,18 @@ Paraméter: `expression`
 
 
 Értelmezés: `Execute(...)`
-: Az egyes utasítások egyedi értelmezését az `Execute(...)` tisztán virtuális függvény kezeli, amely abszrtaktá teszi az `Instruction` osztályt. 
+: Az egyes utasítások egyedi értelmezését az `Execute(...)` tisztán virtuális függvény kezeli, amely absztraktá teszi az `Instruction` osztályt.
 
 Kiértékelés: `ProcessExpression(...)`
 : A kifejezések (pl: `a = 4*(b-c)`) kiértékelésért a `ProcessExpression(...)` függvény felel, ami a kapott bemeneti sztringet
-tokenekre bontja, kiértékeli, visszahelyettesíti a kiértékelt rész-kifejezésket az értékeire egész addig, míg egy értelmes
+tokenekre bontja, kiértékeli, visszahelyettesíti a kiértékelt rész-kifejezéseket az értékeire egész addig, míg egy értelmes
 szám nem marad, vagy hiba nem keletkezik. Ez végzi el a műveleteket és az értékadást, illetve, ha színtaktikai hibát talál,
 akkor kivételt dob a hiba leírásával. Így tehát ez gyakorlatilag a legfontosabb függvény az értelmezés során.
 <p>**A kifejezés kiértékelése:** <p/>
-Mivel a matematikai műveleti sorrendben a műveleteket balról jobbra, és nagyobb prioritásútól a kisebbek felé haladva oldja 
-meg az ember, ezért a program ennek a fordítottját kell alkalamzz.
-Hiszen a program csak azt tudja megmondani, hogy van egy operátor a sztringebn, és mi jön utána vagy mi van előtte,
-így a két részre bontásnál fontos, hogy a kisebb priorítású oprendusok feldolgozását vegyük előre,
+Mivel a matematikai műveleti sorrendben a műveleteket balról jobbra, és nagyobb prioritásútól a kisebbek felé haladva oldja
+meg az ember, ezért a program ennek a fordítottját kell alkalmazza.
+Hiszen a program csak azt tudja megmondani, hogy van egy operátor a sztringben, és mi jön utána vagy mi van előtte,
+így a két részre bontásnál fontos, hogy a kisebb prioritású operandusok feldolgozását vegyük előre,
 amik aztán meghívják a jobb és baloldali tagukra szintén ezt a függvényt, a kifejezés kiértékelésére. Így valósítja meg tehát az
 értelmező a műveletek felbontását kisebb műveletekre és azok kiértékelését. Az alábbi táblázat a prioritásokat, ahogy feldolgozásra kerülnek (4. oszlop):
 
@@ -485,7 +485,7 @@ amik aztán meghívják a jobb és baloldali tagukra szintén ezt a függvényt,
 
 ### Értékadás: LetInstruction
 
-**Megvalósított parancs**: 
+**Megvalósított parancs**:
 
 `let <regiszter> = <érték>`: Regiszternek értékadás. Az érték tartalmazhat matematikai alapműveleteket és zárójeleket. (`+`,`-`,`*`,`/`,`%`)
 
@@ -515,11 +515,11 @@ akkor a kifejezésre ráhívja a `Instruction::ProcessExpression(...)` függvén
 
 **Működése**:
 
-Az értelmező ezen osztály `Execute(...)` függvényének hívásakor a konstruktorában kapott kifejezésre ráhívja a 
-`Instruction::ProcessExpression(...)` függvényt, és kiértékeli azzal a kapott feltételt. A visszakapott érték (`0` vagy `1`) 
-alapján ha `1`, azaz `Igaz` lett a feltétel, akkor a rákövetkező sort végrehajtaja, majd két sort ugrik az utasítás mutató. 
+Az értelmező ezen osztály `Execute(...)` függvényének hívásakor a konstruktorában kapott kifejezésre ráhívja a
+`Instruction::ProcessExpression(...)` függvényt, és kiértékeli azzal a kapott feltételt. A visszakapott érték (`0` vagy `1`)
+alapján, ha `1`, azaz `Igaz` lett a feltétel, akkor a rákövetkező sort végrehajtja, majd két sort ugrik az utasítás mutató.
 Amennyiben `0` vagyis `Hamis` lett a feltétel, akkor két sort ugrik, és a különben ágat hajtja végre az értelmező, majd egyel léptetve
-az utasítás mutatát megy a következő utasításra, és visszaadja a kezelést az értelmezőnek.
+az utasítás mutatója megy a következő utasításra, és visszaadja a kezelést az értelmezőnek.
 
 ### Ugrás: GotoInstruction
 
@@ -552,8 +552,8 @@ elválasztva, így: `10 READ var` --> `var = <bemenet>`, majd kiértékeli az í
 ## Hibakezelés - UniqueError és SyntaxError
 
 A program az általános hibákat `UniqueError`-ként, az értelmezéskor előforduló színtaktikai hibákat
-pedig `SyntaxError`-ként dobja el az értelmező. A `SyntaxError` a `UniqueError` osztály leszármazottja, 
-ezáltal lehetővé teszi a specifikus hibák dobását, és azok elleőrzését is a program során.
+pedig `SyntaxError`-ként dobja el az értelmező. A `SyntaxError` a `UniqueError` osztály leszármazottja,
+ezáltal lehetővé teszi a specifikus hibák dobását, és azok ellenőrzését is a program során.
 
 ```mermaid
 classDiagram
@@ -577,14 +577,15 @@ Hiba típusa: `errorType`
 : A konstruktorban megadott hiba típusát tárolja el.
 
 Konstruktor: `UniqueError(...)`
-: A konstruktor egy sztring literált vár, illetve még opcionálisan meg lehet adni a sorszámot és a hiba típusát is, 
-aminek alap érétke `"Error"`. Ezeket a paraméterekt összerakva adja ki a kivétel szövegét:
-`[<típus>]: <hiba üzenet> [a sorban: <sorszám>]`. 
+: A konstruktor egy sztring literált vár, illetve még opcionálisan meg lehet adni a sorszámot és a hiba típusát is,
+aminek alap érétke `"Error"`. Ezeket a paramétereket összerakva adja ki a kivétel szövegét:
+`[<típus>]: <hiba üzenet> [a sorban: <sorszám>]`.
 
 Kivétel lekérdezése: `what()`
 : A kivétel elkapásakor a `what()` függvény a konstruktor által megalkotott sztringet (`errormessage`) adja visszatérési értékként.
 
 ## Tesztelés
+
 
 ## Egyszerűsített UML osztálydiagram
 
@@ -786,58 +787,3 @@ classDiagram
 ## Osztály- és függvény dokumentáció
 
 > A program angol nyelven íródott, ezért az osztályok, függvények, és változók nevei mind angolul szerepelnek, ebből kifolyólag a dokumentációjuk is angolul íródott.  
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/IDE.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/Command.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/HelpCommand.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/RunCommand.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/EndCommand.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/ListCommand.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/NewCommand.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/LoadCommand.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/SaveCommand.h -->
-<!-- END DOC-COMMENT --> 
-
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/Instruction.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/PrintInstruction.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/LetInstruction.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/GotoInstruction.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/IfInstruction.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/ReadInstruction.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/Computer.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/UniqueError.h -->
-<!-- END DOC-COMMENT --> 
-
-<!-- BEGIN DOC-COMMENT ../Project Jporta/SyntaxError.h -->
-<!-- END DOC-COMMENT -->
