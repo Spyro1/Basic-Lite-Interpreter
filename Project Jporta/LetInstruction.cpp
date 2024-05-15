@@ -10,8 +10,8 @@ LetInstruction::LetInstruction(int lineNumber, const string& expression) : Instr
 void LetInstruction::Execute(std::map<string, float>& registers, vector<Instruction*> &instructions, int &instructionIndex) {
     //  Remove whitespace
     string shortExpression = RemoveWhiteSpace(expression);
-    // Evaluate assingment
+    // Evaluate assignment
     string evaluated = ProcessExpression(shortExpression,registers);
-    // Step to next instrcution
+    // Step to next instruction
     instructionIndex++;
 }

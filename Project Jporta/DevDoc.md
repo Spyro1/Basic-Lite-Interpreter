@@ -464,6 +464,10 @@ amik aztán meghívják a jobb és baloldali tagukra szintén ezt a függvényt,
 |            8.             |         `\|\|`         | Logikai VAGY              |            3.            |
 |            9.             |          `=`           | Értékadás (jobbról balra) |            1.            |
 
+### Kifejezés feldolgozás pszeudókóddal
+
+...
+
 ## Specifikus utasítások
 
 ### Értékadás: LetInstruction
@@ -512,6 +516,12 @@ az utasítás mutatát megy a következő utasításra, és visszaadja a kezelé
 
 **Működése**:
 
+Az értelmező ezen osztály `Execute(...)` függvényének hívásakor a konstruktorában kapott kifejezésre ráhívja a
+`Instruction::ProcessExpression(...)` függvényt, és kiértékeli azzal a kapott kifejezést. Ennek végeredménye egy egész szám kell legyen,
+ami az utasítássorozatban létező sorszámnak felel meg. Így tehát az argumentum tartalmazhat bármilyen kifejezést sztring literálon kívül.
+Amennyiben nem egész szám lesz az eredmény, vagy nem lehet a kifejezést értelmesen feldolgozni, úgy hibát fog dobni.
+Ha viszont helyes és létező sorszámot kapott eredményül, akkor átállítja az `instructionIndex`-et a sor indexére, ezáltal a következő
+utasítást onnan fogja futtatni az értelmező.
 
 ### Beolvasás: ReadInstrucion
 
@@ -519,6 +529,14 @@ az utasítás mutatát megy a következő utasításra, és visszaadja a kezelé
 
 `read <regiszter>`: Beolvas a szabványos bemenetről egy számot és eltárolja az éréket a regiszterben.
 
+**Működése**:
+
+Az értelmező ezen osztály `Execute(...)` függvényének hívásakor bekér egy sort a felhasználótól a standard bemenetről.
+Ezután a konstruktorban kapott változónevet tartalmazó kifejezéshez hozzárakja a bemenetként kapott kifejezést egy egyenlőségjellel
+elválasztva, így: `10 READ var` --> `var = <bemenet>`, majd kiértékeli az így kapott kifejezésre ráhívja a
+`Instruction::ProcessExpression(...)` függvényt. Ezáltal értéket adva a regiszternek.
+
+## 
 
 ## Tesztelés
 

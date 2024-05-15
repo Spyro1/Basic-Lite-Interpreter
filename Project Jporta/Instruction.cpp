@@ -64,19 +64,9 @@ string Instruction::ProcessExpression(string &argument, std::map<string, float>&
     if (Exists(assignValueSignIndex) && assignValueSignIndex != equalsIndex && assignValueSignIndex-1 != notEqualsIndex && assignValueSignIndex-1 != biggerIndex && assignValueSignIndex-1 != smallerIndex){
         string regName = argument.substr(0, assignValueSignIndex); // Get register name
         string valueToAssign = argument.substr(assignValueSignIndex + 1); // Separate after the equal sign
-
-//        size_t regIndex = FindRegisterIndex(registers, regName); // Get index
         string evaluatedValueToAssign = ProcessExpression(valueToAssign, registers); // Process right value
         auto newValue = std::stof(evaluatedValueToAssign); // Convert to float
         registers[regName] = newValue; // Assign value to register
-//        if (Exists(regIndex)) {
-//            // Assign value to existing register
-//            registers.find(regName) != registers.end()
-//            registers[regIndex].SetValue(newValue);
-//        } else {
-//            // Create new register and initialize it
-//            registers.emplace_back(regName, newValue);
-//        }
         return evaluatedValueToAssign;
     }
     #pragma endregion
@@ -273,18 +263,7 @@ size_t Instruction::FindBracketPairIndex(string str, size_t openPos, char OpenPa
     else
         return closePos; // Pair found
 }
-//size_t Instruction::FindRegisterIndex(const std::std::map<string, float>& registers, const string& name) {
-//    // Iterate through the vector array
-//    auto it = std::find_if(registers.begin(), registers.end(), [&name](const Register& reg) {
-//        return reg.getName() == name;
-//    });
-//
-//    if (it != registers.end()) {
-//        return std::distance(registers.begin(), it); // Return the index of register in array if found
-//    } else {
-//        return std::string::npos; // Return -1 to indicate register name is not found
-//    }
-//}
+
 void Instruction::SplitAndProcessArguments(const string &inputArg, std::map<string, float>& registers, size_t operatorIndex, float &evaluatedArg1, float &evaluatedArg2, size_t operatorChars) {
     string leftSide = inputArg.substr(0, operatorIndex);
     string rightSide = inputArg.substr(operatorIndex + operatorChars, inputArg.length() - operatorIndex);
@@ -308,8 +287,3 @@ bool Instruction::isNumber(const std::string& str) {
     }
     return i == str.length() && hasDigits;
 }
-
-
-
-
-

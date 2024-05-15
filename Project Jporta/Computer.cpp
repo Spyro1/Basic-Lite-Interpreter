@@ -85,7 +85,6 @@ void Computer::ClearProgram() {
 }
 
 std::ostream &operator<<(std::ostream &os, const Computer &pc) {
-//    os << "[Computer]: Number of instructions: " << pc.instructions.size() << "\n";
     for (auto instruction : pc.instructions) {
         os << *instruction << "\n";
     }
@@ -159,10 +158,7 @@ void Computer::RemoveInstruction(int lineNumber){
     }
 }
 
-
 // == Destructor ==
 Computer::~Computer() {
     ClearInstructions();
 }
-
-

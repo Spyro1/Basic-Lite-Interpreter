@@ -89,8 +89,3 @@ IDE::~IDE() {
         delete commands[i];
     }
 }
-
-
-
-
-

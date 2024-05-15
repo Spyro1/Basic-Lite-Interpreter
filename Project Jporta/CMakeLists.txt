@@ -25,7 +25,6 @@ add_executable(Nagyhazi main.cpp
         NewCommand.h    NewCommand.cpp
         LoadCommand.h   LoadCommand.cpp
         SaveCommand.h   SaveCommand.cpp
-
 )
 add_compile_definitions(MEMTRACE)
 #add_compile_definitions(CPORTA)
