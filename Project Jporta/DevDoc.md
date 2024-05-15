@@ -16,12 +16,13 @@
     - [Sorszám](#sorszám)
     - [Utasítás és paraméterek](#utasítás-és-paraméterek)
   - [Hibakezelés](#hibakezelés)
-- [BASIC-lite interpreter felépítése  - Programozói szemmel](#basic-lite-interpreter-felépítése----programozói-szemmel)
+- [BASIC-lite interpreter felépítése - Programozói szemmel](#basic-lite-interpreter-felépítése---programozói-szemmel)
   - [Program működés](#program-működés)
-  - [Felhasználóval kommunikáció - Az interfész: IDE](#felhasználóval-való-kommunikáció---az-interfész-ide-)
-      - [IDE és Command kapcsolata - UML osztálydiagram](#ide-és-command-kapcsolata---uml-osztálydiagram)
+  - [Felhasználóval való kommunikáció - Az interfész: IDE](#felhasználóval-való-kommunikáció---az-interfész-ide)
+    - [IDE és Command kapcsolata - osztálydiagram](#ide-és-command-kapcsolata---osztálydiagram)
     - [Használata](#használata)
   - [Interfész parancsok: Command](#interfész-parancsok-command)
+    - [Command és leszármazottainak kapcsolata - osztálydiagram](#command-és-leszármazottainak-kapcsolata---osztálydiagram)
     - [Specifikus parancsok: Command leszármazottai](#specifikus-parancsok-command-leszármazottai)
       - [Segítség: HelpCommand](#segítség-helpcommand)
       - [Program futtatása: RunCommand](#program-futtatása-runcommand)
@@ -30,8 +31,15 @@
       - [Új program létrehozása: NewCommand](#új-program-létrehozása-newcommand)
       - [Program beolvasása fájlból: LoadCommand](#program-beolvasása-fájlból-loadcommand)
       - [Program mentése fájlba: SaveCommand](#program-mentése-fájlba-savecommand)
-    - []()
-    - [Fájlkezelés](#fájlkezelés)
+  - [Az értelmező: Computer](#az-értelmező-computer)
+  - [Program utasítás: Instruction](#program-utasítás-instruction)
+    - [Kifejezés feldolgozás pszeudókóddal](#kifejezés-feldolgozás-pszeudókóddal)
+  - [Specifikus utasítások](#specifikus-utasítások)
+    - [Értékadás: LetInstruction](#értékadás-letinstruction)
+    - [Kiiratás: PrintInstruction](#kiiratás-printinstruction)
+    - [Feltételes utasítás: IfInstruciton](#feltételes-utasítás-ifinstruciton)
+    - [Ugrás: GotoInstruction](#ugrás-gotoinstruction)
+    - [Beolvasás: ReadInstrucion](#beolvasás-readinstrucion)
   - [Tesztelés](#tesztelés)
   - [Egyszerűsített UML osztálydiagram](#egyszerűsített-uml-osztálydiagram)
   - [Teljes UML osztálydiagram](#teljes-uml-osztálydiagram)
@@ -147,7 +155,7 @@ Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kiv�
 | **[Syntax error]:** Program shutdown due to infinite cycle!                     | A program futás közben leállt végteln ciklus miatt       |
 | **[Syntax error]:** Missing brackets                                            | Rossz zárójelezés egy kifejezésben                       |
 
-# BASIC-lite interpreter felépítése  - Programozói szemmel
+# BASIC-lite interpreter felépítése - Programozói szemmel
 
 ## Program működés
 
@@ -156,14 +164,14 @@ A felhasználóval való kommunikációért az `IDE` és a `Command` osztályok 
 **BASIC-lite** program értelmezésért a `Computer`, `Register`, `Instruction` és leszármazott osztályai felelősek.
 A továbbiakban ezek részletes bemutatása olvasható.
 
-## Felhasználóval való kommunikáció - Az interfész: IDE 
+## Felhasználóval való kommunikáció - Az interfész: IDE
 
 A program indulásakor egy CLI-s felület fogadja a felhasználót.
 Ezt a felületet és a be- és kimeneteket az `IDE` osztály kezeli. 
 Az itt kiadható parancsokat `Command`-ként ([Bőveben a Comandról](#interfész-parancsok-command)) tartja nyilván egy heterogén kollekcióban, ahova az
 `IDE` konstruktora berakja a kiadható parancsokat az interfészen keresztül, azaz a `Command` osztály leszármazottaiból egy-egy példányt. ([Bővebben a Command leszármazottairól](#specifikus-parancsok-command-leszármazottai)) 
 
-#### IDE és Command kapcsolata - UML osztálydiagram
+### IDE és Command kapcsolata - osztálydiagram
 
 ```mermaid
 classDiagram
@@ -245,6 +253,7 @@ Az `IDE`-vel való kommunikáció során a felhasználó különböző parancsok
 Minden specifikus parancstípus saját eljárást hajt végre a meghívásakor. Erre a célra szolgál a teljesen virtuális 
 `operator()` operátor a `Command` absztrakt osztályból, melyet minden leszármazottnak implementálnia kell.
 
+### Command és leszármazottainak kapcsolata - osztálydiagram
 ```mermaid
 classDiagram
   direction TB
@@ -283,9 +292,6 @@ classDiagram
     + SaveCommand(cmdStr: string, pc: Computer)
     + operator()(commandExpression: string, active&: bool) void
   }
-%%  Command <|-- HelpCommand
-%%  Command <|-- RunCommand
-%%  Command <|-- EndCommand
   HelpCommand --|> Command
   RunCommand --|> Command
   EndCommand --|> Command
@@ -398,19 +404,26 @@ A program az egyes kódsorokat az `Instruction` absztrakt osztályból származt
 ```mermaid
 classDiagram
     direction TB
-    class Instruction {
-        <<abstract>>
-        - lineNumber: int
-        - expression: string
-        - instrTy: InstructionType
-        + Instruction(lineNumber: int, expression: string)
-        + getLineNumber() int
-        + getInstructionTypeStr() string
-        + getInstructionType() InstructionType
-        + getExpression() string
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void*
-        - ProcessExpression(argument: string, registers: Register[]) string
-    }
+  class Instruction {
+    <<abstract>>
+    - lineNumber: int
+    - expression: string
+    - instrTy: InstructionType
+    + Instruction(lineNumber: int, expression: string, instrTy: InstructionType)
+    + getLineNumber() int
+    + getInstructionTypeStr() string
+    + getInstructionType() InstructionType
+    + getExpression() string
+    + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void = 0*
+    + isNumber(str: string) bool$
+    # ProcessExpression(argument: string, registers: map~string, float~) string
+    # RemoveWhiteSpace(str: string) string
+    # Exists(value: int) bool
+    - ReplaceCharacters(inputStr: string, searched: string, replace: string) void
+    - SplitAndProcessArguments(inputArg: string, registers: map~string, float~, ...) void
+  %%        - SplitAndProcessArguments(inputArg: string, registers: vector~Register~, operatorIndex: int, evaluatedArg1: float, evaluatedArg2: float, operatorChars: int) void
+    - FindBracketPairIndex(str: string, openPos: int, openPair: char, ClosePair: char) int
+  }
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
     Instruction <|-- IfInstruction
@@ -536,7 +549,40 @@ Ezután a konstruktorban kapott változónevet tartalmazó kifejezéshez hozzár
 elválasztva, így: `10 READ var` --> `var = <bemenet>`, majd kiértékeli az így kapott kifejezésre ráhívja a
 `Instruction::ProcessExpression(...)` függvényt. Ezáltal értéket adva a regiszternek.
 
-## 
+## Hibakezelés - UniqueError és SyntaxError
+
+A program az általános hibákat `UniqueError`-ként, az értelmezéskor előforduló színtaktikai hibákat
+pedig `SyntaxError`-ként dobja el az értelmező. A `SyntaxError` a `UniqueError` osztály leszármazottja, 
+ezáltal lehetővé teszi a specifikus hibák dobását, és azok elleőrzését is a program során.
+
+```mermaid
+classDiagram
+    direction TB
+  class UniqueError{
+    - errormessage: string
+    - errorType: string
+    + UniqueError(messsage: string, lineNumber: int, type: string)
+    + what() string
+  }
+  class SyntaxError{
+    + SyntaxError(messsage: string, lineNumber: int)
+  }
+  UniqueError <|-- SyntaxError
+```
+
+Összeillesztett hibaüzenet: `errormessage`
+: A konstruktor által összerakott, hibaüzenetet tárolja el.
+
+Hiba típusa: `errorType`
+: A konstruktorban megadott hiba típusát tárolja el.
+
+Konstruktor: `UniqueError(...)`
+: A konstruktor egy sztring literált vár, illetve még opcionálisan meg lehet adni a sorszámot és a hiba típusát is, 
+aminek alap érétke `"Error"`. Ezeket a paraméterekt összerakva adja ki a kivétel szövegét:
+`[<típus>]: <hiba üzenet> [a sorban: <sorszám>]`. 
+
+Kivétel lekérdezése: `what()`
+: A kivétel elkapásakor a `what()` függvény a konstruktor által megalkotott sztringet (`errormessage`) adja visszatérési értékként.
 
 ## Tesztelés
 
