@@ -31,126 +31,156 @@ Az értelmező képes regiszterekben számértékeket eltárolni és azokkal mű
 ```mermaid
 classDiagram
     direction LR
-%%    namespace interface{
-        class IDE{
-            - active: bool
-            - commands[]: Command
-            + IDE()
-            + Run() void
-            - PrintTitle() void
-        }
-        class Command{
-            - cmdStr: string
-            - pc&: Computer
-            + Command(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void = 0*
-        }
-        class HelpCommand{
-            + HelpCommand(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void
-        }
-        class RunCommand{
-            + RunCommand(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void
-        }
-        class EndCommand{
-            + EndCommand(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void
-        }
-        class ListCommand{
-            + ListCommand(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void
-        }
-        class NewCommand{
-            + NewCommand(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void
-        }
-        class LoadCommand{
-            + LoadCommand(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void
-        }
-        class SaveCommand{
-            + SaveCommand(cmdStr: string, pc: Computer)
-            + operator()(commandExpression: string) void
-        }
-%%    }
-
-%%    namespace interpreter{
-        
-        class Computer {
-            - registers: Register[]
-            - instructions: Instruction[]
-            - instructionIndex: int
-            + Computer()
-            + getInstructionCount() int
-            + ReadProgramFromFile(filename: string) void
-            + NewInstruction(programLine: string) void
-            + RunProgram() void
-            + ClearProgram() void
-            - ExecuteNextInstruction() void
-        }    
-        class Register{
-            - name: string
-            - value: float
-            + Register(name: string, value: int)
-            + getName() string
-            + getValue() int
-            + setValue(newValue: float) void
-        }
-        class InstructionType { 
-            <<enumeration>>
-            NoType, Print, Let, If, Goto, Read 
-        }
-        class Instruction {
-            <<abstract>>
-            - lineNumber: int
-            - expression: string
-            - instrTy: InstructionType
-            + Instruction(lineNumber: int, expression: string)
-            + getLineNumber() int
-            + getInstructionTypeStr() string
-            + getInstructionType() InstructionType
-            + getExpression() string
-            + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void = 0*
-            - ProcessExpression(argument: string, registers: Register[]) string
-        }
-      class LetInstruction{
+    class IDE{
+        - active: bool
+        - commands: vector~Command*~
+        + IDE()
+        + Run() void
+        - PrintTitle() void
+        - ReadInput(line: string, commandStr: string, argumentStr: string) void
+    }
+    class Computer {
+        - registers: map~string, float~
+        - instructions: vector~Instruction*~
+        - instructionIndex: int
+        + Computer()
+        + getInstructionCount() int
+        + ReadProgramFromFile(filename: string) void
+        + NewInstruction(programLine: string) void
+        + RunProgram() void
+        + ClearProgram() void
+        + ToUpperCaseStr(str: string) string$
+        - ProcessProgramLine(inputLine: string) void
+        - ClearInstructions() void
+        - SortInstructions() void
+        - RemoveInstruction() void
+        - SplitLineToTokens(inputLine: string,...) void
+    %%        - SplitLineToTokens(inputLine: string, lineNumber: int, command: string, expression: string) void$
+    }
+    class InstructionType {
+        <<enumeration>>
+        NoType, Print, Let, If, Goto, Read
+    }
+    class Instruction {
+        <<abstract>>
+        - lineNumber: int
+        - expression: string
+        - instrTy: InstructionType
+        + Instruction(lineNumber: int, expression: string, instrTy: InstructionType)
+        + getLineNumber() int
+        + getInstructionTypeStr() string
+        + getInstructionType() InstructionType
+        + getExpression() string
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void = 0*
+        + isNumber(str: string) bool$
+        # ProcessExpression(argument: string, registers: map~string, float~) string
+        # RemoveWhiteSpace(str: string) string
+        # Exists(value: int) bool
+        - ReplaceCharacters(inputStr: string, searched: string, replace: string) void
+        - SplitAndProcessArguments(inputArg: string, registers: map~string, float~, ...) void
+    %%        - SplitAndProcessArguments(inputArg: string, registers: vector~Register~, operatorIndex: int, evaluatedArg1: float, evaluatedArg2: float, operatorChars: int) void
+        - FindBracketPairIndex(str: string, openPos: int, openPair: char, ClosePair: char) int
+    }
+    class LetInstruction{
         + LetInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-      }
-      class PrintInstruction{
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
+    }
+    class PrintInstruction{
         + PrintInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-      }
-      class GotoInstruction{
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
+    }
+    class GotoInstruction{
         + GotoInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-      }
-      class IfInstruction{
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
+    }
+    class IfInstruction{
         + IfInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-      }
-      class ReadInstruction{
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
+    }
+    class ReadInstruction{
         + ReadInstruction(lineNumber: int, expression: string)
-        + Execute(registers: Register[], instructions: Instruction[], instructionIndex: int) void
-      }
-%%  }
-  
-%%      IDE "1" *-- "1" Computer : contains    
-    Computer "1" --* "1" IDE : contains    
-    IDE "1" *-- "0..*" Command : contains
-    
-    Register <-- Instruction : uses
-    Computer "1" *-- "0..*" Instruction : contains
-    Computer "1" *-- "1..*" Register : contains
+        + Execute(registers: map~string, float~, instructions: vector~Instruction~, instructionIndex: int) void
+    }
 
+    class Command{
+        - cmdStr: string
+        - pc&: Computer
+        + Command(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void = 0*
+        + operator==(commandStr: string) bool
+    }
+    class HelpCommand{
+        + HelpCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void
+    }
+    class RunCommand{
+        + RunCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void
+    }
+    class EndCommand{
+        + EndCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void
+    }
+    class ListCommand{
+        + ListCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void
+    }
+    class NewCommand{
+        + NewCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void
+    }
+    class LoadCommand{
+        + LoadCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void
+    }
+    class SaveCommand{
+        + SaveCommand(cmdStr: string, pc: Computer)
+        + operator()(commandExpression: string, active&: bool) void
+    }
+    class UniqueError{
+        - errormessage: string
+        - errorType: string
+        + UniqueError(messsage: string, lineNumber: int, type: string)
+        + what() string
+    }
+    class SyntaxError{
+        + SyntaxError(messsage: string, lineNumber: int)
+    }
+
+
+%%    UniqueError <-- IDE : catches
+
+%%    IDE "1" *-- "1" Computer : contains    
+    Computer "1" --* "1" IDE : contains
+    IDE "1" *-- "0..*" Command : contains
+    IDE <-- UniqueError : catches
+%%    UniqueError --> IDE : catches 
+
+
+%%    Instruction --> UniqueError : throws
+    Instruction --> SyntaxError : throws
+    UniqueError <|-- SyntaxError
+    Computer --> UniqueError : throws
+    Computer --> SyntaxError : throws
+
+%%    SyntaxError --|> UniqueError
+
+%%    Computer "1" *-- "1..*" Register : contains
+    Computer "1" *-- "0..*" Instruction : contains
+%%    Register <-- Instruction : uses
+
+    Instruction "1" *-- "1" InstructionType : defines
     Instruction <|-- LetInstruction
     Instruction <|-- PrintInstruction
     Instruction <|-- IfInstruction
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
-    Instruction "1" *-- "1" InstructionType : defines
-    
+%% ----
+%%    SyntaxError <-- Instruction : throws
+%%    UniqueError <-- Instruction : throws
+%%    UniqueError <-- Computer : throws
+%%    SyntaxError <-- Computer : throws
+%% ----
     Command <|-- HelpCommand
     Command <|-- RunCommand
     Command <|-- EndCommand
@@ -158,6 +188,4 @@ classDiagram
     Command <|-- NewCommand
     Command <|-- LoadCommand
     Command <|-- SaveCommand
-    
-    
 ```
