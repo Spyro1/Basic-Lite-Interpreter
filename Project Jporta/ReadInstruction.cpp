@@ -8,20 +8,18 @@
 ReadInstruction::ReadInstruction(int lineNumber, const string& expression) : Instruction(lineNumber, expression, Read) {}
 
 void ReadInstruction::Execute(std::map<string, float>& registers, vector<Instruction*> &instructions, int &instructionIndex) {
-    float newValue;
+    // Get line from user
     string readValue;
     std::getline(std::cin, readValue);
 
-    // Error handling if not empty string
-    if (readValue.empty()){
-        readValue = "0";
+    string shortExpression = RemoveWhiteSpace(readValue); //  Remove whitespace
+    string assignment = expression + "=" + shortExpression; // Gluing the given expression with the given value: Example: 10 read a --> a = <input>
+    try{
+        string evaluated = ProcessExpression(assignment, registers); // Process the expression
+    } catch (std::exception& e){
+        // Error handling if the inputted string contained a wrong formula
+        throw UniqueError(string("Invalid input were given!\n") + e.what()); // Can not convert, throw error
     }
-    if (isNumber(readValue))
-        newValue = stof(readValue); // Convert value to float
-    else
-        throw UniqueError("Invalid input were given!"); // Can not convert, throw error
-    // Assign inputted value to register
-    registers[expression] = newValue;
-    // Skip instruction if empty
+    // Go to next instruction
     instructionIndex++;
 }
