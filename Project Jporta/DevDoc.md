@@ -1,6 +1,6 @@
 # BASIC-lite interpreter - Dokumentáció
 
-> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: [Dátum] Budapest
+> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.05.15. Budapest
 
 [//]: # (<div class="page"></div>)
 
@@ -150,9 +150,9 @@ Valamint a **BASIC-lite** értelmező is minden lehetséges kód elírásra kiv�
 | **[Syntax error]:** Can not recognize "argument" as a print argument in line: # | Print nem megfelelő paraméterezése                       |
 | **[Syntax error]:** Can not recognize "argument" as an if condition in line: #  | If nem megfelelő feltétel                                |
 | **[Syntax error]:** Wrong string literal in line: #                             | Nem megfelelő sztring szintaxis, hiányzó idézőjel        |
-| **[Syntax error]:** Unrecognized register name "argument" in line: #            | Nem deklarált regiszter használta                        ||
+| **[Syntax error]:** Unrecognized register name "argument" in line: #            | Nem deklarált regiszter használta                        |
 | **[Syntax error]:** No line identifier found to jump to in line:                | Nem létező sor azonosító lett megadva goto paraméterként |
-| **[Syntax error]:** Program shutdown due to infinite cycle!                     | A program futás közben leállt végtelen ciklus miatt       |
+| **[Syntax error]:** Program shutdown due to infinite cycle!                     | A program futás közben leállt végtelen ciklus miatt      |
 | **[Syntax error]:** Missing brackets                                            | Rossz zárójelezés egy kifejezésben                       |
 
 # BASIC-lite interpreter felépítése - Programozói szemmel
@@ -194,6 +194,8 @@ classDiagram
   }
   IDE "1" *-- "0..*" Command : contains
 ```
+
+([Teljes UML osztálydiagram](#teljes-uml-osztálydiagram))
 
 Interfész állapot: `active`
 : Az `IDE` osztályban a program futási állapotát az `active` logikai érték tárolja. Ameddig igaz, addig fut a program.
@@ -301,6 +303,8 @@ classDiagram
   Command <|-- SaveCommand
 ```
 
+([Teljes UML osztálydiagram](#teljes-uml-osztálydiagram))
+
 Parancs kulcsszó: `cmdStr`
 : A parancs kulcsszavát tartalmazó string.
 
@@ -372,6 +376,8 @@ classDiagram
   }    
 ```
 
+([Teljes UML osztálydiagram](#teljes-uml-osztálydiagram))
+
 Regiszter tároló: `registers`
 : Az értelmező futása során használt regiszterek értékeit egy `map<string, float>`-ben tárolja. Ezáltal könnyen elérhetőek
 a regiszeterek értékei a nevük alapján.
@@ -430,6 +436,8 @@ classDiagram
     Instruction <|-- GotoInstruction
     Instruction <|-- ReadInstruction
 ```
+
+([Teljes UML osztálydiagram](#teljes-uml-osztálydiagram))
 
 Sorszám: `lineNumber`
 : Egy program kódsor sorszám egy 0-nál nagyobb pozitív egész szám mindig.
@@ -584,10 +592,25 @@ aminek alap érétke `"Error"`. Ezeket a paramétereket összerakva adja ki a ki
 Kivétel lekérdezése: `what()`
 : A kivétel elkapásakor a `what()` függvény a konstruktor által megalkotott sztringet (`errormessage`) adja visszatérési értékként.
 
-## Tesztelés
+## Tesztelés és memóriaszivárgás ellenőrzése
 
+A program tesztelést valósít meg a `gtest_lite.h` header fájl segítségével.
+A teszteltés futtatását a `CPORTA` makró definiálásval lehet elérni. Így amikor az említett makró definiálva van, akkor 
+a tesztek futnak, egyéb esetben az interfészt futtatja a program.
+
+A tesztelő blokkok minden osztály minden publikus függvényét letesztelik a legkisebb egységtől haladva egyre kifele.
+Így tehát először a kivétel osztályokat teszteli, a `UniqueError`-t és a `SyntaxError`-t, majd az `Instruction` osztályt, 
+és leszármazottait. Ezután a az értelmezőt, a `Computer` osztályt teszteli, majd peig az interfész
+parancsait (`HelpCommand`, `RunCommand`, ...), és legvégül magát az interfész (`IDE`) publikus tagfüggvényeit, és helyes működését.
+
+A memóriaszivárgás ellenőrzésére a `memtrace.h` és `memtrace.cpp` fájlokat használja a program.
+A `MEMTRACE` makró projekt szintű definiálásával a tesztek futtatása után megbizonyosodhatunk róla,
+hogy nincs szivárgás a programban. Így futtatva a teszteket azt tapasztaljuk, hogy valóban nincs szivárgás, tehát a program
+minden lefoglalt memóriát helyesen felszabadít.
 
 ## Egyszerűsített UML osztálydiagram
+
+A program alábbi osztálydiagramja tagváltozók és tagfüggvények nélkül a könnyű átláthatóság miatt készült. Lentebb található a [Teljes UML osztálydiagram](#teljes-uml-osztálydiagram).
 
 ```mermaid
 classDiagram
@@ -786,4 +809,6 @@ classDiagram
 
 ## Osztály- és függvény dokumentáció
 
-> A program angol nyelven íródott, ezért az osztályok, függvények, és változók nevei mind angolul szerepelnek, ebből kifolyólag a dokumentációjuk is angolul íródott.  
+> **Megjegyzés:** A program angol nyelven íródott, ezért az osztályok, függvények, és változók nevei mind angolul szerepelnek, ebből kifolyólag a dokumentációjuk is angolul íródott a fájlokban.  
+
+> Írta: Szenes Márton Miklós, Neptun kód: KTZRDZ, Készült: 2024.05.15. Budapest

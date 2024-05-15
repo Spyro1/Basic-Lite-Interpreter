@@ -1,20 +1,24 @@
-//#define CPORTA
-//#define UTF8
-
 #include <iostream>
-#include "gtest_lite.h"
 #include "IDE.h"
 #include "Computer.h"
 
 #ifdef CPORTA
-#include "PrintInstruction.h"
-#include "LetInstruction.h"
-#include "GotoInstruction.h"
-#include "ReadInstruction.h"
-#include "IfInstruction.h"
+    #include "PrintInstruction.h"
+    #include "LetInstruction.h"
+    #include "GotoInstruction.h"
+    #include "ReadInstruction.h"
+    #include "IfInstruction.h"
+    #include "HelpCommand.h"
+    #include "RunCommand.h"
+    #include "EndCommand.h"
+    #include "ListCommand.h"
+    #include "LoadCommand.h"
+    #include "SaveCommand.h"
+    #include "NewCommand.h"
 #endif
-#include "memtrace.h"
 
+#include "gtest_lite.h"
+#include "memtrace.h"
 
 
 int main() {
@@ -25,6 +29,26 @@ int main() {
 
 // === RUN TESTS ===
 #ifdef CPORTA
+
+    // === UniqueError tests ===
+    TEST(UniqueError, Constructor){
+            UniqueError ue = UniqueError("Problem1");
+            EXPECT_STREQ("[Error]: Problem1", ue.what());
+        } END
+
+    TEST(UniqueError, LineNumber){
+            UniqueError ue = UniqueError("Problem2", 10);
+            EXPECT_STREQ("[Error]: Problem2 in line: 10", ue.what());
+        } END
+
+    TEST(UniqueError, CostomType){
+            UniqueError ue = UniqueError("Problem3", 20, "Jporta");
+            EXPECT_STREQ("[Jporta]: Problem3 in line: 20", ue.what());
+        } END
+    TEST(SyntaxError, Constructor){
+            SyntaxError se = SyntaxError("Syntax problem");
+            EXPECT_STREQ("[Syntax error]: Syntax problem", se.what());
+        } END
 
     // === Instruction tests ===
     TEST(Instruction, Getters) {
@@ -159,26 +183,6 @@ int main() {
         instructions.clear();
     } END
 
-    // === UniqueError tests ===
-
-    TEST(UniqueError, Constructor){
-        UniqueError ue = UniqueError("Problem1");
-        EXPECT_STREQ("[Error]: Problem1", ue.what());
-    } END
-
-    TEST(UniqueError, LineNumber){
-        UniqueError ue = UniqueError("Problem2", 10);
-        EXPECT_STREQ("[Error]: Problem2 in line: 10", ue.what());
-    } END
-
-    TEST(UniqueError, CostomType){
-        UniqueError ue = UniqueError("Problem3", 20, "Jporta");
-        EXPECT_STREQ("[Jporta]: Problem3 in line: 20", ue.what());
-    } END
-    TEST(SyntaxError, Constructor){
-        SyntaxError se = SyntaxError("Syntax problem");
-        EXPECT_STREQ("[Syntax error]: Syntax problem", se.what());
-    } END
 
     // === Computer tests ===
     Computer pc;
@@ -219,6 +223,32 @@ int main() {
         EXPECT_STREQ("10", test_output.str().c_str());
     }END
 
+    // === Command tests ===
+    TEST(Command, Comparators){
+        Command* helpCmd = new HelpCommand(pc);
+        Command* runCmd = new RunCommand(pc);
+        Command* endCmd = new EndCommand(pc);
+        Command* listCmd = new ListCommand(pc);
+        Command* newCmd = new NewCommand(pc);
+        Command* loadCmd = new LoadCommand(pc);
+        Command* saveCmd = new SaveCommand(pc);
+        EXPECT_TRUE(*helpCmd == HELP_CMD);
+        EXPECT_TRUE(*runCmd == RUN_CMD);
+        EXPECT_TRUE(*endCmd == END_CMD);
+        EXPECT_TRUE(*listCmd == LIST_CMD);
+        EXPECT_TRUE(*newCmd == NEW_CMD);
+        EXPECT_TRUE(*loadCmd == LOAD_CMD);
+        EXPECT_TRUE(*saveCmd == SAVE_CMD);
+        delete helpCmd;
+        delete runCmd;
+        delete endCmd;
+        delete listCmd;
+        delete newCmd;
+        delete loadCmd;
+        delete saveCmd;
+    } END
+
+    // === Interface tests ===
     TEST(Interface, CreateIDE){
         IDE ide;
     }END
