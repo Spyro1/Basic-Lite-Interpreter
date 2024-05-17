@@ -26,6 +26,10 @@ Az értelmező képes regiszterekben számértékeket eltárolni és azokkal mű
 - `LOAD <fájlnév>`: Beolvassa fájlból a programot a kapott fájlnévvel.
 - `SAVE <fájlnév>`: Elmenti a betöltött programot a megadott fájlnévvel.
 
+## Példaprogramok
+
+Példaprogramok megtalálhatóak a [programs](/Project files/programs) mappában.
+
 ## BASIC-lite interpreter - UML Osztálydiagram
 
 ```mermaid
