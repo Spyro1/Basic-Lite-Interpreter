@@ -28,7 +28,7 @@ Az értelmező képes regiszterekben számértékeket eltárolni és azokkal mű
 
 ## Példaprogramok
 
-Példaprogramok megtalálhatóak a [programs](/Project files/programs) mappában.
+Példaprogramok megtalálhatóak a [programs](</Project files/programs/>) mappában.
 
 ## BASIC-lite interpreter - UML Osztálydiagram
 
