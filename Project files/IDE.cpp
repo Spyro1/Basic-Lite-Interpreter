@@ -57,7 +57,7 @@ void IDE::Run() {
                 }
                 // Not empty line inputted
                 else if (!commandStr.empty()){
-                    cout << "[Computer]: Unrecognizable command!" << endl;
+                    throw UniqueError("Unrecognizable command!", -1, "Computer");
                 }
             }
         } catch (std::exception& e){
